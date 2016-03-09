@@ -1,7 +1,7 @@
 import unittest
 
 from monom import Monom
-from poly import Poly
+from poly import Poly, generate_n_vars
 
 
 class TestBoolPoly(unittest.TestCase):
@@ -17,6 +17,17 @@ class TestBoolPoly(unittest.TestCase):
         p2 = Poly([Monom([1,0,0,0])])
 
         self.assertEqual(p1 + p2, Poly.zero)
+
+    def test_lt(self):
+        variables = ('a', 'b', 'c', 'd')
+        a, b, c, d = generate_n_vars(variables)
+        _1 = Poly.one
+
+        f = a*b*c + c*d + a*b + _1
+        g = c*d + b
+
+        self.assertEqual(str(f.lt()), 'abc')
+        self.assertEqual(str(g.lt()), 'b')
 
     def test_add(self):
         a = Poly([Monom([1,0,0,0])])

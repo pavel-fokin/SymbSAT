@@ -9,7 +9,7 @@ import itertools
 from monom import Monom
 
 
-class Poly(set):
+class Poly(list):
 
     one = None
     zero = None
@@ -17,9 +17,12 @@ class Poly(set):
     def __new__(cls, monoms):
         return super().__new__(cls, monoms)
 
+    def __init__(self, monoms):
+        return super().__init__(sorted(monoms, reverse=True))
+
     def __add__(self, other):
         # difference_symetric
-        return Poly(self ^ other)
+        return Poly(set(self) ^ set(other))
 
     def __mul__(self, other):
         # if self == Poly.one:
@@ -30,7 +33,7 @@ class Poly(set):
             return Poly.zero
         m = itertools.starmap(operator.mul, (itertools.product(self, other)))
         counter = collections.Counter(m)
-        return Poly(m for m, c in counter.items() if c % 2 != 0)
+        return Poly({m for m, c in counter.items() if c % 2 != 0})
 
     def __str__(self):
         if self == Poly.zero:
@@ -40,15 +43,16 @@ class Poly(set):
     def lt(self):
         if self == Poly.zero:
             return Monom.zero
-        return sorted(self, reverse=True)[0]
+        return self[0]
 
     @staticmethod
     def S(f, g):
         """
         Return s-polynomial
         """
-        lcm = f.lt()*g.lt()
-        spoly = f*Poly([lcm/f.lt()]) + g*Poly([lcm/g.lt()])
+        f_lt, g_lt = f.lt(), g.lt()
+        lcm = f_lt.lcm(g_lt)
+        spoly = f*Poly([lcm/f_lt]) + g*Poly([lcm/g_lt])
         return spoly
 
     @staticmethod
@@ -82,8 +86,8 @@ class Poly(set):
                 else:
                     i += 1
             if divisionoccured == False:
-                r = r + Poly([p.lt()])
-                p = p + Poly([p.lt()])
+                r = r + Poly([p_lm])
+                p = p + Poly([p_lm])
 
         return r
 
