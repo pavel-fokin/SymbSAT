@@ -106,7 +106,10 @@ class TestBuchberger(unittest.TestCase):
         for p in G:
             self.assertTrue(p in G_assert)
 
-    def test_buchberger5(self):
+    def test_buchberger_5(self):
+        """
+        Example from Sage Boolean Polynomials Documentation
+        """
         variables = ('x0', 'x1', 'x2', 'x3')
         x0, x1, x2, x3 = generate_n_vars(variables)
         _1 = Poly.one

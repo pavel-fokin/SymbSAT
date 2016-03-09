@@ -21,12 +21,14 @@ def autoreduce(G):
             G_red.append(G[i])
     return G_red
 
-
 def buchberger(F, variables):
     """
     Basic Buchberger algorithm without any optimizations
     """
-    G = F
+    if len(F)>1:
+        G = autoreduce(F)
+    else:
+        G = F
     k = len(G)
 
     x = generate_n_vars(variables)
@@ -44,12 +46,15 @@ def buchberger(F, variables):
         # case with field polynomial
         if i < 0:
             Gj_lm, xi = G[j].lt(), x[abs(i)-1].lt()
-            if not Gj_lm.isrelativelyprime(xi):
-                s = G[j]*x[abs(i)-1]
-            else:
+            if Gj_lm.isrelativelyprime(xi):
                 continue
+            s = G[j]*x[abs(i)-1]
         else:
             p, q = G[i], G[j]
+            p_lm, q_lm = p.lt(), q.lt()
+            #TODO Check first criteria
+            if p_lm.isrelativelyprime(q_lm):
+                continue
             s = Poly.S(p, q)
         h = s.NF(G)
         if h != Poly.zero:
