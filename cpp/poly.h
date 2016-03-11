@@ -1,6 +1,10 @@
+#ifndef POLY_H
+#define POLY_H
+
 #include <vector>
 
 #include "monom.h"
+
 
 class Poly {
     std::vector<Monom> mMonoms;
@@ -28,3 +32,5 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out, const Poly &a);
 };
+
+#endif // POLY_H

@@ -1,8 +1,10 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
+#include <iostream>
 
 #include "poly.h"
+
 
 Poly operator+(Poly& a, Poly& b) {
     std::vector<Monom> monoms;
@@ -15,9 +17,9 @@ Poly operator+(Poly& a, Poly& b) {
     return Poly(monoms);
 }
 
-Poly operator*(Poly& a, Monom& b) {
+Poly operator*(Poly& a, Poly& b) {
     for (auto&& m: a.mMonoms) {
-        std::cout << m*b << std::endl;
+        std::cout << m << std::endl;
     }
     return Poly();
 }
