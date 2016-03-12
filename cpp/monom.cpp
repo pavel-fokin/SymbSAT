@@ -1,8 +1,5 @@
 #include "monom.h"
 
-// const std::unique_ptr<Monom> Monom::sZero = std::make_unique<Monom>();
-// const std::unique_ptr<Monom> Monom::sOne = std::make_unique<Monom>();
-
 bool Monom::isdivisible(const Monom& other) const {
     if (other.isOne()) {
         return true;
@@ -12,6 +9,17 @@ bool Monom::isdivisible(const Monom& other) const {
         return mVars == (mVars | other.mVars);
     }
 
+}
+
+bool Monom::isrelativelyprime(const Monom& other) const {
+    if (mVars == other.mVars) {
+        return true;
+    } else if (this->isOne()) {
+        return true;
+    } else {
+        auto lcm = mVars | other.mVars;
+        return (lcm ^ mVars) == other.mVars;
+    }
 }
 
 Monom operator*(const Monom& a, const Monom& b) {
@@ -40,7 +48,6 @@ Monom operator/(const Monom& a, const Monom& b) {
         // return 1
         return Monom(0);
     }
-    // std::cout << a << b << std::endl;
     if (!a.isdivisible(b)) {
         // return 0
         return Monom();
@@ -66,7 +73,7 @@ std::ostream& operator<<(std::ostream& out, const Monom &a) {
     out << "[ ";
     for (size_t i=0; i<a.mVars.size(); ++i) {
         if (a.mVars[i]) {
-            out << i << " "; 
+            out << i << " ";
         }
     }
     out << "]";

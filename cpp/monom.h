@@ -8,17 +8,22 @@
 #include <memory>
 
 class Monom {
-    // first bit is indicate zero one
+    // first bit indicates zero/one
+    std::bitset<128> mVars;
 
 public:
-    std::bitset<128> mVars;
     Monom() {};
     Monom(size_t var) {
         mVars.set(var);
     }
     Monom(const Monom& m): mVars(m.mVars) {}
     Monom(const Monom&& m) noexcept : mVars(std::move(m.mVars)) {}
-    // Monom& operator=(const Monom&& other);
+    const Monom& operator=(Monom&& other) noexcept {
+        if (this != &other) {
+            mVars = std::move(other.mVars);
+        }
+        return *this;
+    }
     Monom& operator=(const Monom& other) {
         if (this != &other) {
             mVars = other.mVars;
@@ -50,11 +55,11 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out, const Monom &a);
 
-    // static const Monom *const sZero;
-    // static const Monom *const sOne;
-
-    // static const std::unique_ptr<Monom> sZero;
-    // static const std::unique_ptr<Monom> sOne;
+    struct hash {
+        size_t operator()(const Monom& x) const {
+            return std::hash<std::bitset<128>>()(x.mVars); 
+        }
+    };
 };
 
 #endif // MONOM_H

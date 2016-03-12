@@ -10,6 +10,7 @@ class TestMonom: public CppUnit::TestFixture {
     CPPUNIT_TEST(testMul);
     CPPUNIT_TEST(testIsDivisible);
     CPPUNIT_TEST(testDiv);
+    CPPUNIT_TEST(testIsRelativelyPrime);
 
     CPPUNIT_TEST_SUITE_END();
 public:
@@ -20,6 +21,7 @@ public:
     void testMul();
     void testIsDivisible();
     void testDiv();
+    void testIsRelativelyPrime();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestMonom);
@@ -84,4 +86,13 @@ void TestMonom::testDiv() {
     ab = a*b;
     CPPUNIT_ASSERT(ab/b == a);
     CPPUNIT_ASSERT(ab/a == b);
+}
+
+void TestMonom::testIsRelativelyPrime() {
+    Monom _0, _1(0), a(1), b(2), ab = a*b;
+
+    CPPUNIT_ASSERT(a.isrelativelyprime(a));
+    CPPUNIT_ASSERT(a.isrelativelyprime(_1));
+    CPPUNIT_ASSERT(a.isrelativelyprime(b));
+    CPPUNIT_ASSERT(!ab.isrelativelyprime(b));
 }
