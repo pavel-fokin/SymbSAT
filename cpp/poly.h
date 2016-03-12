@@ -41,7 +41,8 @@ public:
 
     Monom lm();
 
-    friend Poly operator+(Poly& a, Poly& b);
+    Poly operator+(const Poly& b) const;
+    // friend Poly operator+(Poly& a, Poly& b);
     friend Poly operator*(const Poly& a, const Monom& m);
     friend Poly operator*(Poly& a, Poly& b);
 

@@ -50,7 +50,7 @@ void TestPoly::testMul() {
 
     Poly p_a(a), p_b(b), p_c(c), p_abc;
 
-    p_abc = p_a + p_b;
+    p_abc = p_a + p_b + p_c;
     p_abc = p_abc*c;
     std::cout << std::endl << p_abc << std::endl;
 }

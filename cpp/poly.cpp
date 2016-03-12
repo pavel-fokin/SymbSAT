@@ -7,16 +7,26 @@
 #include "poly.h"
 
 
-Poly operator+(Poly& a, Poly& b) {
+Poly Poly::operator+(const Poly& b) const {
     std::vector<Monom> monoms;
     std::set_symmetric_difference(
-        a.mMonoms.begin(), a.mMonoms.end(),
+        mMonoms.begin(), mMonoms.end(),
         b.mMonoms.begin(), b.mMonoms.end(),
         std::back_inserter(monoms)
     );
 
     return Poly(monoms);
 }
+// Poly operator+(Poly& a, Poly& b) {
+    // std::vector<Monom> monoms;
+    // std::set_symmetric_difference(
+        // a.mMonoms.begin(), a.mMonoms.end(),
+        // b.mMonoms.begin(), b.mMonoms.end(),
+        // std::back_inserter(monoms)
+    // );
+
+    // return Poly(monoms);
+// }
 
 Poly operator*(const Poly& a, const Monom& b) {
     std::unordered_set<Monom, Monom::hash> monoms_set;
