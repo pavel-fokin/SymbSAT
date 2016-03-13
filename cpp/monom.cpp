@@ -58,7 +58,11 @@ Monom operator/(const Monom& a, const Monom& b) {
 }
 
 bool operator<(const Monom& a, const Monom& b) {
-    return a.mVars.to_string() < b.mVars.to_string();
+    for (size_t i = 1; i < a.mVars.size(); ++i) {
+        if (a.mVars[i] < b.mVars[i])
+            return true;
+    }
+    return false;
 }
 
 std::ostream& operator<<(std::ostream& out, const Monom &a) {
@@ -71,7 +75,8 @@ std::ostream& operator<<(std::ostream& out, const Monom &a) {
         return out;
     }
     out << "[ ";
-    for (size_t i=0; i<a.mVars.size(); ++i) {
+    // start from 1 because first bit is for 0/1
+    for (size_t i=1; i<a.mVars.size(); ++i) {
         if (a.mVars[i]) {
             out << i << " ";
         }

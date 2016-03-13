@@ -7,6 +7,7 @@ class TestMonom: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestMonom);
 
     CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testOrdering);
     CPPUNIT_TEST(testMul);
     CPPUNIT_TEST(testIsDivisible);
     CPPUNIT_TEST(testDiv);
@@ -18,6 +19,7 @@ public:
     void tearDown() {}
 
     void testConstructor();
+    void testOrdering();
     void testMul();
     void testIsDivisible();
     void testDiv();
@@ -31,6 +33,14 @@ void TestMonom::testConstructor() {
 
     CPPUNIT_ASSERT(m1.isZero());
     CPPUNIT_ASSERT(_1.isOne());
+}
+
+void TestMonom::testOrdering() {
+    Monom _0, _1(0), a(1), b(2), ab(a*b);
+
+    CPPUNIT_ASSERT(b < a);
+    CPPUNIT_ASSERT(b < ab);
+
 }
 
 void TestMonom::testMul() {
@@ -80,7 +90,6 @@ void TestMonom::testDiv() {
     // b = a/_1;
     CPPUNIT_ASSERT(a == a/_1);
 
-    // std::cout << std::endl << a << b << std::endl;
     CPPUNIT_ASSERT(a/b == _0);
 
     ab = a*b;

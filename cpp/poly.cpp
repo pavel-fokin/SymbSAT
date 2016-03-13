@@ -17,21 +17,14 @@ Poly Poly::operator+(const Poly& b) const {
 
     return Poly(monoms);
 }
-// Poly operator+(Poly& a, Poly& b) {
-    // std::vector<Monom> monoms;
-    // std::set_symmetric_difference(
-        // a.mMonoms.begin(), a.mMonoms.end(),
-        // b.mMonoms.begin(), b.mMonoms.end(),
-        // std::back_inserter(monoms)
-    // );
 
-    // return Poly(monoms);
-// }
-
-Poly operator*(const Poly& a, const Monom& b) {
+Poly Poly::operator*(const Monom& b) const {
+    if (isZero() || b.isZero()) {
+        return Poly();
+    }
     std::unordered_set<Monom, Monom::hash> monoms_set;
 
-    for (auto&& m: a.mMonoms) {
+    for (auto&& m: mMonoms) {
         Monom tmp(m*b);
 
         if (monoms_set.find(tmp) == monoms_set.end()) {
@@ -46,11 +39,24 @@ Poly operator*(const Poly& a, const Monom& b) {
     return Poly(monoms_vec);
 }
 
-Poly operator*(Poly& a, Poly& b) {
-    for (auto&& m: a.mMonoms) {
-        std::cout << m << std::endl;
+Poly Poly::operator*(const Poly& b) const {
+    if (isZero() || b.isZero()) {
+        // return 0
+        return Poly();
     }
-    return Poly();
+    std::unordered_set<Monom, Monom::hash> monoms_set;
+    for (auto&& m1: mMonoms) {
+        for (auto&& m2: b.mMonoms) {
+            Monom tmp(m1*m2);
+            if (monoms_set.find(tmp) == monoms_set.end()) {
+                monoms_set.insert(tmp);
+            } else {
+                monoms_set.erase(tmp);
+            }
+        }
+    }
+    std::vector<Monom> monoms_vec(std::begin(monoms_set), std::end(monoms_set));
+    return Poly(monoms_vec);
 }
 
 std::ostream& operator<<(std::ostream& out, const Poly &a) {

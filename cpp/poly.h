@@ -1,6 +1,7 @@
 #ifndef POLY_H
 #define POLY_H
 
+#include <algorithm>
 #include <initializer_list>
 #include <vector>
 
@@ -36,15 +37,17 @@ public:
     }
     // TODO
     bool isOne() const {
-        return false;
+        return mMonoms[0].isOne();
     }
 
-    Monom lm();
+    Monom lm() const {
+        auto lm = std::max_element(mMonoms.begin(), mMonoms.end());
+        return *lm;
+    };
 
     Poly operator+(const Poly& b) const;
-    // friend Poly operator+(Poly& a, Poly& b);
-    friend Poly operator*(const Poly& a, const Monom& m);
-    friend Poly operator*(Poly& a, Poly& b);
+    Poly operator*(const Monom& b) const;
+    Poly operator*(const Poly& b) const;
 
     friend std::ostream& operator<<(std::ostream& out, const Poly &a);
 };
