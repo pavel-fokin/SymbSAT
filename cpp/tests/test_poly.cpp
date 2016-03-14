@@ -9,6 +9,7 @@ class TestPoly: public CppUnit::TestFixture {
     CPPUNIT_TEST(testConstructor);
     CPPUNIT_TEST(testAdd);
     CPPUNIT_TEST(testMul);
+    CPPUNIT_TEST(testSpoly);
 
     CPPUNIT_TEST_SUITE_END();
 public:
@@ -18,6 +19,7 @@ public:
     void testConstructor();
     void testAdd();
     void testMul();
+    void testSpoly();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestPoly);
@@ -48,4 +50,19 @@ void TestPoly::testMul() {
 
     p_abc = p_a + p_b + p_c;
     p_abc = p_abc*c;
+}
+
+void TestPoly::testSpoly() {
+    Monom m_a(1), m_b(2),
+          m_c(3), m_d(4), m_one(0);
+    Poly a(m_a), b(m_b),
+         c(m_c), d(m_d),
+         _1(m_one);
+
+    Poly s1, s2;
+
+    s1 = spoly(a*b*c, a*b + _1);
+    s2 = spoly(a*b*c + _1, a*b + _1);
+
+    // CPPUNIT_ASSERT(true);
 }

@@ -55,4 +55,6 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Poly &a);
 };
 
+Poly spoly(const Poly&, const Poly&);
+
 #endif // POLY_H

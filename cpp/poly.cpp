@@ -71,3 +71,15 @@ std::ostream& operator<<(std::ostream& out, const Poly &a) {
     }
     return out;
 }
+
+Poly spoly(const Poly& f, const Poly& g) {
+    Monom f_lm = f.lm();
+    Monom g_lm = g.lm();
+    Monom lcm = f_lm*g_lm;
+
+    Poly spoly;
+
+    spoly = f*(lcm/f_lm) + g*(lcm/g_lm);
+
+    return spoly;
+}
