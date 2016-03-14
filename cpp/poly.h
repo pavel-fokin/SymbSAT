@@ -56,5 +56,6 @@ public:
 };
 
 Poly spoly(const Poly&, const Poly&);
+Poly normalform(const Poly&, const std::vector<Poly>&);
 
 #endif // POLY_H

@@ -83,3 +83,32 @@ Poly spoly(const Poly& f, const Poly& g) {
 
     return spoly;
 }
+
+Poly normalform(const Poly& f, const std::vector<Poly>& F) {
+    Poly p(f), r;
+
+    if (F.empty()) {
+        return r;
+    }
+
+    while (!p.isZero()) {
+        int i{0};
+        bool divisionoccured{false};
+        Monom p_lm, fi_lm;
+        while (i < F.size() && !divisionoccured) {
+            p_lm = p.lm();
+            fi_lm = F[i].lm();
+            if (p_lm.isdivisible(fi_lm)) {
+                p = p + F[i]*(p_lm/fi_lm);
+                divisionoccured = true;
+            } else {
+                i++;
+            }
+        }
+        if (!divisionoccured) {
+            r = r + Poly(p_lm);
+            p = p + Poly(p_lm);
+        }
+    }
+    return r;
+}
