@@ -56,7 +56,6 @@ class TestBoolPoly(unittest.TestCase):
         self.assertEqual('%s' % Poly.S(f, g), 'ab + acd + cd + 1')
 
     def test_NF(self):
-        return
         Monom.variables = ['x0', 'x1', 'x2', 'x3']
         x0 = Poly([Monom([1,0,0,0])])
         x1 = Poly([Monom([0,1,0,0])])
@@ -101,7 +100,6 @@ class TestBoolPoly(unittest.TestCase):
         self.assertEqual(str(p_nf), 'x2x3 + 1')
 
     def test_NF_1(self):
-        return
         Monom.variables = ['x1', 'x2', 'x3']
         x1 = Poly([Monom([1,0,0])])
         x2 = Poly([Monom([0,1,0])])
