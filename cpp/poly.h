@@ -37,10 +37,13 @@ public:
     }
     // TODO
     bool isOne() const {
-        return mMonoms[0].isOne();
+        return mMonoms.size() == 1 && mMonoms[0].isOne();
+        // return false
     }
 
     Monom lm() const {
+        if (isZero())
+            return Monom();
         auto lm = std::max_element(mMonoms.begin(), mMonoms.end());
         return *lm;
     };
