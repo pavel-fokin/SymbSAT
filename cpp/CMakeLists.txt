@@ -25,4 +25,6 @@ ADD_LIBRARY(boolpoly STATIC
     monom.cpp
     poly.h
     poly.cpp
+    gb.h
+    gb.cpp
 )
