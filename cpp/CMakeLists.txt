@@ -26,9 +26,3 @@ ADD_LIBRARY(boolpoly STATIC
     poly.h
     poly.cpp
 )
-
-ADD_EXECUTABLE(main main.cpp)
-
-TARGET_LINK_LIBRARIES( main
-    boolpoly
-)
