@@ -7,6 +7,7 @@ class TestPoly: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestPoly);
 
     CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testLM);
     CPPUNIT_TEST(testAdd);
     CPPUNIT_TEST(testMul);
     CPPUNIT_TEST(testSpoly);
@@ -19,6 +20,7 @@ public:
     void tearDown() {}
 
     void testConstructor();
+    void testLM();
     void testAdd();
     void testMul();
     void testSpoly();
@@ -36,6 +38,18 @@ void TestPoly::testConstructor() {
     Poly p4(monoms);
 
     CPPUNIT_ASSERT(true);
+}
+
+void TestPoly::testLM() {
+    Monom m_a(1), m_b(2),
+          m_c(3), m_d(4), m_one(0);
+    Poly a(m_a), b(m_b),
+         c(m_c), d(m_d),
+         _1(m_one);
+
+    Poly f1 = a + b + c + d;
+
+    CPPUNIT_ASSERT_EQUAL(m_a,  f1.lm());
 }
 
 void TestPoly::testAdd() {
@@ -89,11 +103,12 @@ void TestPoly::testNormalForm1() {
 
     p_nf = normalform(p, F);
 
-    // TODO x1x2x3 + x2
-    std::cout << std::endl << p_nf << std::endl;
+    CPPUNIT_ASSERT_EQUAL(x2*x3*x4 + x3, p_nf);
 }
 
 void TestPoly::testNormalForm2() {
+    // NormalForm against Groebner basis
+    // reduced to 0.
     Monom m_x1(1), m_x2(2),
           m_x3(3), m_x4(4), m_one(0);
 
@@ -110,5 +125,5 @@ void TestPoly::testNormalForm2() {
         x4 + _1
     };
     p_nf = normalform(p, F);
-    std::cout << std::endl << p_nf << std::endl;
+    CPPUNIT_ASSERT(p_nf.isZero());
 }

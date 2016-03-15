@@ -22,6 +22,17 @@ bool Monom::isrelativelyprime(const Monom& other) const {
     }
 }
 
+bool Monom::operator<(const Monom& b) const {
+    // start with 1 because 0-bit indicates zero/one
+    for (size_t i = 1; i < mVars.size(); ++i) {
+        if (mVars[i] < b.mVars[i])
+            return true;
+        else if (mVars[i] > b.mVars[i])
+            return false;
+    }
+    return false;
+}
+
 Monom operator*(const Monom& a, const Monom& b) {
     if (a.isOne()) {
         return b;
@@ -55,14 +66,6 @@ Monom operator/(const Monom& a, const Monom& b) {
     Monom tmp;
     tmp.mVars = a.mVars ^ b.mVars;
     return tmp;
-}
-
-bool operator<(const Monom& a, const Monom& b) {
-    for (size_t i = 1; i < a.mVars.size(); ++i) {
-        if (a.mVars[i] < b.mVars[i])
-            return true;
-    }
-    return false;
 }
 
 std::ostream& operator<<(std::ostream& out, const Monom &a) {

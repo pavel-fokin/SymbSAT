@@ -48,6 +48,7 @@ public:
         return *lm;
     };
 
+    bool operator==(const Poly&) const;
     Poly operator+(const Poly& b) const;
     Poly operator*(const Monom& b) const;
     Poly operator*(const Poly& b) const;

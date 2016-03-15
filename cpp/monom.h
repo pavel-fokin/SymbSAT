@@ -44,6 +44,7 @@ public:
     bool isdivisible(const Monom& other) const;
     bool isrelativelyprime(const Monom& other) const;
 
+    bool operator<(const Monom& a) const;
     bool operator==(const Monom& other) const {
         return mVars == other.mVars;
     }
@@ -51,7 +52,6 @@ public:
     friend Monom lcm(const Monom& a, const Monom& b);
     friend Monom operator*(const Monom& a, const Monom& b);
     friend Monom operator/(const Monom& a, const Monom& b);
-    friend bool operator<(const Monom& a, const Monom& b);
 
     friend std::ostream& operator<<(std::ostream& out, const Monom &a);
 

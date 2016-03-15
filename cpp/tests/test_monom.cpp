@@ -36,15 +36,19 @@ void TestMonom::testConstructor() {
 }
 
 void TestMonom::testOrdering() {
-    Monom _0, _1(0), a(1), b(2), ab(a*b);
+    Monom _0, _1(0), a(1), b(2), c(3), ab(a*b);
 
+    std::vector<Monom> monoms {a,c,b};
+
+    CPPUNIT_ASSERT(!(a < b));
     CPPUNIT_ASSERT(b < a);
+    CPPUNIT_ASSERT(c < a);
+    CPPUNIT_ASSERT(!(b < c));
     CPPUNIT_ASSERT(b < ab);
-
 }
 
 void TestMonom::testMul() {
-    Monom _0, _1(0), 
+    Monom _0, _1(0),
           a(1), b(2), c(3),
           abc;
 

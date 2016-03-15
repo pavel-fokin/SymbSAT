@@ -7,6 +7,15 @@
 #include "poly.h"
 
 
+// TODO Super naive implementation
+bool Poly::operator==(const Poly& other) const {
+    Poly a(*this), b(other);
+
+    std::sort(a.mMonoms.begin(), a.mMonoms.end());
+    std::sort(b.mMonoms.begin(), b.mMonoms.end());
+    return a.mMonoms == b.mMonoms;
+}
+
 Poly Poly::operator+(const Poly& b) const {
     std::vector<Monom> monoms;
     std::set_symmetric_difference(
@@ -92,8 +101,8 @@ Poly normalform(const Poly& f, const std::vector<Poly>& F) {
     }
 
     while (!p.isZero()) {
-        int i{0};
-        bool divisionoccured{false};
+        int i {0};
+        bool divisionoccured {false};
         Monom p_lm, fi_lm;
         while (i < F.size() && !divisionoccured) {
             p_lm = p.lm();
