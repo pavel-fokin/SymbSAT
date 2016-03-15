@@ -55,7 +55,7 @@ class TestBoolPoly(unittest.TestCase):
 
         self.assertEqual('%s' % Poly.S(f, g), 'ab + acd + cd + 1')
 
-    def test_NF(self):
+    def test_NF_1(self):
         Monom.variables = ['x0', 'x1', 'x2', 'x3']
         x0 = Poly([Monom([1,0,0,0])])
         x1 = Poly([Monom([0,1,0,0])])
@@ -77,15 +77,33 @@ class TestBoolPoly(unittest.TestCase):
 
         self.assertEqual(str(p_nf), 'x1x2x3 + x2')
 
+    def test_NF_2(self):
+        Monom.variables = ['x0', 'x1', 'x2', 'x3']
+        x0 = Poly([Monom([1,0,0,0])])
+        x1 = Poly([Monom([0,1,0,0])])
+        x2 = Poly([Monom([0,0,1,0])])
+        x3 = Poly([Monom([0,0,0,1])])
+
+        _1 = Poly.one
         # Groebner basis for F should reduce to 0
         G = [x0 + _1, x1 + _1, x2 + _1, x3 + _1]
+
+        p = x0*x1*x2 + x0*x1*x3 + x0*x2*x3 + x2
 
         p_nf = p.NF(G)
 
         self.assertEqual(str(p_nf), '0')
 
-        # Another example not reduced yet
-        F1 = [
+    def test_NF_3(self):
+        Monom.variables = ['x0', 'x1', 'x2', 'x3']
+        x0 = Poly([Monom([1,0,0,0])])
+        x1 = Poly([Monom([0,1,0,0])])
+        x2 = Poly([Monom([0,0,1,0])])
+        x3 = Poly([Monom([0,0,0,1])])
+
+        _1 = Poly.one
+
+        F = [
             x0 + x1 + x2 + x3,
             x0*x1 + x0*x3 + x1*x2 + x2*x3,
             x0*x1*x2 + x0*x1*x3 + x0*x2*x3 + x1*x2*x3,
@@ -95,11 +113,12 @@ class TestBoolPoly(unittest.TestCase):
 
         p2 = x1*x2*x3 + _1
 
-        p_nf = p2.NF(F1)
+        p_nf = p2.NF(F)
 
         self.assertEqual(str(p_nf), 'x2x3 + 1')
 
-    def test_NF_1(self):
+
+    def test_NF_4(self):
         Monom.variables = ['x1', 'x2', 'x3']
         x1 = Poly([Monom([1,0,0])])
         x2 = Poly([Monom([0,1,0])])
@@ -126,7 +145,7 @@ class TestBoolPoly(unittest.TestCase):
 
         self.assertTrue(s == nf)
 
-    def test_NF_2(self):
+    def test_NF_5(self):
         Monom.variables = ['x1', 'x2', 'x3']
         x1 = Poly([Monom([1,0,0])])
         x2 = Poly([Monom([0,1,0])])
