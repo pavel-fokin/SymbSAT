@@ -28,3 +28,10 @@ ADD_LIBRARY(boolpoly STATIC
     gb.h
     gb.cpp
 )
+
+ADD_EXECUTABLE(cnfread cnfread.cpp)
+
+TARGET_LINK_LIBRARIES( cnfread 
+  boolpoly
+)
+
