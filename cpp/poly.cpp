@@ -13,7 +13,8 @@ bool Poly::operator==(const Poly& other) const {
 
     std::sort(a.mMonoms.begin(), a.mMonoms.end());
     std::sort(b.mMonoms.begin(), b.mMonoms.end());
-    return a.mMonoms == b.mMonoms;
+    // return a.mMonoms == b.mMonoms;
+    return std::equal(a.mMonoms.begin(), a.mMonoms.end(), b.mMonoms.begin());
 }
 
 Poly Poly::operator+(const Poly& b) const {
@@ -101,7 +102,7 @@ Poly normalform(const Poly& f, const std::vector<Poly>& F) {
     Poly p(f), r;
 
     if (F.empty()) {
-        return r;
+        return p;
     }
 
     while (!p.isZero()) {

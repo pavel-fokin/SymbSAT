@@ -73,7 +73,7 @@ class Poly(list):
         r = Poly.zero
 
         if F == []:
-            return r
+            return p
 
         while p != Poly.zero:
             i = 0
