@@ -1,6 +1,6 @@
 #include "gb.h"
 
-std::vector<Poly> autoreduce(std::vector<Poly>& F) {
+std::vector<Poly> autoreduce(const std::vector<Poly>& F) {
     std::vector<Poly> G(F);
     std::vector<Poly> P;
 
@@ -37,29 +37,27 @@ std::vector<Poly> autoreduce(std::vector<Poly>& F) {
     return G;
 }
 
-std::vector<Poly> buchberger(std::vector<Poly>& F) {
-    std::vector<Poly> G{F};
+std::vector<Poly> buchberger(const std::vector<Poly>& F, const int num_vars) {
+    std::vector<Poly> G;
     std::vector<std::tuple<int, int>> pairs;
 
-    // std::cout << std::endl;
-    int num_vars{4};
+    G = autoreduce(F);
 
     int k = G.size();
     for (int i=-num_vars; i<k; ++i)
         for (int j=0; j<k; ++j)
             if (i<j) {
-                // std::cout << i  << " " << j << std::endl;
                 pairs.push_back(std::make_tuple(i, j));
             }
 
-    std::cout << std::endl;
+    // std::cout << std::endl;
     while (!pairs.empty()) {
         Poly s, h;
         int i, j;
 
         std::tie(i, j) = pairs.front();
         pairs.erase(pairs.begin());
-        std::cout << i  << " " << j << std::endl;
+        // std::cout << i  << " " << j << std::endl;
 
         if (i < 0) {
             Monom Gj_lm = G[j].lm(), xi(std::abs(i));
@@ -83,7 +81,7 @@ std::vector<Poly> buchberger(std::vector<Poly>& F) {
         }
     }
 
-    // G = autoreduce(G);
+    G = autoreduce(G);
 
     return G;
 }

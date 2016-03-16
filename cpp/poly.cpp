@@ -7,12 +7,12 @@
 #include "poly.h"
 
 
-// TODO Super naive implementation
 bool Poly::operator==(const Poly& other) const {
     Poly a(*this), b(other);
 
-    std::sort(a.mMonoms.begin(), a.mMonoms.end());
-    std::sort(b.mMonoms.begin(), b.mMonoms.end());
+    // TODO Super naive implementation
+    // std::sort(a.mMonoms.begin(), a.mMonoms.end());
+    // std::sort(b.mMonoms.begin(), b.mMonoms.end());
     // return a.mMonoms == b.mMonoms;
     return std::equal(a.mMonoms.begin(), a.mMonoms.end(), b.mMonoms.begin());
 }

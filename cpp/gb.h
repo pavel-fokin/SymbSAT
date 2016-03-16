@@ -3,7 +3,7 @@
 
 #include "poly.h"
 
-std::vector<Poly> autoreduce(std::vector<Poly>&);
-std::vector<Poly> buchberger(std::vector<Poly>&);
+std::vector<Poly> autoreduce(const std::vector<Poly>&);
+std::vector<Poly> buchberger(const std::vector<Poly>&, const int);
 
 #endif // GB_H
