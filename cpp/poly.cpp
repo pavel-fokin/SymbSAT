@@ -74,7 +74,11 @@ std::ostream& operator<<(std::ostream& out, const Poly &a) {
     } else if (a.isOne()) {
         out << "1";
     } else {
-        for (auto&& m: a.mMonoms) {
+        auto monoms(a.mMonoms);
+        std::sort(monoms.begin(), monoms.end());
+        std::reverse(monoms.begin(), monoms.end());
+        // for (auto&& m: a.mMonoms) {
+        for (auto&& m: monoms) {
             out << m << " ";
         }
     }

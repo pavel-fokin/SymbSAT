@@ -81,7 +81,7 @@ std::ostream& operator<<(std::ostream& out, const Monom &a) {
     // start from 1 because first bit is for 0/1
     for (size_t i=1; i<a.mVars.size(); ++i) {
         if (a.mVars[i]) {
-            out << i << " ";
+        out << "x" << i-1 << " ";
         }
     }
     out << "]";

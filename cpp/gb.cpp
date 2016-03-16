@@ -9,45 +9,59 @@ std::vector<Poly> autoreduce(std::vector<Poly>& F) {
         G.pop_back();
         h = normalform(h, P);
         if (!h.isZero()) {
-            for (auto& q: P) {
-                if (q.lm().isdivisible(h.lm())) {
-                    G.push_back(q);
-                    // P.erase(q);
+            auto itP = P.begin();
+            while ( itP != P.end() ) {
+                if ((*itP).lm().isdivisible(h.lm())) {
+                    G.push_back(*itP);
+                    P.erase(itP);
+                } else {
+                    ++itP;
                 }
             }
+            P.push_back(h);
         }
     }
 
+    int PSize = P.size();
+    for (int i=0; i<PSize; ++i) {
+        Poly h = P.front();
+        P.erase(P.begin());
+        h = normalform(h, P);
+        if (h.isZero()) {
+            --PSize;
+        } else {
+            P.push_back(h);
+        }
+    }
+    G = std::move(P);
     return G;
 }
 
 std::vector<Poly> buchberger(std::vector<Poly>& F) {
-    std::vector<Poly> G {F};
+    std::vector<Poly> G{F};
     std::vector<std::tuple<int, int>> pairs;
 
     // std::cout << std::endl;
     int num_vars{4};
 
     int k = G.size();
-    for (int i=-num_vars; i<k; ++i) 
-        for (int j=0; j<k; ++j) 
+    for (int i=-num_vars; i<k; ++i)
+        for (int j=0; j<k; ++j)
             if (i<j) {
                 // std::cout << i  << " " << j << std::endl;
                 pairs.push_back(std::make_tuple(i, j));
             }
-
-    std::reverse(pairs.begin(), pairs.end());
 
     std::cout << std::endl;
     while (!pairs.empty()) {
         Poly s, h;
         int i, j;
 
-        std::tie(i, j) = pairs.back();
-        pairs.pop_back();
+        std::tie(i, j) = pairs.front();
+        pairs.erase(pairs.begin());
         std::cout << i  << " " << j << std::endl;
 
-        if (i<0) {
+        if (i < 0) {
             Monom Gj_lm = G[j].lm(), xi(std::abs(i));
             if (Gj_lm.isrelativelyprime(xi))
                 continue;
@@ -65,9 +79,11 @@ std::vector<Poly> buchberger(std::vector<Poly>& F) {
             ++k;
             for (int i=-num_vars; i<k-1; ++i) {
                 pairs.push_back(std::make_tuple(i, k-1));
-            } 
+            }
         }
     }
-    
+
+    // G = autoreduce(G);
+
     return G;
 }
