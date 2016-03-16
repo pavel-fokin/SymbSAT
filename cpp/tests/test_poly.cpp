@@ -13,6 +13,7 @@ class TestPoly: public CppUnit::TestFixture {
     CPPUNIT_TEST(testSpoly);
     CPPUNIT_TEST(testNormalForm1);
     CPPUNIT_TEST(testNormalForm2);
+    CPPUNIT_TEST(testNormalForm3);
 
     CPPUNIT_TEST_SUITE_END();
 public:
@@ -26,6 +27,7 @@ public:
     void testSpoly();
     void testNormalForm1();
     void testNormalForm2();
+    void testNormalForm3();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestPoly);
@@ -126,4 +128,25 @@ void TestPoly::testNormalForm2() {
     };
     p_nf = normalform(p, F);
     CPPUNIT_ASSERT(p_nf.isZero());
+}
+
+void TestPoly::testNormalForm3() {
+    Monom m_x1(1), m_x2(2),
+          m_x3(3), m_x4(4), m_one(0);
+
+    Poly x1(m_x1), x2(m_x2),
+         x3(m_x3), x4(m_x4), _1(m_one);
+
+    Poly p = x2*x3*x4 + _1;
+    Poly p_nf;
+
+    std::vector<Poly> F {
+        x1 + x2 + x3 + x4,
+        x1*x2 + x2*x3 + x1*x3 + x3*x4,
+        x1*x2*x3 + x1*x2*x4 + x1*x3*x4 + x2*x3*x4,
+        x1*x2*x3*x4 + _1,
+        x2 + x4
+    };
+    p_nf = normalform(p, F);
+    CPPUNIT_ASSERT_EQUAL(x3*x4 + _1, p_nf);
 }
