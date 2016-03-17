@@ -14,8 +14,12 @@ class Poly {
 public:
     Poly() {};
     Poly(Monom& m) : mMonoms{m} {}
-    Poly(std::initializer_list<Monom> monoms) : mMonoms(monoms) {}
-    Poly(std::vector<Monom>& monoms) : mMonoms(monoms) {}
+    Poly(std::initializer_list<Monom> monoms) : mMonoms(monoms) {
+        std::sort(mMonoms.begin(), mMonoms.end());
+    }
+    Poly(std::vector<Monom>& monoms) : mMonoms(monoms) {
+        std::sort(mMonoms.begin(), mMonoms.end());
+    }
     Poly(const Poly& other) : mMonoms(other.mMonoms) {}
     Poly& operator=(const Poly& other) {
         if (this != &other) {
@@ -44,8 +48,9 @@ public:
     Monom lm() const {
         if (isZero())
             return Monom();
-        auto lm = std::max_element(mMonoms.begin(), mMonoms.end());
-        return *lm;
+        // auto lm = std::max_element(mMonoms.begin(), mMonoms.end());
+        // return *lm;
+        return mMonoms.back();
     };
 
     bool operator==(const Poly&) const;

@@ -24,11 +24,13 @@ bool Monom::isrelativelyprime(const Monom& other) const {
 
 bool Monom::operator<(const Monom& b) const {
     // start with 1 because 0-bit indicates zero/one
-    for (size_t i = 1; i < mVars.size(); ++i) {
-        if (mVars[i] < b.mVars[i])
-            return true;
-        else if (mVars[i] > b.mVars[i])
-            return false;
+    size_t msize = mVars.size();
+    for (size_t i = 1; i < msize; ++i) {
+        // if (mVars[i] < b.mVars[i])
+            // return true;
+        // else if (mVars[i] > b.mVars[i])
+            // return false;
+        if (mVars[i] ^ b.mVars[i]) return b.mVars[i];
     }
     return false;
 }
