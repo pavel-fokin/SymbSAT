@@ -31,30 +31,13 @@ def sat_groebner(P, variables):
         print('SAT')
 
 
-if __name__ == '__main__':
+def main():
 
-    # SAT
-    FILENAME1 = 'cnf/quinn.cnf'
-    # UNSAT
-    FILENAME2 = 'cnf/hole6.cnf'
-    FILENAME3 = 'cnf/dubois20.cnf'
-    FILENAME4 = 'cnf/dubois22.cnf'
-    FILENAME5 = 'cnf/aim-100-1_6-no-1.cnf'
-    # Minimal unsat
-    FILENAME6 = 'cnf/unsat.cnf'
-    FILENAME7 = 'cnf/rope_0001.shuffled.cnf'
-    FILENAME8 = 'cnf/marg/marg2x2.cnf'
-    FILENAME9 = 'cnf/marg/marg2x3.cnf'
-    FILENAME10 = 'cnf/marg/marg2x4.cnf'
-    FILENAME11 = 'cnf/marg/marg2x5.cnf'
-    FILENAME12 = 'cnf/marg/marg2x6.cnf'
-    FILENAME13 = 'cnf/x1_16.shuffled.cnf'
-
-    P, variables = cnftools.cnf2polys(FILENAME10)
-
-    # print()
-    # for p in P:
-        # print(p)
-
-    # sat_mult(P)
+    P, variables = cnftools.cnf2polys(sys.argv[1])
     sat_groebner(P, variables)
+    return 0
+
+
+if __name__ == '__main__':
+    import sys
+    sys.exit(main())
