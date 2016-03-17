@@ -106,7 +106,7 @@ Poly normalform(const Poly& f, const std::vector<Poly>& F) {
     }
 
     while (!p.isZero()) {
-        int i {0};
+        unsigned int i {0};
         bool divisionoccured {false};
         Monom p_lm, fi_lm;
         while (i < F.size() && !divisionoccured) {

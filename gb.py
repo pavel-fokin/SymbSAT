@@ -35,9 +35,7 @@ def buchberger(F, variables):
     assert x != []
 
     # Fill pairs with negative indexes for field polynomials
-    pairs = [(i, j) for i in range(-len(variables), 0) for j in range(len(G))]
-
-    pairs += list(itertools.combinations(range(len(G)), 2))
+    pairs = [(i, j) for i in range(-len(variables), k) for j in range(len(G))]
 
     count = 0
     while pairs != []:
