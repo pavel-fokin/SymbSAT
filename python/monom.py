@@ -40,7 +40,7 @@ class Monom(tuple):
         assert self.isdivisible(other)
 
         return Monom(map(operator.xor, self, other))
- 
+
     __div__ = __truediv__
 
     def __str__(self):
@@ -68,6 +68,12 @@ class Monom(tuple):
         # lcm = Monom(map(operator.or_, self, other))
         lcm = self.lcm(other)
         return Monom(map(operator.xor, lcm, self)) == other
+
+    def prolong(i):
+        """Prolongation of the monomial m*x
+        """
+        assert(not self[i])
+        self[i] = 1
 
     @property
     def degree(self):
