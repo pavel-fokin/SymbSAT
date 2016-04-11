@@ -52,10 +52,10 @@ void TestMonom::testMul() {
           a(1), b(2), c(3),
           abc;
 
-    b = _1*a;    
+    b = _1*a;
     CPPUNIT_ASSERT(a == b);
 
-    b = a*_1;    
+    b = a*_1;
     CPPUNIT_ASSERT(a == b);
 
     b = a*_0;
@@ -89,16 +89,25 @@ void TestMonom::testIsDivisible() {
 }
 
 void TestMonom::testDiv() {
-    Monom _0, _1(0), a(1), b(2), ab;
+    Monom _0, _1(0),
+          a(1), b(2), c(3),
+          ab(a*b), bc(b*c), abc(a*b*c);
 
     // b = a/_1;
-    CPPUNIT_ASSERT(a == a/_1);
+    // a == a/_1;
+    CPPUNIT_ASSERT_EQUAL(a, a/_1);
 
-    CPPUNIT_ASSERT(a/b == _0);
+    // a/b == _0;
+    CPPUNIT_ASSERT_EQUAL(_0, a/b);
 
-    ab = a*b;
-    CPPUNIT_ASSERT(ab/b == a);
-    CPPUNIT_ASSERT(ab/a == b);
+    // ab/b == a;
+    CPPUNIT_ASSERT_EQUAL(a, ab/b);
+    // ab/a == b;
+    CPPUNIT_ASSERT_EQUAL(b, ab/a);
+    // abc/ab == c;
+    CPPUNIT_ASSERT_EQUAL(c, abc/ab);
+    // ab/bc == 0;
+    CPPUNIT_ASSERT_EQUAL(_0, ab/bc);
 }
 
 void TestMonom::testIsRelativelyPrime() {
