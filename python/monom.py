@@ -76,6 +76,12 @@ class Monom(tuple):
         self[i] = 1
 
     @property
+    def vars(self):
+        """Return list of variables positions
+        """
+        return [i for i, v in enumerate(self) if v == 1]
+
+    @property
     def degree(self):
         return sum(self)
 

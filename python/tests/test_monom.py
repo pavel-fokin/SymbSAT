@@ -58,3 +58,7 @@ class TestBoolMonom(unittest.TestCase):
     def test_lcm(self):
         self.assertTrue(True)
 
+    def test_vars(self):
+        m1 = Monom([1,0,1,0])
+
+        self.assertEqual([0,2], m1.vars)
