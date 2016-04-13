@@ -17,9 +17,12 @@ class ZDD(object):
     _one = Node(-1, None, None)
     _zero = Node(-1, None, None)
 
-    def __init__(self, var):
+    def __init__(self, var=-1):
         self._cache = {}
-        self.root = self._create_node(var, ZDD._one, ZDD._zero)
+        if var < 0:
+            self.root = ZDD._zero
+        else:
+            self.root = self._create_node(var, ZDD._one, ZDD._zero)
 
     def _create_node(self, var, m, a):
         r = None
@@ -50,21 +53,27 @@ class ZDD(object):
             r = a if m == ZDD._zero else self._create_node(i.var, m, a)
         elif i.var == j.var:
             m = self._add(i.mul, i.add)
-            r = ZDD._zero if m == ZDD.__zero else self._create_node(j.var, m, ZDD._zero)
+            if m == ZDD._zero:
+                r = ZDD._zero
+            else:
+                self._create_node(j.var, m, ZDD._zero)
         elif i.var >= 0:
             r = self._create_node(j.var, i, ZDD._zero)
         else:
-            r = ZDD._zero if i == ZDD._zero else self._create_node(j.var, ZDD._one, ZDD._zero)
+            if i == ZDD._zero:
+                r = ZDD._zero
+            else:
+                self._create_node(j.var, ZDD._one, ZDD._zero)
         return r
 
     def __add__(self, other):
-        r = ZDD(-1)
+        r = ZDD()
         r.root = self._add(self.root, other.root)
         r._cache = self._cache.copy()
         return r
 
     def __mul__(self, other):
-        r = ZDD(-1)
+        r = ZDD()
         r.root = self._mul(self.root, other.root)
         r._cache = self._cache.copy()
         return r

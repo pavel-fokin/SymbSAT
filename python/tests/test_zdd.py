@@ -22,10 +22,6 @@ class TestZDD(unittest.TestCase):
 
         z3 = z1 * z2
 
-        print()
-        for m in z3:
-            print(m)
-
         self.assertTrue(True)
 
     def test_lm(self):
@@ -34,12 +30,6 @@ class TestZDD(unittest.TestCase):
 
         z3 = z1 * z2 + z1
 
-        print()
-        for m in z3:
-            print(m)
-
-        print(z3.lm())
-
         self.assertTrue(True)
 
     def test_iter(self):
@@ -47,9 +37,5 @@ class TestZDD(unittest.TestCase):
         z2 = ZDD(2)
 
         z3 = z1 + z2
-
-        print()
-        for m in z3:
-            print(m)
 
         self.assertTrue(True)
