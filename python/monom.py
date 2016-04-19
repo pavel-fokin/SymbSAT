@@ -15,21 +15,19 @@ class Monom(tuple):
         return super().__new__(cls, it)
 
     def __mul__(self, other):
-        if self == Monom.one:
+        if self.isOne():
             return other
-        if other == Monom.one:
+        if other.isOne():
             return self
-        if self == Monom.zero or other == Monom.zero:
+        if self.isZero() or other.isZero():
             return Monom.zero
-
-        assert len(self) == len(other)
 
         return Monom(map(operator.or_, self, other))
 
     def __truediv__(self, other):
-        if other == Monom.one:
+        if other.isOne():
             return self
-        if self == Monom.one:
+        if self.isOne():
             return Monom.zero
         if self == other:
             return Monom.one
@@ -41,26 +39,33 @@ class Monom(tuple):
     __div__ = __truediv__
 
     def __str__(self):
-        if self == Monom.one:
+        if self.isOne():
             return "1"
-        if self == Monom.zero:
+        if self.isZero():
             return "0"
-        return "".join(l for v, l in zip(self, self.variables) if v == 1)
+        #  return "".join(l for v, l in zip(self, self.variables) if v == 1)
+        return str(self.vars)
 
     def lcm(self, other):
         return self*other
 
+    def isOne(self):
+        return id(self) == id(Monom.one)
+
+    def isZero(self):
+        return id(self) == id(Monom.zero)
+
     def isdivisible(self, other):
-        if other == Monom.one:
+        if other.isOne():
             return True
-        if self == Monom.one:
+        if self.isOne():
             return False
         return self == Monom(map(operator.or_, self, other))
 
     def isrelativelyprime(self, other):
         if self == other:
             return True
-        if self == Monom.one:
+        if self.isOne():
             return True
         lcm = self.lcm(other)
         return Monom(map(operator.xor, lcm, self)) == other
@@ -88,5 +93,5 @@ class Monom(tuple):
         raise NotImplemented
 
 
-Monom.one = Monom((-1,))
+Monom.one = Monom(())
 Monom.zero = Monom(())
