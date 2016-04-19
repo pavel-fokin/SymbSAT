@@ -7,30 +7,41 @@ from monom import Monom
 class TestBoolMonom(unittest.TestCase):
 
     def setUp(self):
-        Monom.variables = "abcd"
+        Monom.size = 4
+        self.variables = (
+            Monom(vars=[0]), # a
+            Monom(vars=[1]), # b
+            Monom(vars=[2]), # c
+            Monom(vars=[3]), # d
+        )
+
+    def test_zero_one(self):
+        self.assertNotEqual(id(Monom.zero), id(Monom.one))
 
     def test_init(self):
-        m1 = Monom([1,1,1,0])
-        m2 = Monom([1,1,0,0])
-        m3 = Monom([0,0,1,0])
-        m4 = Monom([0,0,0,1])
+        abcd = Monom((1,1,1,1))
+        abc  = Monom(vars=[0,1,2])
+        ab   = Monom(vars=[0,1])
+        c    = Monom(vars=[2])
+        d    = Monom(vars=[3])
+        _0   = Monom()
 
-        self.assertEqual(m1, (1,1,1,0))
-        self.assertEqual(m2, (1,1,0,0))
-        self.assertEqual(m3, (0,0,1,0))
-        self.assertEqual(m4, (0,0,0,1))
+
+        self.assertEqual(abcd, (1,1,1,1))
+        self.assertEqual(abc, (1,1,1,0))
+        self.assertEqual(ab, (1,1,0,0))
+        self.assertEqual(c, (0,0,1,0))
+        self.assertEqual(d, (0,0,0,1))
+        self.assertTrue(_0.isZero())
 
     def test_mul(self):
-        a = Monom((1,0,0,0))
-        b = Monom((0,1,0,0))
+        a, b = self.variables[:2]
 
         self.assertEqual(a*a, a)
         self.assertEqual(b*a, a*b)
 
     def test_truediv(self):
-        a = Monom([1,0,0,0])
-        b = Monom([0,1,0,0])
-        c = Monom([0,0,1,0])
+        a, b, c = self.variables[:3]
 
         ab = a*b
         bc = b*c
@@ -39,11 +50,11 @@ class TestBoolMonom(unittest.TestCase):
         _0, _1 = Monom.zero, Monom.one
 
         # 1/a == 0
-        self.assertEqual(_0, _1/a)
+        self.assertTrue((_1/a).isZero())
         # a == a/1
         self.assertEqual(a, a/_1)
         # a/b == 0
-        self.assertEqual(_0, a/b)
+        self.assertTrue((a/b).isZero())
         # ab/b == a
         self.assertEqual(a, ab/b)
         # ab/a == b
@@ -51,36 +62,34 @@ class TestBoolMonom(unittest.TestCase):
         # abc/ab == c
         self.assertEqual(c, abc/ab)
         # ab/bc == 0
-        self.assertEqual(_0, ab/bc)
+        self.assertTrue((ab/bc).isZero())
 
     def test_isdivisible(self):
-        m = Monom([1,0,0,0])
+        a, b, c = self.variables[:3]
 
-        self.assertFalse(Monom.one.isdivisible(m))
+        self.assertFalse(Monom.one.isdivisible(a))
 
         self.assertTrue(Monom.one.isdivisible(Monom.one))
 
     def test_isrelativelyprime(self):
-        m1 = Monom([1,0,0,0])
-        m2 = Monom([0,1,0,0])
-        self.assertTrue(m1.isrelativelyprime(m2))
+        a, b, c = self.variables[:3]
 
-        m1 = Monom([1,0,1,0])
-        m2 = Monom([0,1,0,0])
-        self.assertTrue(m1.isrelativelyprime(m2))
+        self.assertTrue(a.isrelativelyprime(b))
 
-        m1 = Monom([1,0,0,0])
-        m2 = Monom([1,0,0,0])
-        self.assertTrue(m1.isrelativelyprime(m2))
+        ac = a*c
+        self.assertTrue(ac.isrelativelyprime(b))
 
-        m1 = Monom([1,1,0,0])
-        m2 = Monom([0,1,0,0])
-        self.assertFalse(m1.isrelativelyprime(m2))
+        self.assertTrue(a.isrelativelyprime(a))
+
+        ab = a*b
+        self.assertFalse(ab.isrelativelyprime(b))
 
     def test_lcm(self):
         self.assertTrue(True)
 
     def test_vars(self):
-        m1 = Monom([1,0,1,0])
+        a, b, c = self.variables[:3]
 
-        self.assertEqual([1,3], m1.vars)
+        ac = a*c
+
+        self.assertEqual([0,2], ac.vars)

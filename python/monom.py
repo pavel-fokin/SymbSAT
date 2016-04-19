@@ -2,17 +2,26 @@
 Boolean Monom
 """
 
+import itertools
 import operator
 
 
 class Monom(tuple):
 
-    variables = []
+    size = 0
     zero = None
     one = None
 
-    def __new__(cls, it):
-        return super().__new__(cls, it)
+    def __new__(cls, bits=None, vars=None):
+        if bits is not None:
+            return super().__new__(cls, bits)
+        elif vars is not None:
+            bits = list(itertools.repeat(0, Monom.size))
+            for var in vars:
+                bits[var] = 1
+            return super().__new__(cls, bits)
+        else:
+            return Monom.zero
 
     def __mul__(self, other):
         if self.isOne():
