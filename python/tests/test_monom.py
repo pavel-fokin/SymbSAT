@@ -25,11 +25,30 @@ class TestBoolMonom(unittest.TestCase):
         self.assertEqual(str(m2), 'ab')
 
     def test_truediv(self):
-        m = Monom([1,0,0,0])
+        a = Monom([1,0,0,0])
+        b = Monom([0,1,0,0])
+        c = Monom([0,0,1,0])
 
-        r = Monom.one/m
+        ab = a*b
+        bc = b*c
+        abc = a*b*c
 
-        self.assertTrue(True)
+        _0, _1 = Monom.zero, Monom.one
+
+        # 1/a == 0
+        self.assertEqual(_0, _1/a)
+        # a == a/1
+        self.assertEqual(a, a/_1)
+        # a/b == 0
+        self.assertEqual(_0, a/b)
+        # ab/b == a
+        self.assertEqual(a, ab/b)
+        # ab/a == b
+        self.assertEqual(b, ab/a)
+        # abc/ab == c
+        self.assertEqual(c, abc/ab)
+        # ab/bc == 0
+        self.assertEqual(_0, ab/bc)
 
     def test_isdivisible(self):
         m = Monom([1,0,0,0])

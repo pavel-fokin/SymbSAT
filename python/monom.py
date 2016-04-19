@@ -31,13 +31,10 @@ class Monom(tuple):
             return self
         if self == Monom.one:
             return Monom.zero
-
-        assert len(self) == len(other)
-
         if self == other:
             return Monom.one
-
-        assert self.isdivisible(other)
+        if not self.isdivisible(other):
+            return Monom.zero
 
         return Monom(map(operator.xor, self, other))
 
@@ -65,7 +62,6 @@ class Monom(tuple):
             return True
         if self == Monom.one:
             return True
-        # lcm = Monom(map(operator.or_, self, other))
         lcm = self.lcm(other)
         return Monom(map(operator.xor, lcm, self)) == other
 
