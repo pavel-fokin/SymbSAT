@@ -40,7 +40,7 @@ class Poly(list):
             return "0"
         return " + ".join(map(str, sorted(self, reverse=True)))
 
-    def lt(self):
+    def lm(self):
         if self == Poly.zero:
             return Monom.zero
         return self[0]
@@ -50,9 +50,9 @@ class Poly(list):
         """
         Return s-polynomial
         """
-        f_lt, g_lt = f.lt(), g.lt()
-        lcm = f_lt.lcm(g_lt)
-        spoly = f*Poly([lcm/f_lt]) + g*Poly([lcm/g_lt])
+        f_lm, g_lm = f.lm(), g.lm()
+        lcm = f_lm.lcm(g_lm)
+        spoly = f*Poly([lcm/f_lm]) + g*Poly([lcm/g_lm])
         return spoly
 
     @staticmethod
@@ -79,7 +79,7 @@ class Poly(list):
             i = 0
             divisionoccured = False
             while i < len(F) and divisionoccured == False:
-                p_lm, fi_lm = p.lt(), F[i].lt()
+                p_lm, fi_lm = p.lm(), F[i].lm()
                 if p_lm.isdivisible(fi_lm):
                     p = p + F[i]*Poly([p_lm/fi_lm])
                     divisionoccured = True

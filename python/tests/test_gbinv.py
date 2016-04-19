@@ -10,7 +10,6 @@ class TestGBInv(unittest.TestCase):
         m1 = monom.Monom([1,1,1,0])
 
         vars_M = gbinv.nmulti_vars(m1)
-        print(list(vars_M))
 
         self.assertTrue(True)
 

@@ -18,7 +18,7 @@ class TestBoolPoly(unittest.TestCase):
 
         self.assertEqual(p1 + p2, Poly.zero)
 
-    def test_lt(self):
+    def test_lm(self):
         variables = ('a', 'b', 'c', 'd')
         a, b, c, d = generate_n_vars(variables)
         _1 = Poly.one
@@ -26,8 +26,8 @@ class TestBoolPoly(unittest.TestCase):
         f = a*b*c + c*d + a*b + _1
         g = c*d + b
 
-        self.assertEqual(str(f.lt()), 'abc')
-        self.assertEqual(str(g.lt()), 'b')
+        self.assertEqual(str(f.lm()), 'abc')
+        self.assertEqual(str(g.lm()), 'b')
 
     def test_add(self):
         a = Poly([Monom([1,0,0,0])])

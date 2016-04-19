@@ -43,13 +43,13 @@ def buchberger(F, variables):
 
         # case with field polynomial
         if i < 0:
-            Gj_lm, xi = G[j].lt(), x[abs(i)-1].lt()
+            Gj_lm, xi = G[j].lm(), x[abs(i)-1].lm()
             if Gj_lm.isrelativelyprime(xi):
                 continue
             s = G[j]*x[abs(i)-1]
         else:
             p, q = G[i], G[j]
-            p_lm, q_lm = p.lt(), q.lt()
+            p_lm, q_lm = p.lm(), q.lm()
             #TODO Check first criteria
             if p_lm.isrelativelyprime(q_lm):
                 continue
