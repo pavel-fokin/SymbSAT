@@ -26,8 +26,8 @@ class TestBoolPoly(unittest.TestCase):
         f = a*b*c + c*d + a*b + _1
         g = c*d + b
 
-        self.assertEqual(str(f.lm()), 'abc')
-        self.assertEqual(str(g.lm()), 'b')
+        self.assertEqual(f.lm(), (a*b*c).lm())
+        self.assertEqual(g.lm(), b.lm())
 
     def test_add(self):
         a = Poly([Monom([1,0,0,0])])
@@ -37,7 +37,7 @@ class TestBoolPoly(unittest.TestCase):
 
         p = (a+b+c+d)*b*c
 
-        self.assertEqual(str(p), 'abc + bcd')
+        self.assertEqual(p, a*b*c + b*c*d)
 
     def test_S(self):
         a = Poly([Monom([1,0,0,0])])
@@ -47,13 +47,17 @@ class TestBoolPoly(unittest.TestCase):
 
         _1 = Poly([Monom.one])
 
-        self.assertEqual('%s' % Poly.S(a*b*c, a*b + _1), 'c')
-        self.assertEqual('%s' % Poly.S(a*b*c + _1, a*b + _1), 'c + 1')
+        s = Poly.S(a*b*c, a*b + _1)
+        self.assertEqual(s, c)
+
+        s = Poly.S(a*b*c + _1, a*b + _1)
+        self.assertEqual(s, c + _1)
 
         f = a*b*c + c*d + a*b + _1
         g = c*d + b
 
-        self.assertEqual('%s' % Poly.S(f, g), 'ab + acd + cd + 1')
+        s = Poly.S(f, g)
+        self.assertEqual(s, a*b + a*c*d + c*d + _1)
 
     def test_NF_1(self):
         Monom.variables = ['x0', 'x1', 'x2', 'x3']
@@ -75,7 +79,7 @@ class TestBoolPoly(unittest.TestCase):
 
         p_nf = p.NF(F)
 
-        self.assertEqual(str(p_nf), 'x1x2x3 + x2')
+        self.assertEqual(p_nf, x1*x2*x3 + x2)
 
     def test_NF_2(self):
         Monom.variables = ['x0', 'x1', 'x2', 'x3']
@@ -85,6 +89,7 @@ class TestBoolPoly(unittest.TestCase):
         x3 = Poly([Monom([0,0,0,1])])
 
         _1 = Poly.one
+        _0 = Poly.zero
         # Groebner basis for F should reduce to 0
         G = [x0 + _1, x1 + _1, x2 + _1, x3 + _1]
 
@@ -92,7 +97,7 @@ class TestBoolPoly(unittest.TestCase):
 
         p_nf = p.NF(G)
 
-        self.assertEqual(str(p_nf), '0')
+        self.assertEqual(_0, p_nf)
 
     def test_NF_3(self):
         Monom.variables = ['x0', 'x1', 'x2', 'x3']
@@ -115,7 +120,7 @@ class TestBoolPoly(unittest.TestCase):
 
         p_nf = p2.NF(F)
 
-        self.assertEqual(str(p_nf), 'x2x3 + 1')
+        self.assertEqual(p_nf, x2*x3 + _1)
 
 
     def test_NF_4(self):
