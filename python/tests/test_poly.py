@@ -1,26 +1,26 @@
 import unittest
 
 from monom import Monom
-from poly import Poly, generate_n_vars
+from poly import Poly
+from ring import BoolPolyRing
 
 
 class TestBoolPoly(unittest.TestCase):
 
     def setUp(self):
-        Monom.variables = "abcd"
+        self.B = BoolPolyRing(4)
 
     def test_init(self):
         self.assertTrue(True)
 
     def test_zero_poly(self):
-        p1 = Poly([Monom([1,0,0,0])])
-        p2 = Poly([Monom([1,0,0,0])])
+        p1 = Poly([Monom([1, 0, 0, 0])])
+        p2 = Poly([Monom([1, 0, 0, 0])])
 
         self.assertEqual(p1 + p2, Poly.zero)
 
     def test_lm(self):
-        variables = ('a', 'b', 'c', 'd')
-        a, b, c, d = generate_n_vars(variables)
+        a, b, c, d = self.B.gens
         _1 = Poly.one
 
         f = a*b*c + c*d + a*b + _1
@@ -30,20 +30,14 @@ class TestBoolPoly(unittest.TestCase):
         self.assertEqual(g.lm(), b.lm())
 
     def test_add(self):
-        a = Poly([Monom([1,0,0,0])])
-        b = Poly([Monom([0,1,0,0])])
-        c = Poly([Monom([0,0,1,0])])
-        d = Poly([Monom([0,0,0,1])])
+        a, b, c, d = self.B.gens
 
         p = (a+b+c+d)*b*c
 
         self.assertEqual(p, a*b*c + b*c*d)
 
     def test_S(self):
-        a = Poly([Monom([1,0,0,0])])
-        b = Poly([Monom([0,1,0,0])])
-        c = Poly([Monom([0,0,1,0])])
-        d = Poly([Monom([0,0,0,1])])
+        a, b, c, d = self.B.gens
 
         _1 = Poly([Monom.one])
 
@@ -60,11 +54,7 @@ class TestBoolPoly(unittest.TestCase):
         self.assertEqual(s, a*b + a*c*d + c*d + _1)
 
     def test_NF_1(self):
-        Monom.variables = ['x0', 'x1', 'x2', 'x3']
-        x0 = Poly([Monom([1,0,0,0])])
-        x1 = Poly([Monom([0,1,0,0])])
-        x2 = Poly([Monom([0,0,1,0])])
-        x3 = Poly([Monom([0,0,0,1])])
+        x0, x1, x2, x3 = self.B.gens
 
         _1 = Poly.one
 
@@ -82,11 +72,7 @@ class TestBoolPoly(unittest.TestCase):
         self.assertEqual(p_nf, x1*x2*x3 + x2)
 
     def test_NF_2(self):
-        Monom.variables = ['x0', 'x1', 'x2', 'x3']
-        x0 = Poly([Monom([1,0,0,0])])
-        x1 = Poly([Monom([0,1,0,0])])
-        x2 = Poly([Monom([0,0,1,0])])
-        x3 = Poly([Monom([0,0,0,1])])
+        x0, x1, x2, x3 = self.B.gens
 
         _1 = Poly.one
         _0 = Poly.zero
@@ -100,11 +86,7 @@ class TestBoolPoly(unittest.TestCase):
         self.assertEqual(_0, p_nf)
 
     def test_NF_3(self):
-        Monom.variables = ['x0', 'x1', 'x2', 'x3']
-        x0 = Poly([Monom([1,0,0,0])])
-        x1 = Poly([Monom([0,1,0,0])])
-        x2 = Poly([Monom([0,0,1,0])])
-        x3 = Poly([Monom([0,0,0,1])])
+        x0, x1, x2, x3 = self.B.gens
 
         _1 = Poly.one
 
@@ -122,12 +104,8 @@ class TestBoolPoly(unittest.TestCase):
 
         self.assertEqual(p_nf, x2*x3 + _1)
 
-
     def test_NF_4(self):
-        Monom.variables = ['x1', 'x2', 'x3']
-        x1 = Poly([Monom([1,0,0])])
-        x2 = Poly([Monom([0,1,0])])
-        x3 = Poly([Monom([0,0,1])])
+        x1, x2, x3 = self.B.gens[:3]
 
         _1 = Poly.one
 
@@ -151,10 +129,7 @@ class TestBoolPoly(unittest.TestCase):
         self.assertTrue(s == nf)
 
     def test_NF_5(self):
-        Monom.variables = ['x1', 'x2', 'x3']
-        x1 = Poly([Monom([1,0,0])])
-        x2 = Poly([Monom([0,1,0])])
-        x3 = Poly([Monom([0,0,1])])
+        x1, x2, x3 = self.B.gens[:3]
 
         _1 = Poly.one
 
