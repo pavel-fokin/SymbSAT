@@ -2,11 +2,7 @@
 Groebner Basis
 """
 
-import sys
-import itertools
-import time
-
-from poly import Poly, generate_n_vars
+from poly import Poly
 
 
 def autoreduce(G):
@@ -21,21 +17,21 @@ def autoreduce(G):
             G_red.append(G[i])
     return G_red
 
-def buchberger(F, variables):
+
+def buchberger(F, BRing):
     """
     Basic Buchberger algorithm without any optimizations
     """
-    if len(F)>1:
+    if len(F) > 1:
         G = autoreduce(F)
     else:
         G = F
     k = len(G)
 
-    x = generate_n_vars(variables)
-    assert x != []
+    x = BRing.gens
 
     # Fill pairs with negative indexes for field polynomials
-    pairs = [(i, j) for i in range(-len(variables), k) for j in range(len(G))]
+    pairs = [(i, j) for i in range(-len(BRing.gens), k) for j in range(len(G))]
 
     count = 0
     while pairs != []:
@@ -50,7 +46,7 @@ def buchberger(F, variables):
         else:
             p, q = G[i], G[j]
             p_lm, q_lm = p.lm(), q.lm()
-            #TODO Check first criteria
+            # TODO Check first criteria
             if p_lm.isrelativelyprime(q_lm):
                 continue
             s = Poly.S(p, q)
@@ -58,7 +54,7 @@ def buchberger(F, variables):
         if h != Poly.zero:
             G.append(h)
             k += 1
-            pairs += [(i, k-1) for i in range(-len(variables), k-1)]
+            pairs += [(i, k-1) for i in range(-len(BRing.gens), k-1)]
         count += 1
 
     # Autoreduce

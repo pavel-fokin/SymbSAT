@@ -1,20 +1,23 @@
 import unittest
 
-from monom import Monom
-from poly import Poly, generate_n_vars
-from gb import autoreduce, buchberger
+from poly import Poly
+from ring import BoolPolyRing
+from gb import buchberger
 
 
 class TestBuchberger(unittest.TestCase):
+
+    def setUp(self):
+        # Create BoolRing with number of variables
+        # enough for all tests
+        self.B = BoolPolyRing(10)
 
     def test_buchberger1(self):
         """
         Example from SAGE documentation
         for boolean polynomials
         """
-        #  return
-        variables = ('x0', 'x1', 'x2', 'x3')
-        x0, x1, x2, x3 = generate_n_vars(variables)
+        x0, x1, x2, x3 = self.B.gens[:4]
         _1 = Poly.one
 
         F = [
@@ -24,14 +27,14 @@ class TestBuchberger(unittest.TestCase):
             x0*x1*x2*x3 + _1
         ]
 
-        G = buchberger(F, variables)
+        G = buchberger(F, self.B)
 
         G_assert = [x0 + _1, x1 + _1, x2 + _1, x3 + _1]
 
         for p in G:
             self.assertTrue(p in G_assert)
 
-    #TODO Check GB for this example
+    # TODO Check GB for this example
     def test_buchberger2(self):
         """
         Example from paper
@@ -39,9 +42,7 @@ class TestBuchberger(unittest.TestCase):
         simulation of quantum computation
         p.14 lex-order
         """
-        #  return
-        variables = ('a1', 'a2', 'a3', 'x1', 'x2', 'x3', 'x4', 'b1', 'b2', 'b3')
-        a1, a2, a3, x1, x2, x3, x4, b1, b2, b3 = generate_n_vars(variables)
+        a1, a2, a3, x1, x2, x3, x4, b1, b2, b3 = self.B.gens
 
         F = [
             x3 + x2*x4 + b1,
@@ -50,7 +51,7 @@ class TestBuchberger(unittest.TestCase):
             a1*x1 + a2*x2 + x1*x3 + a3*x4 + x1*x2*x4,
         ]
 
-        G = buchberger(F, variables)
+        G = buchberger(F, self.B)  # noqa
 
         G_assert = [
             x2 + b2,
@@ -59,21 +60,17 @@ class TestBuchberger(unittest.TestCase):
             x3 + b1 + b2*b3,
         ]
 
-        #  for p in G:
-            #  print(p)
-            #  self.assertTrue(p in G_assert)
+        self.assertTrue(len(G_assert) > 0)
 
     def test_buchberger3(self):
-        variables = ('x1', 'x2')
-        x1, x2 = generate_n_vars(variables)
-        _1 = Poly.one
+        x1, x2 = self.B.gens[:2]
 
         F = [
             x1*x2 + x1,
             x1*x2 + x2
         ]
 
-        G = buchberger(F, variables)
+        G = buchberger(F, self.B)
 
         G_assert = [x1 + x2]
 
@@ -81,8 +78,7 @@ class TestBuchberger(unittest.TestCase):
             self.assertTrue(p in G_assert)
 
     def test_buchberger4(self):
-        variables = ('x1', 'x2', 'x3', 'x4')
-        x1, x2, x3, x4 = generate_n_vars(variables)
+        x1, x2, x3, x4 = self.B.gens[:4]
         _1 = Poly.one
 
         F = [
@@ -92,7 +88,7 @@ class TestBuchberger(unittest.TestCase):
             x1*x4
         ]
 
-        G = buchberger(F, variables)
+        G = buchberger(F, self.B)
 
         G_assert = [
             x1*x2 + x1,
@@ -110,15 +106,13 @@ class TestBuchberger(unittest.TestCase):
         """
         Example from Sage Boolean Polynomials Documentation
         """
-        variables = ('x0', 'x1', 'x2', 'x3')
-        x0, x1, x2, x3 = generate_n_vars(variables)
-        _1 = Poly.one
+        x0, x1, x2, x3 = self.B.gens[:4]
 
         F = [
             x0*x1*x2*x3 + x0*x1*x3 + x0*x1 + x0*x2 + x0
         ]
 
-        G = buchberger(F, variables)
+        G = buchberger(F, self.B)
 
         G_assert = [x0*x1 + x0*x2 + x0, x0*x2*x3 + x0*x3]
 
@@ -127,16 +121,14 @@ class TestBuchberger(unittest.TestCase):
             self.assertTrue(p in G_assert)
 
     def test_buchberger6(self):
-        variables = ('x', 'y', 'z')
-        x, y, z = generate_n_vars(variables)
-        _1 = Poly.one
+        x, y, z = self.B.gens[:3]
 
         F = [
             x*z + y*z + z,
             x*y + x*z + x + y*z + y + z
         ]
 
-        G = buchberger(F, variables)
+        G = buchberger(F, self.B)
 
         G_assert = [x, y, z]
 
@@ -148,8 +140,7 @@ class TestBuchberger(unittest.TestCase):
         """
         Basis should be equal 1
         """
-        variables = ('x1', 'x2', 'x3')
-        x1, x2, x3 = generate_n_vars(variables)
+        x1, x2, x3 = self.B.gens[:3]
         _1 = Poly.one
 
         F = [
@@ -163,6 +154,6 @@ class TestBuchberger(unittest.TestCase):
             x1*x2*x3 + x1*x2 + x1*x3 + x1 + x2*x3 + x2 + x3 + _1
         ]
 
-        G = buchberger(F, variables)
+        G = buchberger(F, self.B)
 
         self.assertTrue(G == [Poly.one])
