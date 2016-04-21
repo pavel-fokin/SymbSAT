@@ -4,7 +4,7 @@ Check SAT UNSAT
 
 import functools
 
-import cnftools
+import dimacs
 import gb
 from poly import Poly
 
@@ -21,9 +21,9 @@ def sat_mult(P):
         print('SAT')
 
 
-def sat_groebner(P, variables):
+def sat_groebner(P, ring):
 
-    res = gb.buchberger(P, variables)
+    res = gb.buchberger(P, ring)
 
     if res == [Poly.one]:
         print('UNSAT')
@@ -33,8 +33,9 @@ def sat_groebner(P, variables):
 
 def main():
 
-    P, variables = cnftools.cnf2polys(sys.argv[1])
-    sat_groebner(P, variables)
+    P, ring = dimacs.load(sys.argv[1])
+    sat_groebner(P, ring)
+    #  sat_mult(P)
     return 0
 
 
