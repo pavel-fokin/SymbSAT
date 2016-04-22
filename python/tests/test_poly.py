@@ -36,10 +36,38 @@ class TestBoolPoly(unittest.TestCase):
 
         self.assertEqual(p, a*b*c + b*c*d)
 
+    def test_add_monom(self):
+        a, b, c, d = self.B.gens
+        m_ab = Monom((1, 1, 0, 0))
+
+        p = a*b + b + c
+
+        r = p + m_ab
+
+        self.assertEqual(r, b + c)
+
+    def test_mul(self):
+        a, b, c, d = self.B.gens
+        p = a*b + b + c
+
+        r = p * a
+
+        self.assertEqual(r, a*c)
+
+    def test_mul_monom(self):
+        a, b, c, d = self.B.gens
+        m_a = Monom((1, 0, 0, 0))
+
+        p = a*b + b + c
+
+        r = p * m_a
+
+        self.assertEqual(r, a*c)
+
     def test_S(self):
         a, b, c, d = self.B.gens
 
-        _1 = Poly([Monom.one])
+        _1 = Poly.one
 
         s = Poly.S(a*b*c, a*b + _1)
         self.assertEqual(s, c)
