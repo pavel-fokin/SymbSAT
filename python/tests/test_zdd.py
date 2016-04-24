@@ -1,41 +1,61 @@
 import unittest
 
+from monom import Monom
 from zdd import ZDD
+from ring import BoolPolyRing
 
 
 class TestZDD(unittest.TestCase):
 
+    def setUp(self):
+        self.B = BoolPolyRing(4, poly_type="zdd")
+
     def test_init(self):
+        a, b, c, d = self.B.gens
+
         z1 = ZDD(1)
-        self.assertTrue(True)
+        self.assertEqual(z1, b)
+
+        m = Monom((1, 1, 1, 1))
+
+        z = ZDD(monom=m)
+
+        self.assertEqual(z, a*b*c*d)
 
     def test_add(self):
-        z1 = ZDD(1)
-        z2 = ZDD(2)
+        a, b, c, d = self.B.gens
 
-        z3 = z1 + z2
-        self.assertTrue(True)
+        p = a + c + c + d
+        self.assertEqual(p, a + d)
+
+        p = a + a + b + b
+        self.assertTrue(p.isZero())
+
+    def test_add_monom(self):
+        a, b, c, d = self.B.gens
+        m_ab = Monom((1, 1, 0, 0))
+
+        p = a*b + b + c
+
+        r = p + m_ab
+
+        self.assertEqual(r, b + c)
 
     def test_mul(self):
-        z1 = ZDD(1)
-        z2 = ZDD(2)
+        a, b, c, d = self.B.gens
 
-        z3 = z1 * z2
+        p = (a + b + c + d) * b*c
+        self.assertEqual(p, a*b*c + b*c*d)
 
-        self.assertTrue(True)
+        p = (a*b + b + c) * a
+        self.assertEqual(p, a*c)
 
-    def test_lm(self):
-        z1 = ZDD(1)
-        z2 = ZDD(2)
+    def test_mul_monom(self):
+        a, b, c, d = self.B.gens
+        m_a = Monom((1, 0, 0, 0))
 
-        z3 = z1 * z2 + z1
+        p = a*b + b + c
 
-        self.assertTrue(True)
+        r = p * m_a
 
-    def test_iter(self):
-        z1 = ZDD(1)
-        z2 = ZDD(2)
-
-        z3 = z1 + z2
-
-        self.assertTrue(True)
+        self.assertEqual(r, a*c)
