@@ -53,8 +53,8 @@ def buchberger(F, BRing):
         h = s.NF(G)
         if h != Poly.zero:
             G.append(h)
+            pairs += [(i, k) for i in range(-len(BRing.gens), k)]
             k += 1
-            pairs += [(i, k-1) for i in range(-len(BRing.gens), k-1)]
         count += 1
 
     # Autoreduce

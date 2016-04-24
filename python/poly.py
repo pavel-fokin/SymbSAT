@@ -21,10 +21,13 @@ class Poly(list):
         return super(Poly, self).__init__(sorted(monoms, reverse=True))
 
     def __add__(self, other):
+        # difference_symetric
         if isinstance(other, Monom):
             return Poly(set(self) ^ set([other]))
-        # difference_symetric
-        return Poly(set(self) ^ set(other))
+        elif isinstance(other, Poly):
+            return Poly(set(self) ^ set(other))
+        else:
+            raise TypeError("Cannot multiply on %s." % type(other))
 
     def __mul__(self, other):
         if isinstance(other, Monom):
@@ -39,7 +42,7 @@ class Poly(list):
                 (itertools.product(self, other))
             )
         else:
-            raise ValueError("Cannot multiply on %s." % type(other))
+            raise TypeError("Cannot multiply on %s." % type(other))
 
         counter = collections.Counter(monoms)
         return Poly({m for m, c in counter.items() if c % 2 != 0})
@@ -79,7 +82,7 @@ class Poly(list):
         while p != Poly.zero:
             i = 0
             divisionoccured = False
-            while i < len(F) and not divisionoccured:
+            while i < len(F) and (not divisionoccured):
                 p_lm, fi_lm = p.lm(), F[i].lm()
                 if p_lm.isdivisible(fi_lm):
                     p = p + F[i]*(p_lm/fi_lm)

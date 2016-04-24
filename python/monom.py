@@ -14,12 +14,12 @@ class Monom(tuple):
 
     def __new__(cls, bits=None, vars=None):
         if bits is not None:
-            return super().__new__(cls, bits)
+            return super(Monom, cls).__new__(cls, bits)
         elif vars is not None:
             bits = list(itertools.repeat(0, Monom.size))
             for var in vars:
                 bits[var] = 1
-            return super().__new__(cls, bits)
+            return super(Monom, cls).__new__(cls, bits)
         else:
             return Monom.zero
 
@@ -52,8 +52,10 @@ class Monom(tuple):
             return "1"
         if self.isZero():
             return "0"
-        #  return "".join(l for v, l in zip(self, self.variables) if v == 1)
         return str(self.vars)
+
+    def pprint(self, alphabet, op=""):
+        return op.join(l for v, l in zip(self, alphabet) if v == 1)
 
     def lcm(self, other):
         return self*other
@@ -79,7 +81,7 @@ class Monom(tuple):
         lcm = self.lcm(other)
         return Monom(map(operator.xor, lcm, self)) == other
 
-    def prolong(i):
+    def prolong(self, i):
         """Prolongation of the monomial m*x
         """
         assert(not self[i])
