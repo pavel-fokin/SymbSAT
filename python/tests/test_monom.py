@@ -9,29 +9,28 @@ class TestBoolMonom(unittest.TestCase):
     def setUp(self):
         Monom.size = 4
         self.variables = (
-            Monom(vars=[0]), # a
-            Monom(vars=[1]), # b
-            Monom(vars=[2]), # c
-            Monom(vars=[3]), # d
+            Monom(vars=[0]),  # a
+            Monom(vars=[1]),  # b
+            Monom(vars=[2]),  # c
+            Monom(vars=[3]),  # d
         )
 
     def test_zero_one(self):
         self.assertNotEqual(id(Monom.zero), id(Monom.one))
 
     def test_init(self):
-        abcd = Monom((1,1,1,1))
-        abc  = Monom(vars=[0,1,2])
-        ab   = Monom(vars=[0,1])
-        c    = Monom(vars=[2])
-        d    = Monom(vars=[3])
-        _0   = Monom()
+        abcd = Monom((1, 1, 1, 1))
+        ab = Monom(vars=[0, 1])
+        abc = Monom(vars=[0, 1, 2])
+        c = Monom(vars=[2])
+        d = Monom(vars=[3])
+        _0 = Monom()
 
-
-        self.assertEqual(abcd, (1,1,1,1))
-        self.assertEqual(abc, (1,1,1,0))
-        self.assertEqual(ab, (1,1,0,0))
-        self.assertEqual(c, (0,0,1,0))
-        self.assertEqual(d, (0,0,0,1))
+        self.assertEqual(abcd, (1, 1, 1, 1))
+        self.assertEqual(abc, (1, 1, 1, 0))
+        self.assertEqual(ab, (1, 1, 0, 0))
+        self.assertEqual(c, (0, 0, 1, 0))
+        self.assertEqual(d, (0, 0, 0, 1))
         self.assertTrue(_0.isZero())
 
     def test_mul(self):
@@ -47,7 +46,7 @@ class TestBoolMonom(unittest.TestCase):
         bc = b*c
         abc = a*b*c
 
-        _0, _1 = Monom.zero, Monom.one
+        _1 = Monom.one
 
         # 1/a == 0
         self.assertTrue((_1/a).isZero())
@@ -92,4 +91,4 @@ class TestBoolMonom(unittest.TestCase):
 
         ac = a*c
 
-        self.assertEqual([0,2], ac.vars)
+        self.assertEqual([0, 2], ac.vars)
