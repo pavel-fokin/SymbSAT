@@ -21,13 +21,13 @@ class Poly(list):
         return super(Poly, self).__init__(sorted(monoms, reverse=True))
 
     def __add__(self, other):
-        # difference_symetric
+        # symmetric difference
         if isinstance(other, Monom):
             return Poly(set(self) ^ set([other]))
         elif isinstance(other, Poly):
             return Poly(set(self) ^ set(other))
         else:
-            raise TypeError("Cannot multiply on %s." % type(other))
+            return NotImplemented
 
     def __mul__(self, other):
         if isinstance(other, Monom):
@@ -42,7 +42,7 @@ class Poly(list):
                 (itertools.product(self, other))
             )
         else:
-            raise TypeError("Cannot multiply on %s." % type(other))
+            return NotImplemented
 
         counter = collections.Counter(monoms)
         return Poly({m for m, c in counter.items() if c % 2 != 0})
