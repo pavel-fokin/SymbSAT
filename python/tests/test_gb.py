@@ -1,24 +1,18 @@
 import unittest
 
-from poly import Poly
 from ring import BoolPolyRing
 from gb import buchberger
 
 
-class TestBuchberger(unittest.TestCase):
+class TestBuchberger(object):
 
-    def setUp(self):
-        # Create BoolRing with number of variables
-        # enough for all tests
-        self.B = BoolPolyRing(10)
-
-    def test_buchberger1(self):
+    def test_buchberger_1(self):
         """
         Example from SAGE documentation
         for boolean polynomials
         """
         x0, x1, x2, x3 = self.B.gens[:4]
-        _1 = Poly.one
+        _1 = self.B.one
 
         F = [
             x0 + x1 + x2 + x3,
@@ -35,7 +29,7 @@ class TestBuchberger(unittest.TestCase):
             self.assertTrue(p in G_assert)
 
     # TODO Check GB for this example
-    def test_buchberger2(self):
+    def test_buchberger_2(self):
         """
         Example from paper
         On computer algebra application to
@@ -51,7 +45,7 @@ class TestBuchberger(unittest.TestCase):
             a1*x1 + a2*x2 + x1*x3 + a3*x4 + x1*x2*x4,
         ]
 
-        G = buchberger(F, self.B)  # noqa
+        G = buchberger(F, self.B)
 
         G_assert = [
             x2 + b2,
@@ -60,9 +54,10 @@ class TestBuchberger(unittest.TestCase):
             x3 + b1 + b2*b3,
         ]
 
+        self.assertTrue(len(G) > 0)
         self.assertTrue(len(G_assert) > 0)
 
-    def test_buchberger3(self):
+    def test_buchberger_3(self):
         x1, x2 = self.B.gens[:2]
 
         F = [
@@ -77,9 +72,10 @@ class TestBuchberger(unittest.TestCase):
         for p in G:
             self.assertTrue(p in G_assert)
 
-    def test_buchberger4(self):
+    # @unittest.skip
+    def test_buchberger_4(self):
         x1, x2, x3, x4 = self.B.gens[:4]
-        _1 = Poly.one
+        _1 = self.B.one
 
         F = [
             x1*x2*x3 + x1*x2 + x2*x3 + x2,
@@ -120,7 +116,7 @@ class TestBuchberger(unittest.TestCase):
         for p in G:
             self.assertTrue(p in G_assert)
 
-    def test_buchberger6(self):
+    def test_buchberger_6(self):
         x, y, z = self.B.gens[:3]
 
         F = [
@@ -141,7 +137,7 @@ class TestBuchberger(unittest.TestCase):
         Basis should be equal 1
         """
         x1, x2, x3 = self.B.gens[:3]
-        _1 = Poly.one
+        _1 = self.B.one
 
         F = [
             x1*x2*x3,
@@ -156,4 +152,21 @@ class TestBuchberger(unittest.TestCase):
 
         G = buchberger(F, self.B)
 
-        self.assertTrue(G == [Poly.one])
+        self.assertTrue(len(G) == 1)
+        self.assertTrue(G[0].isOne())
+
+
+class TestBuchbergerPolyList(unittest.TestCase, TestBuchberger):
+
+    def setUp(self):
+        # Create BoolRing with number of variables
+        # enough for all tests
+        self.B = BoolPolyRing(10, poly_type="list")
+
+
+class TestBuchbergerPolyZDD(unittest.TestCase, TestBuchberger):
+
+    def setUp(self):
+        # Create BoolRing with number of variables
+        # enough for all tests
+        self.B = BoolPolyRing(10, poly_type="zdd")

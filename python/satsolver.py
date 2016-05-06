@@ -33,7 +33,7 @@ def sat_groebner(P, ring):
 
 def main():
 
-    P, ring = dimacs.load(sys.argv[1])
+    P, ring = dimacs.load(sys.argv[1], sys.argv[2] or "list")
     sat_groebner(P, ring)
     #  sat_mult(P)
     return 0

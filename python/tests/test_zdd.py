@@ -43,12 +43,16 @@ class TestZDD(unittest.TestCase):
 
     def test_mul(self):
         a, b, c, d = self.B.gens
+        _1 = self.B.one
 
         p = (a + b + c + d) * b*c
         self.assertEqual(p, a*b*c + b*c*d)
 
         p = (a*b + b + c) * a
         self.assertEqual(p, a*c)
+
+        p = (a*c + a + c + _1) * c
+        self.assertTrue(p.isZero())
 
     def test_mul_monom(self):
         a, b, c, d = self.B.gens

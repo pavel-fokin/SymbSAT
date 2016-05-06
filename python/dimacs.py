@@ -1,14 +1,13 @@
-"""
-DIMACS Reading
+""" DIMACS Reading
 """
 
-from poly import Poly
 from ring import BoolPolyRing
 
 
 def _parse_line(line, x):
 
-    _1 = Poly.one
+    # TODO
+    _1 = x[0].ring.one
 
     indexes = tuple(map(int, line.split()))
 
@@ -39,7 +38,7 @@ def _parse_line(line, x):
     return p
 
 
-def load(filename):
+def load(filename, poly_type="list"):
 
     num_vars = 0
     num_clauses = 0
@@ -64,7 +63,7 @@ def load(filename):
             num_vars = int(_line[2])
             num_clauses = int(_line[3])
 
-            B = BoolPolyRing(num_vars)
+            B = BoolPolyRing(num_vars, poly_type=poly_type)
             x = B.gens
 
             continue

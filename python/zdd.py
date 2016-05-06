@@ -112,10 +112,18 @@ class ZDD(object):
             if i.var < j.var:
                 m = self._mul(i.mul, j)
                 a = self._mul(i.add, j)
+
+                if m == ZDD._zero:
+                    return a
+
                 r = self._create_node(i.var, m, a)
             elif i.var > j.var:
                 m = self._mul(j.mul, i)
                 a = self._mul(j.add, i)
+
+                if m == ZDD._zero:
+                    return a
+
                 r = self._create_node(j.var, m, a)
             else:
                 m1 = self._mul(i.add, j.mul)
