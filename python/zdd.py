@@ -28,6 +28,7 @@ class ZDD(object):
         def __eq__(self, other):
             return id(self) == id(other)
 
+    ring = None
     _one = Node(-1, None, None)
     _zero = Node(-1, None, None)
 
@@ -35,11 +36,18 @@ class ZDD(object):
         self._cache = {}
 
         if monom is not None:
-            self.root = self._create_node(monom.vars[0], ZDD._one, ZDD._zero)
-            root = self.root
-            for var in monom.vars[1:]:
-                root.mul = self._create_node(var, ZDD._one, ZDD._zero)
-                root = root.mul
+            if monom.isOne():
+                self.setOne()
+            elif monom.isZero():
+                self.setZero()
+            else:
+                self.root = self._create_node(
+                    monom.vars[0], ZDD._one, ZDD._zero
+                )
+                root = self.root
+                for var in monom.vars[1:]:
+                    root.mul = self._create_node(var, ZDD._one, ZDD._zero)
+                    root = root.mul
         elif var < 0:
             self.root = ZDD._zero
         else:
@@ -145,6 +153,12 @@ class ZDD(object):
         else:
             return NotImplemented
 
+    def copy(self):
+        r = ZDD()
+        r.root = self.root
+        r._cache = self._cache
+        return r
+
     def setZero(self):
         self.root = ZDD._zero
 
@@ -158,7 +172,7 @@ class ZDD(object):
         return self.root == ZDD._one
 
     def lm(self):
-        return Monom(vars=next(iter(self)))
+        return next(iter(self))
 
     def __iter__(self):
         if self.root == ZDD._zero:

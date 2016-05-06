@@ -59,3 +59,17 @@ class TestZDD(unittest.TestCase):
         r = p * m_a
 
         self.assertEqual(r, a*c)
+
+    def test_lm(self):
+        a, b, c, d = self.B.gens
+
+        m_abc = Monom((1, 1, 1, 0))
+        m_b = Monom((0, 1, 0, 0))
+
+        _1 = self.B.one
+
+        f = a*b*c + c*d + a*b + _1
+        g = c*d + b
+
+        self.assertEqual(f.lm(), m_abc)
+        self.assertEqual(g.lm(), m_b)

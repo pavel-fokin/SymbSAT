@@ -11,6 +11,7 @@ from monom import Monom
 
 class Poly(list):
 
+    ring = None
     one = None
     zero = None
 
@@ -52,48 +53,20 @@ class Poly(list):
             return "0"
         return " + ".join(map(str, sorted(self, reverse=True)))
 
+    def copy(self):
+        return Poly(self)
+
+    def isZero(self):
+        return self == Poly.zero
+
+    def isOne(self):
+        return self == Poly.one
+
     def lm(self):
         if self == Poly.zero:
             return Monom.zero
         return self[0]
 
-    @staticmethod
-    def S(f, g):
-        """
-        Return s-polynomial
-        """
-        f_lm, g_lm = f.lm(), g.lm()
-        lcm = f_lm.lcm(g_lm)
-        spoly = f*(lcm/f_lm) + g*(lcm/g_lm)
-        return spoly
-
-    def NF(self, F):
-        """
-        NormalForm w.r.t F
-        D. Cox, J. Little, D. O'Shea - Ideals, Varieties, and Algorithms
-        $3 A Division Algorithm
-        """
-        p = Poly(self)
-        r = Poly.zero
-
-        if F == []:
-            return p
-
-        while p != Poly.zero:
-            i = 0
-            divisionoccured = False
-            while i < len(F) and (not divisionoccured):
-                p_lm, fi_lm = p.lm(), F[i].lm()
-                if p_lm.isdivisible(fi_lm):
-                    p = p + F[i]*(p_lm/fi_lm)
-                    divisionoccured = True
-                else:
-                    i += 1
-            if not divisionoccured:
-                r = r + p_lm
-                p = p + p_lm
-
-        return r
 
 Poly.zero = Poly([])
 Poly.one = Poly([Monom.one])

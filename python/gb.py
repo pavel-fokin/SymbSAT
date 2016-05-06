@@ -2,7 +2,7 @@
 Groebner Basis
 """
 
-from poly import Poly
+from polyfuncs import spoly, normal_form
 
 
 def autoreduce(G):
@@ -12,8 +12,8 @@ def autoreduce(G):
     """
     G_red = []
     for i, g in enumerate(G):
-        G[i] = g.NF(G[:i] + G[i+1:])
-        if G[i] != Poly.zero:
+        G[i] = normal_form(g, G[:i] + G[i+1:])
+        if not G[i].isZero():
             G_red.append(G[i])
     return G_red
 
@@ -49,9 +49,9 @@ def buchberger(F, BRing):
             # TODO Check first criteria
             if p_lm.isrelativelyprime(q_lm):
                 continue
-            s = Poly.S(p, q)
-        h = s.NF(G)
-        if h != Poly.zero:
+            s = spoly(p, q)
+        h = normal_form(s, G)
+        if not h.isZero():
             G.append(h)
             pairs += [(i, k) for i in range(-len(BRing.gens), k)]
             k += 1
