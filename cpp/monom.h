@@ -30,8 +30,11 @@ public:
         }
         return *this;
     }
-    // ~Monom() {}
+    ~Monom() {}
 
+    void setVar(size_t var) {
+        mVars.set(var);
+    }
     bool isZero() const {
         // return this == Monom::sZero.get();
         return mVars.none();
@@ -57,7 +60,7 @@ public:
 
     struct hash {
         size_t operator()(const Monom& x) const {
-            return std::hash<std::bitset<128>>()(x.mVars); 
+            return std::hash<std::bitset<128>>()(x.mVars);
         }
     };
 };

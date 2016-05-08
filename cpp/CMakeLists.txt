@@ -2,7 +2,7 @@ PROJECT (symbsat)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-SET(CMAKE_CXX_COMPILER "/usr/bin/clang++-3.6")
+# SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 SET(CMAKE_CXX_FLAGS "-std=c++11")
 
 ADD_DEFINITIONS(-Wall)
@@ -25,6 +25,8 @@ ADD_LIBRARY(boolpoly STATIC
     monom.cpp
     poly.h
     poly.cpp
+    zdd.h
+    zdd.cpp
     gb.h
     gb.cpp
 )
