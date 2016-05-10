@@ -6,7 +6,7 @@ from monom import Monom
 
 class ZDD(object):
 
-    _slots__ = ['root', '_cache', '_lm']
+    _slots__ = ['root', '_lm']
 
     class Node(object):
 
@@ -16,6 +16,15 @@ class ZDD(object):
             self.var = var
             self.mul = m  # and
             self.add = a  # xor
+
+        def copy(self):
+            if self.var < 0:
+                return self
+            return ZDD.Node(
+                self.var,
+                self.mul.copy(),
+                self.add.copy()
+            )
 
         def isZero(self):
             return self.var == -2
@@ -42,7 +51,6 @@ class ZDD(object):
 
     def __init__(self, var=-1, monom=None):
         self._lm = None
-        self._cache = {}
 
         if monom is not None:
             if monom.isOne():
@@ -71,15 +79,7 @@ class ZDD(object):
     def _create_node(self, var, m, a):
         assert m != ZDD._zero
 
-        r = None
-
-        if (var, id(m), id(a)) in self._cache:
-            r = self._cache[var, id(m), id(a)]
-        else:
-            r = ZDD.Node(var, m, a)
-            self._cache[var, id(m), id(a)] = r
-
-        return r
+        return ZDD.Node(var, m, a)
 
     def _add(self, i, j):
 
@@ -153,7 +153,6 @@ class ZDD(object):
         elif isinstance(other, ZDD):
             r = ZDD()
             r.root = self._add(self.root, other.root)
-            r._cache = self._cache
             return r
         else:
             return NotImplemented
@@ -165,15 +164,14 @@ class ZDD(object):
         elif isinstance(other, ZDD):
             r = ZDD()
             r.root = self._mul(self.root, other.root)
-            r._cache = self._cache
             return r
         else:
             return NotImplemented
 
     def copy(self):
         r = ZDD()
-        r.root = self.root
-        r._cache = self._cache
+        r.root = self.root.copy()
+        r._lm = self._lm
         return r
 
     def setZero(self):
