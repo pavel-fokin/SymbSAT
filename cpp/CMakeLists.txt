@@ -31,9 +31,9 @@ ADD_LIBRARY(boolpoly STATIC
     gb.cpp
 )
 
-ADD_EXECUTABLE(cnfread cnfread.cpp)
+ADD_EXECUTABLE(satsolver satsolver.cpp)
 
-TARGET_LINK_LIBRARIES( cnfread 
+TARGET_LINK_LIBRARIES( satsolver 
   boolpoly
 )
 
