@@ -106,6 +106,8 @@ public:
 
     Monom lm() const;
 
+    bool operator==(const ZDD& rhs) const;
+
     ZDD operator+(const ZDD& rhs) const;
     ZDD operator+(const Monom& rhs) const;
 

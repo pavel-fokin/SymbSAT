@@ -1,5 +1,28 @@
 #include "zdd.h"
 
+bool ZDD::operator==(const ZDD& rhs) const {
+
+    if (this == &rhs) {
+        return true;
+    }
+
+    MonomConstIterator it1(*this), it2(rhs);
+
+    while (!it1 || !it2) {
+        if ( !(it1.monom() == it2.monom()) ) {
+            return false;
+        }
+        ++it1;
+        ++it2;
+    }
+
+    if (!it1 || !it2) {
+        return false;
+    }
+
+    return true;
+}
+
 const ZDD::Node* ZDD::add(const Node* i, const Node* j) {
     if ( i->isZero() ) {
         return j;
