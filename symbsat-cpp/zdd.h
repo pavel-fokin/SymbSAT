@@ -33,6 +33,18 @@ class ZDD {
         inline bool isOne() const {
             return mVar == -1;
         }
+
+        static inline bool isEqual(const Node* a, const Node* b) {
+            if (a->mVar != b->mVar) {
+                return false;
+            } else if (a->isZero() && b->isZero()) {
+                return true;
+            } else if (a->isOne() && b->isOne()) {
+                return true;
+            } else {
+                return isEqual(a->mAdd, b->mAdd) && isEqual(a->mMul, b->mMul);
+            }
+        }
     };
 
     const Node* mRoot;
@@ -55,20 +67,22 @@ class ZDD {
         }
     }
 
+    friend std::ostream& operator<<(std::ostream& out, const Node *a);
+
     const Node* add(const Node* a, const Node* b);
     const Node* mul(const Node* a, const Node* b);
 
 public:
 
     ZDD() {
-        mRoot = create_node(-2, nullptr, nullptr); // zero
+        // mRoot = create_node(-2, nullptr, nullptr); // zero
+        mRoot = mZero;
     }
     ZDD(const ZDD& z) {
         mRoot = copy(z.mRoot);
     }
-    ZDD(const ZDD&& z):
-        mRoot(z.mRoot),
-        mNodes(std::move(z.mNodes)) {
+    ZDD(const ZDD&& z) {
+        mRoot = copy(z.mRoot);
     }
     ZDD& operator=(const ZDD& other) {
         if (this != &other) {
@@ -78,8 +92,7 @@ public:
     }
     const ZDD& operator=(const ZDD&& other) {
         if (this != &other) {
-            mRoot = other.mRoot;
-            mNodes = std::move(other.mNodes);
+            mRoot = copy(other.mRoot);
         }
         return *this;
     }
@@ -124,6 +137,7 @@ public:
                 mMonom.push_back(i->mVar);
             }
         };
+        ~MonomConstIterator () =default;
 
         const Monom monom() const {
             Monom tmp;

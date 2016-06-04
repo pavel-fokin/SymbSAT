@@ -9,7 +9,6 @@ class TestZDD: public CppUnit::TestFixture {
     CPPUNIT_TEST(testMonomIterator);
     CPPUNIT_TEST(testZDDEqual);
     CPPUNIT_TEST(testZDDAdd);
-    // Segmentation fault
     CPPUNIT_TEST(testZDDMul);
 
     CPPUNIT_TEST_SUITE_END();
@@ -40,6 +39,11 @@ void TestZDD::testConstructor() {
     ZDD z4 = z2;
     CPPUNIT_ASSERT( z4 == z2 );
 
+    ZDD z5(5), z6;
+    CPPUNIT_ASSERT( !(z5 == z6) );
+
+    z5 = z6;
+    CPPUNIT_ASSERT( z5 == z6 );
 }
 
 void TestZDD::testMonomIterator() {
@@ -49,7 +53,6 @@ void TestZDD::testMonomIterator() {
     ZDD::MonomConstIterator it(z3);
 
     while(!it) {
-        std::cout << it.monom() << "\n";
         ++it;
     }
 
@@ -75,16 +78,25 @@ void TestZDD::testZDDEqual() {
 void TestZDD::testZDDAdd() {
     ZDD a(1), b(2), c(3), d(4);
 
-    ZDD p = a + a + b + b;
+    ZDD p1 = a + a + b + b;
 
-    CPPUNIT_ASSERT(p.isZero());
+    CPPUNIT_ASSERT(p1.isZero());
+
+    ZDD p2 = a + c + c + d;
+
+    CPPUNIT_ASSERT_EQUAL(a + d, p2);
 }
 
 void TestZDD::testZDDMul() {
     ZDD a(1), b(2), c(3), d(4);
 
-    // TODO Segmentation fault
-    // ZDD p = (a + b + c + d) * b*c;
-    ZDD p = (a + b + c + d) * c;
-    CPPUNIT_ASSERT(true);
+    ZDD p1 = a*a;
+
+    CPPUNIT_ASSERT_EQUAL(a, p1);
+
+    ZDD p2 = (a + b + c + d) * b*c;
+    CPPUNIT_ASSERT_EQUAL(a*b*c + b*c*d, p2);
+
+    ZDD p3 = (a*b + b + c) * a;
+    CPPUNIT_ASSERT_EQUAL(a*c, p3);
 }

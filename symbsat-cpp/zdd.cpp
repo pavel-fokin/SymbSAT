@@ -1,5 +1,6 @@
 #include "zdd.h"
 
+// TODO need to review for correctness
 bool ZDD::operator==(const ZDD& rhs) const {
 
     if (this == &rhs) {
@@ -16,7 +17,8 @@ bool ZDD::operator==(const ZDD& rhs) const {
         ++it2;
     }
 
-    if (!it1 || !it2) {
+    // TODO should be used || or ^ ?
+    if (!it1 ^ !it2) {
         return false;
     }
 
@@ -25,30 +27,32 @@ bool ZDD::operator==(const ZDD& rhs) const {
 
 const ZDD::Node* ZDD::add(const Node* i, const Node* j) {
     if ( i->isZero() ) {
-        return j;
+        return copy(j);
     } else if ( j->isZero() ) {
-        return i;
-    } else if (i == j) {
+        return copy(i);
+    // } else if (i == j) {
+    } else if (ZDD::Node::isEqual(i, j)) {
         // return 0
         return mZero;
     } else if ( i->isOne() ) {
         return create_node(
-            j->mVar, j->mMul,
+            j->mVar, copy(j->mMul),
             add(j->mAdd, mOne)
         );
     } else if ( j->isOne() ) {
         return create_node(
-            i->mVar, i->mMul,
+            i->mVar, copy(i->mMul),
             add(i->mAdd, mOne)
         );
     } else {
         if (i->mVar < j->mVar) {
             return create_node(
-                i->mVar, i->mMul, add(i->mAdd, j)
+                i->mVar, copy(i->mMul), add(i->mAdd, j)
             );
         } else if (i->mVar > j->mVar) {
             return create_node(
-                j->mVar, j->mMul, add(j->mAdd, i)
+                // j->mVar, copy(j->mMul), add(j->mAdd, i)
+                j->mVar, j->mMul, add(i, j->mAdd)
             );
         } else {
             auto m = add(i->mMul, j->mMul);
@@ -65,12 +69,13 @@ const ZDD::Node* ZDD::add(const Node* i, const Node* j) {
 
 const ZDD::Node* ZDD::mul(const Node* i, const Node* j) {
     if ( i->isOne() ) {
-        return j;
+        return copy(j);
     } else if ( i->isZero() || j->isZero() ) {
         // return 0
         return mZero;
-    } else if ( j->isOne() || i == j ) {
-        return i;
+    // } else if ( j->isOne() || i == j ) {
+    } else if ( j->isOne() || ZDD::Node::isEqual(i, j) ) {
+        return copy(i);
     } else {
         if (i->mVar < j->mVar) {
             auto m = mul(i->mMul, j);
@@ -89,7 +94,7 @@ const ZDD::Node* ZDD::mul(const Node* i, const Node* j) {
                 return a;
             }
 
-            return create_node(i->mVar, m, a);
+            return create_node(j->mVar, m, a);
         } else {
             auto m1 = mul(i->mAdd, j->mMul);
             auto m2 = mul(i->mMul, j->mMul);
@@ -134,4 +139,32 @@ void ZDD::MonomConstIterator::operator++() {
             mMonom.push_back(i->mVar);
         }
     }
+}
+
+std::ostream& operator<<(std::ostream& out, const ZDD::Node* a) {
+    if (a->isZero()) {
+        out << "_zero";
+    } else if (a->isOne()) {
+        out << "_one";
+    } else {
+        out << a->mVar << " -> {" << a->mMul << "} {" << a->mAdd << "} ";
+    }
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const ZDD &a) {
+    ZDD::MonomConstIterator it(a);
+
+    if (a.isZero()) {
+        out << "0";
+    } else if (a.isOne()) {
+        out << "1";
+    } else {
+        while(!it) {
+            out << it.monom() << " ";
+            ++it;
+        }
+    }
+    return out;
 }
