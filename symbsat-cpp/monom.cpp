@@ -73,19 +73,17 @@ Monom operator/(const Monom& a, const Monom& b) {
 std::ostream& operator<<(std::ostream& out, const Monom &a) {
     if (a.isZero()) {
         out << "0";
-        return out;
-    }
-    if (a.isOne()) {
+    } else if (a.isOne()) {
         out << "1";
-        return out;
-    }
-    out << "[ ";
-    // start from 1 because first bit is for 0/1
-    for (size_t i=1; i<a.mVars.size(); ++i) {
-        if (a.mVars[i]) {
-        out << "x" << i-1 << " ";
+    } else {
+        out << "[ ";
+        // start from 1 because first bit is for 0/1
+        for (size_t i=1; i<a.mVars.size(); ++i) {
+            if (a.mVars[i]) {
+                out << i-1 << " ";
+            }
         }
+        out << "]";
     }
-    out << "]";
     return out;
 }
