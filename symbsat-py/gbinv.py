@@ -1,19 +1,15 @@
-"""
-Compute Involutive Groebner Basis
-"""
+"""Compute Involutive Groebner Basis."""
 
 
 def nmulti_vars(m):
-    """Pommaret Non-Multiplicative Variables
-    """
+    """Pommaret Non-Multiplicative Variables."""
     for i, bit in enumerate(reversed(m)):
         if bit == 1:
             return range(len(m) - i, len(m) + 1)
 
 
 def multi_vars(m):
-    """Pommaret Multiplicative Variables
-    """
+    """Pommaret Multiplicative Variables."""
     vars_multi = []
     for i, bit in enumerate(m):
         if bit == 1:
@@ -21,19 +17,16 @@ def multi_vars(m):
 
 
 def IsDivisibleInv(a, b):
-    """Check Involutive Divisibility
-    """
+    """Check Involutive Divisibility."""
     if a.isdivisible(b):
         return True
 
 
 def NormalFormInv(p, F):
-    """Compute Involutive NormalForm
-    """
-    raise NotImplemented
+    """Compute Involutive NormalForm"""
+    raise NotImplementedError
 
 
 def AutoreduceInv(F):
-    """Autoreduce set of polynomials
-    """
-    raise NotImplemented
+    """Autoreduce set of polynomials."""
+    raise NotImplementedError

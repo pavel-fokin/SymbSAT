@@ -1,6 +1,4 @@
-"""
-Groebner Basis
-"""
+"""Groebner Basis."""
 
 from polyfuncs import spoly, normal_form
 
@@ -19,9 +17,7 @@ def autoreduce(G):
 
 
 def buchberger(F, BRing):
-    """
-    Basic Buchberger algorithm without any optimizations
-    """
+    """Basic Buchberger algorithm without any optimizations."""
     if len(F) > 1:
         G = autoreduce(F)
     else:

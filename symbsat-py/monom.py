@@ -1,6 +1,4 @@
-"""
-Boolean Monom
-"""
+"""Boolean Monomials."""
 
 import itertools
 import operator
@@ -82,15 +80,13 @@ class Monom(tuple):
         return Monom(map(operator.xor, lcm, self)) == other
 
     def prolong(self, i):
-        """Prolongation of the monomial m*x
-        """
+        """Prolongation of the monomial m*x."""
         assert(not self[i])
         self[i] = 1
 
     @property
     def vars(self):
-        """Return list of variables positions
-        """
+        """Return list of variables positions."""
         return [i for i, v in enumerate(self) if v == 1]
 
     @property
@@ -98,10 +94,10 @@ class Monom(tuple):
         return sum(self)
 
     def lex(self, other):
-        raise NotImplemented
+        raise NotImplementedError
 
     def deglex(self, other):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 Monom.one = Monom(())

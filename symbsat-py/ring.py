@@ -1,5 +1,5 @@
-"""BoolPolyRing
-"""
+"""Boolean Polynomial Ring."""
+
 from monom import Monom
 from poly import Poly
 from zdd import ZDD

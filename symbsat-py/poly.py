@@ -1,6 +1,4 @@
-"""
-Boolean Polynomials
-"""
+"""Boolean Polynomials."""
 
 import collections
 import operator

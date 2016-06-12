@@ -1,6 +1,4 @@
-"""
-Check SAT UNSAT
-"""
+"""Check SAT UNSAT."""
 
 import functools
 

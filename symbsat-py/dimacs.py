@@ -1,5 +1,4 @@
-""" DIMACS Reading
-"""
+"""DIMACS Reading."""
 
 from ring import BoolPolyRing
 

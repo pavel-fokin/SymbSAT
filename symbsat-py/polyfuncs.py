@@ -1,11 +1,8 @@
-""" Generic functions for polynomials
-"""
+"""Generic functions for polynomials."""
 
 
 def spoly(f, g):
-    """
-    Return s-polynomial
-    """
+    """Return s-polynomial."""
     f_lm, g_lm = f.lm(), g.lm()
     lcm = f_lm.lcm(g_lm)
     spoly = f*(lcm/f_lm) + g*(lcm/g_lm)

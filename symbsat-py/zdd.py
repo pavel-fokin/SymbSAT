@@ -1,5 +1,4 @@
-"""ZDDs
-"""
+"""ZDDs."""
 
 from monom import Monom
 
