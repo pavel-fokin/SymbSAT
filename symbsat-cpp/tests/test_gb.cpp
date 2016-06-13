@@ -38,8 +38,8 @@ void TestGB::testBuchberger1() {
 
     auto G = buchberger(F, 4);
 
-    for (auto& p: G)
-        std::cout << p << std::endl;
+    // for (auto& p: G)
+        // std::cout << p << std::endl;
 
     CPPUNIT_ASSERT(true);
 }
@@ -56,8 +56,8 @@ void TestGB::testBuchberger3() {
 
     auto G = buchberger(F, 2);
 
-    for (auto& p: G)
-        std::cout << p << std::endl;
+    // for (auto& p: G)
+        // std::cout << p << std::endl;
 
     CPPUNIT_ASSERT(true);
 }
@@ -80,6 +80,6 @@ void TestGB::testBuchberger7() {
 
     auto G = buchberger(F, 3);
 
-    for (auto& p: G)
-        std::cout << p << std::endl;
+    // for (auto& p: G)
+        // std::cout << p << std::endl;
 }

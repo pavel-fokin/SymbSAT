@@ -9,6 +9,7 @@ ADD_EXECUTABLE( unittest
 )
 
 TARGET_LINK_LIBRARIES( unittest
-    cppunit
     boolpoly
+    cppunit
+    gcov
 )

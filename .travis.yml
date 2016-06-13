@@ -21,13 +21,7 @@ install:
 
 script:
   - (cd symbsat-py && coverage run -m unittest tests/test_*.py)
-  - "(
-      mkdir build &&
-      cd build &&
-      cmake ../symbsat-cpp &&
-      make &&
-      tests/unittest
-  )"
+  - (mkdir build && cd build && cmake ../symbsat-cpp && make && tests/unittest)
 
 after_success:
-    - "(cd symbsat-py && bash <(curl -s https://codecov.io/bash))"
+  - (cd symbsat-cpp && bash <(curl -s https://codecov.io/bash))
