@@ -2,7 +2,10 @@ PROJECT (symbsat)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-ADD_DEFINITIONS(-std=c++11 -Wall)
+ADD_DEFINITIONS(-std=c++11 -Wall --coverage)
+
+# We want to generate files with extension *.gcno but not with *.cpp.gcno
+SET(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
 
 SET(BUILD_TEST TRUE)
 
@@ -30,7 +33,8 @@ ADD_LIBRARY(boolpoly STATIC
 
 ADD_EXECUTABLE(satsolver satsolver.cpp)
 
-TARGET_LINK_LIBRARIES( satsolver 
+TARGET_LINK_LIBRARIES( satsolver
   boolpoly
+  gcov
 )
 

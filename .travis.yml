@@ -15,19 +15,30 @@ addons:
       - cmake
       - libcppunit-dev
 
+env:
+  GCOV_PREFIX="~/SymbSAT/symbsat-cpp/build/cov"
+  GCOV_PREFIX_STRIP=3
+
 install:
   - pip install -U pip setuptools
   - pip install coverage
 
 script:
   - (cd symbsat-py && coverage run -m unittest tests/test_*.py)
-  - "(
-      mkdir build &&
-      cd build &&
-      cmake ../symbsat-cpp &&
-      make &&
-      tests/unittest
-  )"
+  # Build C++ and generate gcov
+  - mkdir build
+  - mkdir build/cov
+  - pushd build
+  - export GCOV_PREFIX="`pwd`/cov"
+  - export GCOV_PREFIX_STRIP=10
+  - cmake ../symbsat-cpp
+  - make
+  - tests/unittest
+  - popd
+  - find -name *.gcno -exec cp {} build/cov \;
+  - pushd build/cov
+  - gcov -o . -s ../../symbsat-cpp *
+  - popd
 
 after_success:
-    - "(cd symbsat-py && bash <(curl -s https://codecov.io/bash))"
+    - bash <(curl -s https://codecov.io/bash))
