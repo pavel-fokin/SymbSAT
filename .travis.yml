@@ -15,8 +15,12 @@ addons:
       - cmake
       - libcppunit-dev
 
+install:
+  - pip install -U pip setuptools
+  - pip install coverage
+
 script:
-  - (cd symbsat-py && python -m unittest tests/test_*.py)
+  - (cd symbsat-py && coverage run -m unittest tests/test_*.py)
   - "(
       mkdir build &&
       cd build &&
@@ -24,3 +28,6 @@ script:
       make &&
       tests/unittest
   )"
+
+after_success:
+    - "(cd symbsat-py && bash <(curl -s https://codecov.io/bash))"
