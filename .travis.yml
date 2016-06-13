@@ -20,7 +20,7 @@ install:
   - pip install coverage
 
 script:
-  - (cd symbsat-py && coverage run -m unittest tests/test_*.py)
+  - (cd symbsat-py && coverage run --branch -m unittest tests/test_*.py)
   - (mkdir build && cd build && cmake ../symbsat-cpp && make && tests/unittest)
 
 after_success:
