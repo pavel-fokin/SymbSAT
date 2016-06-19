@@ -22,7 +22,7 @@ class ZDD {
         Node (const Node& n) =delete;
         Node (const Node&& n) =delete;
         Node& operator=(const Node&) =delete;
-        const Node& operator=(const Node&&) =delete;
+        Node& operator=(const Node&&) =delete;
 
         Node (int var, const Node* mul, const Node* add):
             mVar(var), mMul(mul), mAdd(add) {}
@@ -34,7 +34,7 @@ class ZDD {
             return mVar == -1;
         }
 
-        static inline bool isEqual(const Node* a, const Node* b) {
+        static bool isEqual(const Node* a, const Node* b) {
             if (a->mVar != b->mVar) {
                 return false;
             } else if (a->isZero() && b->isZero()) {
@@ -90,7 +90,7 @@ public:
         }
         return *this;
     }
-    const ZDD& operator=(const ZDD&& other) {
+    ZDD& operator=(const ZDD&& other) {
         if (this != &other) {
             mRoot = copy(other.mRoot);
         }
@@ -105,10 +105,10 @@ public:
         );
     }
 
-    ZDD(int var) {
+    explicit ZDD(int var) {
         mRoot = create_node(var, mOne, mZero);
     }
-    ZDD(Monom& m);
+    explicit ZDD(const Monom& m);
 
     inline bool isZero() const {
         return mRoot->isZero();
@@ -131,7 +131,7 @@ public:
         std::vector<int> mMonom;
         std::stack<const Node*> mPath;
     public:
-        MonomConstIterator(const ZDD& z) {
+        explicit MonomConstIterator(const ZDD& z) {
             for (const Node* i=z.mRoot; i->mVar >= 0; i = i->mMul) {
                 mPath.push(i);
                 mMonom.push_back(i->mVar);
@@ -156,3 +156,6 @@ public:
 
     friend std::ostream& operator<<(std::ostream& out, const ZDD &a);
 };
+
+ZDD spoly(const ZDD&, const ZDD&);
+ZDD normalform(const ZDD&, const std::vector<ZDD>&);

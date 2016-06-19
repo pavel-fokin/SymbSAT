@@ -13,11 +13,11 @@ class Poly {
 
 public:
     Poly() {};
-    Poly(Monom& m) : mMonoms{m} {}
-    Poly(std::initializer_list<Monom> monoms) : mMonoms(monoms) {
+    explicit Poly(Monom& m) : mMonoms{m} {}
+    explicit Poly(std::initializer_list<Monom> monoms) : mMonoms(monoms) {
         std::sort(mMonoms.begin(), mMonoms.end());
     }
-    Poly(std::vector<Monom>& monoms) : mMonoms(monoms) {
+    explicit Poly(std::vector<Monom>& monoms) : mMonoms(monoms) {
         std::sort(mMonoms.begin(), mMonoms.end());
     }
     Poly(const Poly& other) : mMonoms(other.mMonoms) {}
@@ -28,7 +28,7 @@ public:
         return *this;
     }
     Poly(const Poly&& other) noexcept : mMonoms(std::move(other.mMonoms)) {}
-    const Poly& operator=(Poly&& other) noexcept {
+    Poly& operator=(Poly&& other) noexcept {
         if (this != &other) {
             mMonoms = std::move(other.mMonoms);
         }

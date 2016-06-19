@@ -13,12 +13,12 @@ class Monom {
 
 public:
     Monom() {};
-    Monom(size_t var) {
+    explicit Monom(size_t var) {
         mVars.set(var);
     }
     Monom(const Monom& m): mVars(m.mVars) {}
     Monom(const Monom&& m) noexcept : mVars(std::move(m.mVars)) {}
-    const Monom& operator=(Monom&& other) noexcept {
+    Monom& operator=(Monom&& other) noexcept {
         if (this != &other) {
             mVars = std::move(other.mVars);
         }
