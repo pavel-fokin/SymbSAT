@@ -35,38 +35,38 @@ bool Monom::operator<(const Monom& b) const {
     return false;
 }
 
-Monom operator*(const Monom& a, const Monom& b) {
-    if (a.isOne()) {
+Monom Monom::operator*(const Monom& b) const {
+    if (this->isOne()) {
         return b;
     }
     if (b.isOne()) {
-        return a;
+        return *this;
     }
-    if (a.isZero() || b.isZero()) {
+    if (this->isZero() || b.isZero()) {
         return Monom();
     }
     Monom tmp;
-    tmp.mVars = a.mVars | b.mVars;
+    tmp.mVars = mVars | b.mVars;
     return tmp;
 }
 
-Monom operator/(const Monom& a, const Monom& b) {
+Monom Monom::operator/(const Monom& b) const {
     if (b.isOne()) {
-        return a;
+        return *this;
     }
-    if (a.isOne()) {
+    if (this->isOne()) {
         return Monom();
     }
-    if (a == b) {
+    if (*this == b) {
         // return 1
         return Monom(0);
     }
-    if (!a.isdivisible(b)) {
+    if (!this->isdivisible(b)) {
         // return 0
         return Monom();
     }
     Monom tmp;
-    tmp.mVars = a.mVars ^ b.mVars;
+    tmp.mVars = mVars ^ b.mVars;
     return tmp;
 }
 

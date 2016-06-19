@@ -52,9 +52,9 @@ public:
         return mVars == other.mVars;
     }
 
+    Monom operator*(const Monom& b) const;
+    Monom operator/(const Monom& b) const;
     friend Monom lcm(const Monom& a, const Monom& b);
-    friend Monom operator*(const Monom& a, const Monom& b);
-    friend Monom operator/(const Monom& a, const Monom& b);
 
     friend std::ostream& operator<<(std::ostream& out, const Monom &a);
 
