@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <bitset>
+#include <vector>
 #include <string>
 #include <utility>
 #include <memory>
@@ -35,6 +36,18 @@ public:
     void setVar(size_t var) {
         mVars.set(var);
     }
+    std::vector<int> getVars() const {
+        std::vector<int> vars;
+
+        size_t msize = mVars.size();
+        for (size_t i = 1; i < msize; ++i) {
+            if (mVars[i]) {
+                vars.push_back(i);
+            }
+        }
+        return vars;
+    }
+
     bool isZero() const {
         // return this == Monom::sZero.get();
         return mVars.none();
