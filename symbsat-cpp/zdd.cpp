@@ -1,5 +1,21 @@
 #include "zdd.h"
 
+ZDD::ZDD(const Monom& m) {
+    if (m.isOne()) {
+        setOne();
+    } else if (m.isZero()) {
+        setZero();
+    } else {
+        std::vector<int> vars = m.getVars();
+        mRoot = create_node(vars[0], mOne, mZero);
+
+        size_t vsize = vars.size();
+        for (size_t i = 1; i < vsize; ++i) {
+            mRoot = mul(mRoot, create_node(vars[i], mOne, mZero));
+        }
+    }
+}
+
 // TODO need to review for correctness
 bool ZDD::operator==(const ZDD& rhs) const {
 
@@ -18,6 +34,7 @@ bool ZDD::operator==(const ZDD& rhs) const {
     }
 
     // TODO should be used || or ^ ?
+    // FIXME bitwise operator on bools
     if (!it1 ^ !it2) {
         return false;
     }
@@ -119,10 +136,37 @@ ZDD ZDD::operator+(const ZDD& rhs) const {
     return tmp;
 }
 
+ZDD ZDD::operator+(const Monom& rhs) const {
+    ZDD tmp;
+    return tmp;
+}
+
 ZDD ZDD::operator*(const ZDD& rhs) const {
     ZDD tmp(*this);
     tmp.mRoot = tmp.mul(mRoot, rhs.mRoot);
     return tmp;
+}
+
+ZDD ZDD::operator*(const Monom& rhs) const {
+    ZDD tmp;
+    return tmp;
+}
+
+
+Monom ZDD::lm() const {
+    Monom tmp;
+    if (isZero()) {
+        return tmp;
+    } else if (isOne()) {
+        // zero-bit indicates 0/1
+        tmp.setVar(0);
+        return tmp;
+    } else {
+        for (const Node* i=this->mRoot; i->mVar >= 0; i = i->mMul) {
+            tmp.setVar(i->mVar);
+        }
+        return tmp;
+    }
 }
 
 void ZDD::MonomConstIterator::operator++() {

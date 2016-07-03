@@ -6,7 +6,9 @@
 class TestZDD: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestZDD);
     CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST(testConstructorMonom);
     CPPUNIT_TEST(testMonomIterator);
+    CPPUNIT_TEST(testZDDLm);
     CPPUNIT_TEST(testZDDEqual);
     CPPUNIT_TEST(testZDDAdd);
     CPPUNIT_TEST(testZDDMul);
@@ -17,7 +19,9 @@ public:
     void tearDown() {}
 
     void testConstructor();
+    void testConstructorMonom();
     void testMonomIterator();
+    void testZDDLm();
     void testZDDEqual();
     void testZDDAdd();
     void testZDDMul();
@@ -46,6 +50,22 @@ void TestZDD::testConstructor() {
     CPPUNIT_ASSERT( z5 == z6 );
 }
 
+void TestZDD::testConstructorMonom() {
+    Monom a(1), b(2), c(3);
+    Monom abc(a*b*c);
+
+    ZDD z(abc);
+    CPPUNIT_ASSERT_EQUAL(abc, z.lm());
+
+    Monom m_zero;
+    ZDD z_zero(m_zero);
+    CPPUNIT_ASSERT(z_zero.isZero());
+
+    Monom m_one; m_one.setVar(0);
+    ZDD z_one(m_one);
+    CPPUNIT_ASSERT(z_one.isOne());
+}
+
 void TestZDD::testMonomIterator() {
     ZDD z1(1), z2(2);
     ZDD z3 = z1*z2 + z2;
@@ -57,6 +77,22 @@ void TestZDD::testMonomIterator() {
     }
 
     CPPUNIT_ASSERT(true);
+}
+
+void TestZDD::testZDDLm() {
+    Monom a(1), b(2), c(3);
+    Monom abc(a*b*c);
+
+    ZDD z1(1), z2(2), z3(3);
+    ZDD z4 = z1*z2*z3;
+
+    CPPUNIT_ASSERT_EQUAL(abc, z4.lm());
+
+    ZDD z_zero;
+    CPPUNIT_ASSERT(z_zero.lm().isZero());
+
+    ZDD z_one; z_one.setOne();
+    CPPUNIT_ASSERT(z_one.lm().isOne());
 }
 
 void TestZDD::testZDDEqual() {

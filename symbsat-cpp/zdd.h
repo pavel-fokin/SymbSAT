@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+// #include <iostream>
 #include <iterator>
 #include <memory>
 #include <vector>
@@ -115,6 +116,12 @@ public:
     }
     inline bool isOne() const {
         return mRoot->isOne();
+    }
+    inline void setZero() {
+        mRoot = mZero;
+    }
+    inline void setOne() {
+        mRoot = mOne;
     }
 
     Monom lm() const;
