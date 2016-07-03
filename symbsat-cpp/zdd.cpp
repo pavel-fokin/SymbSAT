@@ -137,7 +137,8 @@ ZDD ZDD::operator+(const ZDD& rhs) const {
 }
 
 ZDD ZDD::operator+(const Monom& rhs) const {
-    ZDD tmp;
+    ZDD tmp(*this), rhs_zdd(rhs);
+    tmp.mRoot = tmp.add(mRoot, rhs_zdd.mRoot);
     return tmp;
 }
 
@@ -148,7 +149,8 @@ ZDD ZDD::operator*(const ZDD& rhs) const {
 }
 
 ZDD ZDD::operator*(const Monom& rhs) const {
-    ZDD tmp;
+    ZDD tmp(*this), rhs_zdd(rhs);
+    tmp.mRoot = tmp.mul(mRoot, rhs_zdd.mRoot);
     return tmp;
 }
 

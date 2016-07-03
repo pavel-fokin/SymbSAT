@@ -11,7 +11,9 @@ class TestZDD: public CppUnit::TestFixture {
     CPPUNIT_TEST(testZDDLm);
     CPPUNIT_TEST(testZDDEqual);
     CPPUNIT_TEST(testZDDAdd);
+    CPPUNIT_TEST(testZDDAddMonom);
     CPPUNIT_TEST(testZDDMul);
+    CPPUNIT_TEST(testZDDMulMonom);
 
     CPPUNIT_TEST_SUITE_END();
 public:
@@ -24,7 +26,9 @@ public:
     void testZDDLm();
     void testZDDEqual();
     void testZDDAdd();
+    void testZDDAddMonom();
     void testZDDMul();
+    void testZDDMulMonom();
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestZDD);
@@ -123,6 +127,17 @@ void TestZDD::testZDDAdd() {
     CPPUNIT_ASSERT_EQUAL(a + d, p2);
 }
 
+void TestZDD::testZDDAddMonom() {
+    ZDD a(1), b(2), c(3), d(4);
+    Monom m_ab; m_ab.setVar(1); m_ab.setVar(2);
+
+    ZDD p = a*b + b + c;
+
+    ZDD r = p + m_ab;
+
+    CPPUNIT_ASSERT_EQUAL(r, b + c);
+}
+
 void TestZDD::testZDDMul() {
     ZDD a(1), b(2), c(3), d(4);
 
@@ -135,4 +150,14 @@ void TestZDD::testZDDMul() {
 
     ZDD p3 = (a*b + b + c) * a;
     CPPUNIT_ASSERT_EQUAL(a*c, p3);
+}
+
+void TestZDD::testZDDMulMonom() {
+    ZDD a(1), b(2), c(3), d(4);
+    Monom m_a; m_a.setVar(1);
+
+    ZDD p = a*b + b + c;
+
+    ZDD r = p * m_a;
+    CPPUNIT_ASSERT_EQUAL(r, a*c);
 }
