@@ -60,10 +60,10 @@ class ZDD(object):
                 self.root = self._create_node(
                     monom.vars[0], ZDD._one, ZDD._zero
                 )
-                root = self.root
                 for var in monom.vars[1:]:
-                    root.mul = self._create_node(var, ZDD._one, ZDD._zero)
-                    root = root.mul
+                    self.root = self._mul(
+                        self.root, self._create_node(var, ZDD._one, ZDD._zero)
+                    )
         elif var < 0:
             self.root = ZDD._zero
         else:
@@ -220,6 +220,9 @@ class ZDD(object):
                 if path:
                     i = path.pop().add
                     monom.pop()
+                    if i.isOne():
+                        yield Monom.one
+                        break
                     while i != ZDD._one:
                         monom.append(i.var)
                         path.append(i)
