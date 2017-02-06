@@ -21,6 +21,7 @@ IF (BUILD_TEST)
 ENDIF (BUILD_TEST)
 
 ADD_LIBRARY(boolpoly STATIC
+    monomt.h
     monom.h
     monom.cpp
     poly.h
