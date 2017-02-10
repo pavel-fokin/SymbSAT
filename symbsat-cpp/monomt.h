@@ -152,6 +152,12 @@ public:
     }
   };
 
+  std::string toStr() const {
+    std::ostringstream s;
+    s << *this;
+    return s.str();
+  }
+
   friend std::ostream &operator<<(std::ostream &out, const Monom &a) {
     if (a.isZero()) {
       out << "0";
