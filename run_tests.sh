@@ -16,6 +16,7 @@ export GCOV_PREFIXSTRIP=20
 cmake ../symbsat-cpp
 make -j8
 tests/unittest
+tests/catch_tests
 popd
 find -name *.gcno -exec cp {} build/cov \; &>/dev/null
 find -name *.gcda -exec cp {} build/cov \; &>/dev/null

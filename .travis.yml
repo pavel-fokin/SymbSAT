@@ -16,12 +16,13 @@ addons:
       - libcppunit-dev
 
 install:
+  - wget https://raw.githubusercontent.com/philsquared/Catch/master/single_include/catch.hpp -P symbsat-cpp/tests
   - pip install -U pip setuptools
   - pip install coverage
 
 script:
   - (cd symbsat-py && coverage run --branch -m unittest tests/test_*.py)
-  - (mkdir build && cd build && cmake ../symbsat-cpp && make && tests/unittest)
+  - (mkdir build && cd build && cmake ../symbsat-cpp && make && tests/catch_tests && tests/unittest)
 
 after_success:
   - (cd symbsat-cpp && bash <(curl -s https://codecov.io/bash))
