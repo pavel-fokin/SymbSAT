@@ -92,7 +92,7 @@ public:
   bool operator==(const Monom &other) const {
     if (isZero() && other.isZero())
       return true;
-    if (isZero() && other.isZero())
+    if (isOne() && other.isOne())
       return true;
     if (isOne() && other.isZero())
       return false;
