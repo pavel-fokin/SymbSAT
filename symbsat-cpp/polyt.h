@@ -5,8 +5,6 @@
 #include <unordered_set>
 #include <vector>
 
-#include "monomt.h"
-
 namespace symbsat {
 
 template <typename MonomT> class Poly {

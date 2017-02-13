@@ -1,0 +1,323 @@
+#pragma once
+
+#include <stack>
+
+namespace symbsat {
+
+template <typename MonomType> class ZDD {
+  struct Node {
+    int mVar;
+    const Node *mMul; // and
+    const Node *mAdd; // xor
+
+    Node() = delete;
+    Node(const Node &n) = delete;
+    Node(const Node &&n) = delete;
+    Node &operator=(const Node &) = delete;
+    Node &operator=(const Node &&) = delete;
+
+    Node(int var, const Node *mul, const Node *add)
+        : mVar(var), mMul(mul), mAdd(add) {}
+
+    inline bool isZero() const { return mVar == -2; }
+    inline bool isOne() const { return mVar == -1; }
+
+    static bool isEqual(const Node *a, const Node *b) {
+      if (a->mVar != b->mVar) {
+        return false;
+      } else if (a->isZero() && b->isZero()) {
+        return true;
+      } else if (a->isOne() && b->isOne()) {
+        return true;
+      } else {
+        return isEqual(a->mAdd, b->mAdd) && isEqual(a->mMul, b->mMul);
+      }
+    }
+  };
+
+  const Node *mRoot;
+  std::vector<Node *> mNodes;
+
+  const Node *mOne = create_node(-1, nullptr, nullptr);
+  const Node *mZero = create_node(-2, nullptr, nullptr);
+
+  inline const Node *create_node(int var, const Node *mul, const Node *add) {
+    Node *tmp = new Node(var, mul, add);
+    mNodes.push_back(tmp);
+    return tmp;
+  }
+
+  const Node *copy(const Node *n) {
+    if (n->mVar == -2) {
+      return mZero;
+    } else if (n->mVar == -1) {
+      return mOne;
+    } else {
+      return create_node(n->mVar, copy(n->mMul), copy(n->mAdd));
+    }
+  }
+
+  friend std::ostream &operator<<(std::ostream &out, const Node *a);
+
+  const Node *add(const Node *i, const Node *j) {
+    if (i->isZero()) {
+      return copy(j);
+    } else if (j->isZero()) {
+      return copy(i);
+      // } else if (i == j) {
+    } else if (ZDD::Node::isEqual(i, j)) {
+      // return 0
+      return mZero;
+    } else if (i->isOne()) {
+      return create_node(j->mVar, copy(j->mMul), add(j->mAdd, mOne));
+    } else if (j->isOne()) {
+      return create_node(i->mVar, copy(i->mMul), add(i->mAdd, mOne));
+    } else {
+      if (i->mVar < j->mVar) {
+        return create_node(i->mVar, copy(i->mMul), add(i->mAdd, j));
+      } else if (i->mVar > j->mVar) {
+        return create_node(
+            // j->mVar, copy(j->mMul), add(j->mAdd, i)
+            j->mVar, j->mMul, add(i, j->mAdd));
+      } else {
+        auto m = add(i->mMul, j->mMul);
+        auto a = add(i->mAdd, j->mAdd);
+
+        if (m->isZero()) {
+          return a;
+        }
+
+        return create_node(i->mVar, m, a);
+      }
+    }
+  }
+  const Node *mul(const Node *i, const Node *j) {
+    if (i->isOne()) {
+      return copy(j);
+    } else if (i->isZero() || j->isZero()) {
+      // return 0
+      return mZero;
+      // } else if ( j->isOne() || i == j ) {
+    } else if (j->isOne() || ZDD::Node::isEqual(i, j)) {
+      return copy(i);
+    } else {
+      if (i->mVar < j->mVar) {
+        auto m = mul(i->mMul, j);
+        auto a = mul(i->mAdd, j);
+
+        if (m->isZero()) {
+          return a;
+        }
+
+        return create_node(i->mVar, m, a);
+      } else if (i->mVar > j->mVar) {
+        auto m = mul(j->mMul, i);
+        auto a = mul(j->mAdd, i);
+
+        if (m->isZero()) {
+          return a;
+        }
+
+        return create_node(j->mVar, m, a);
+      } else {
+        auto m1 = mul(i->mAdd, j->mMul);
+        auto m2 = mul(i->mMul, j->mMul);
+        auto m3 = mul(i->mMul, j->mAdd);
+        auto m = add(m1, add(m2, m3));
+
+        if (m->isZero()) {
+          return mul(i->mAdd, j->mAdd);
+        }
+
+        return create_node(i->mVar, m, mul(i->mAdd, j->mAdd));
+      }
+    }
+  }
+
+public:
+  ZDD() {
+    // mRoot = create_node(-2, nullptr, nullptr); // zero
+    mRoot = mZero;
+  }
+  ZDD(const ZDD &z) { mRoot = copy(z.mRoot); }
+  ZDD(const ZDD &&z) { mRoot = copy(z.mRoot); }
+
+  ZDD &operator=(const ZDD &other) {
+    if (this != &other) {
+      mRoot = copy(other.mRoot);
+    }
+    return *this;
+  }
+  ZDD &operator=(const ZDD &&other) {
+    if (this != &other) {
+      // mRoot = copy(other.mRoot);
+      mRoot = other.mRoot;
+    }
+    return *this;
+  }
+  ~ZDD() {
+    std::for_each(std::begin(mNodes), std::end(mNodes),
+                  [](Node *n) { delete n; });
+  }
+
+  explicit ZDD(int var) { mRoot = create_node(var, mOne, mZero); }
+  explicit ZDD(const MonomType &m) {
+    if (m.isOne()) {
+      setOne();
+    } else if (m.isZero()) {
+      setZero();
+    } else {
+      std::vector<int> vars = m.getVars();
+      mRoot = create_node(vars[0], mOne, mZero);
+
+      size_t vsize = vars.size();
+      for (size_t i = 1; i < vsize; ++i) {
+        mRoot = mul(mRoot, create_node(vars[i], mOne, mZero));
+      }
+    }
+  }
+
+  inline bool isZero() const { return mRoot->isZero(); }
+  inline bool isOne() const { return mRoot->isOne(); }
+  inline void setZero() { mRoot = mZero; }
+  inline void setOne() { mRoot = mOne; }
+  MonomType lm() const {
+    MonomType tmp;
+    if (isZero()) {
+      return tmp;
+    } else if (isOne()) {
+      tmp.setOne();
+      return tmp;
+    } else {
+      for (const Node *i = this->mRoot; i->mVar >= 0; i = i->mMul) {
+        tmp.setVar(i->mVar);
+      }
+      return tmp;
+    }
+  }
+
+  ZDD &operator+=(const ZDD &rhs) {
+    mRoot = add(mRoot, rhs.mRoot);
+    return *this;
+  }
+  friend ZDD operator+(ZDD lhs, const ZDD &rhs) {
+    lhs += rhs;
+    return lhs;
+  }
+
+  ZDD &operator+=(const MonomType &rhs) {
+    ZDD rhs_zdd(rhs);
+    mRoot = add(mRoot, rhs_zdd.mRoot);
+    return *this;
+  }
+  friend ZDD operator+(ZDD lhs, const MonomType &rhs) {
+    lhs += rhs;
+    return lhs;
+  }
+
+  ZDD &operator*=(const ZDD &rhs) {
+    mRoot = mul(mRoot, rhs.mRoot);
+    return *this;
+  }
+  friend ZDD operator*(ZDD lhs, const ZDD &rhs) {
+    lhs *= rhs;
+    return lhs;
+  }
+
+  ZDD &operator*=(const MonomType &rhs) {
+    ZDD rhs_zdd(rhs);
+    mRoot = mul(mRoot, rhs_zdd.mRoot);
+    return *this;
+  }
+  friend ZDD operator*(ZDD lhs, const MonomType &rhs) {
+    lhs *= rhs;
+    return lhs;
+  }
+
+  // TODO need to review for correctness
+  bool operator==(const ZDD &rhs) const {
+
+    if (this == &rhs) {
+      return true;
+    }
+
+    MonomConstIterator it1(*this), it2(rhs);
+
+    while (!it1 || !it2) {
+      if (!(it1.monom() == it2.monom())) {
+        return false;
+      }
+      ++it1;
+      ++it2;
+    }
+
+    // TODO should be used || or ^ ?
+    // FIXME bitwise operator on bools
+    if (!it1 ^ !it2) {
+      return false;
+    }
+
+    return true;
+  }
+
+  class MonomConstIterator {
+    std::vector<int> mMonom;
+    std::stack<const Node *> mPath;
+
+  public:
+    explicit MonomConstIterator(const ZDD &z) {
+      for (const Node *i = z.mRoot; i->mVar >= 0; i = i->mMul) {
+        mPath.push(i);
+        mMonom.push_back(i->mVar);
+      }
+    };
+    ~MonomConstIterator() = default;
+
+    const MonomType monom() const {
+      MonomType tmp;
+      for (auto &i : mMonom) {
+        tmp.setVar(i);
+      }
+      return tmp;
+    }
+
+    operator bool() const { return mPath.empty(); }
+    void operator++() {
+      while (!mPath.empty() && (mPath.top()->mAdd->isZero())) {
+        mPath.pop();
+        mMonom.erase(std::begin(mMonom));
+      }
+      if (!mPath.empty()) {
+        const Node *i = mPath.top()->mAdd;
+        mPath.pop();
+        mMonom.erase(std::begin(mMonom));
+        for (; !i->isOne(); i = i->mMul) {
+          mPath.push(i);
+          mMonom.push_back(i->mVar);
+        }
+      }
+    }
+  };
+
+  friend std::ostream &operator<<(std::ostream &out, const ZDD &a) {
+    if (a.isZero()) {
+      out << "0";
+    } else if (a.isOne()) {
+      out << "1";
+    } else {
+      ZDD::MonomConstIterator it(a);
+      while (!it) {
+        out << it.monom() << " ";
+        ++it;
+      }
+    }
+    return out;
+  }
+  std::string toStr() const {
+    std::ostringstream s;
+    s << *this;
+    return s.str();
+  }
+};
+
+}; // namespace symbsat
