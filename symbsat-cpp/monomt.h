@@ -8,46 +8,44 @@ template <size_t N> class Monom {
 
   std::bitset<N> mVars;
 
-  bool is_zero = false;
   bool is_one = false;
 
 public:
-  Monom() : is_zero(true) {}
+  Monom() =default;
   ~Monom() = default;
   Monom(size_t var) { mVars.set(var); }
   Monom(const Monom &m)
-      : mVars(m.mVars), is_zero(m.is_zero), is_one(m.is_one) {}
+      : mVars(m.mVars), is_one(m.is_one) {}
   Monom(const Monom &&m) noexcept : mVars(std::move(m.mVars)),
-                                    is_zero(std::move(m.is_zero)),
                                     is_one(std::move(m.is_one)) {}
   Monom &operator=(const Monom &other) {
     if (this != &other) {
       mVars = other.mVars;
       is_one = other.is_one;
-      is_zero = other.is_zero;
     }
     return *this;
   }
   Monom &operator=(Monom &&other) noexcept {
     if (this != &other) {
       mVars = std::move(other.mVars);
-      is_zero = std::move(other.is_zero);
       is_one = std::move(other.is_one);
     }
     return *this;
   }
 
-  bool isZero() const { return is_zero; }
+  bool isZero() const { return !is_one && mVars.none(); }
   bool isOne() const { return is_one; }
   void setZero() {
-    is_zero = true;
+    mVars.reset();
     is_one = false;
   }
   void setOne() {
     is_one = true;
-    is_zero = false;
   }
 
+  void setVar(size_t var) {
+      mVars.set(var);
+  }
   std::vector<int> getVars() const {
     std::vector<int> vars;
 
