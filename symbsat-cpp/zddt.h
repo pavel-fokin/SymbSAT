@@ -1,3 +1,5 @@
+#include <iostream>
+
 #pragma once
 
 #include <stack>
@@ -148,10 +150,10 @@ public:
     }
     return *this;
   }
+  // TODO move assignment
   ZDD &operator=(const ZDD &&other) {
     if (this != &other) {
-      // mRoot = copy(other.mRoot);
-      mRoot = other.mRoot;
+      mRoot = copy(other.mRoot);
     }
     return *this;
   }
@@ -275,8 +277,13 @@ public:
 
     const MonomType monom() const {
       MonomType tmp;
-      for (auto &i : mMonom) {
-        tmp.setVar(i);
+      if (!mMonom.empty() && mMonom.back() == -1 ) {
+        // std::cout << "### 3 " << mMonom.back() << "\n";
+        tmp.setOne();
+      } else {
+        for (auto &i : mMonom) {
+          tmp.setVar(i);
+        }
       }
       return tmp;
     }
@@ -291,9 +298,16 @@ public:
         const Node *i = mPath.top()->mAdd;
         mPath.pop();
         mMonom.erase(std::begin(mMonom));
-        for (; !i->isOne(); i = i->mMul) {
+        if (i->isOne()) {
+          // std::cout << "### 1\n";
           mPath.push(i);
-          mMonom.push_back(i->mVar);
+          mMonom.push_back(-1);
+          // std::cout << "### 2 " << mMonom.back() << "\n";
+        } else {
+          for (; !i->isOne(); i = i->mMul) {
+            mPath.push(i);
+            mMonom.push_back(i->mVar);
+          }
         }
       }
     }

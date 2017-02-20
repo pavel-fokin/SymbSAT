@@ -20,6 +20,7 @@ ADD_EXECUTABLE( catch_tests
     catch_test_monomt.cpp
     catch_test_polyt.cpp
     catch_test_zddt.cpp
+    test_polyfuncs.cpp
 )
 
 TARGET_LINK_LIBRARIES( catch_tests
