@@ -35,8 +35,20 @@ public:
     return *this;
   }
 
+  explicit Poly(int var) {
+    MonomT m(var);
+    mMonoms.push_back(m);
+  }
+
   bool isZero() const { return mMonoms.empty(); }
   bool isOne() const { return mMonoms.size() == 1 && mMonoms[0].isOne(); }
+  void setZero() { mMonoms.clear(); };
+  void setOne() {
+    MonomT m_one;
+    m_one.setOne();
+    mMonoms.clear();
+    mMonoms.push_back(m_one);
+  }
 
   MonomT lm() const {
     if (isZero()) {
@@ -44,6 +56,12 @@ public:
     }
     return mMonoms.back();
   };
+
+  bool operator==(const Poly &other) const {
+    Poly a(*this), b(other);
+
+    return std::equal(a.mMonoms.begin(), a.mMonoms.end(), b.mMonoms.begin());
+  }
 
   Poly &operator+=(const Poly &b) {
     std::vector<MonomT> monoms;
@@ -96,14 +114,14 @@ public:
     }
     std::unordered_set<MonomT, typename MonomT::hash> monoms_set;
 
-    for (auto& m: mMonoms) {
-        MonomT tmp(m*b);
+    for (auto &m : mMonoms) {
+      MonomT tmp(m * b);
 
-        if (monoms_set.find(tmp) == monoms_set.end()) {
-            monoms_set.insert(tmp);
-        } else {
-            monoms_set.erase(tmp);
-        }
+      if (monoms_set.find(tmp) == monoms_set.end()) {
+        monoms_set.insert(tmp);
+      } else {
+        monoms_set.erase(tmp);
+      }
     }
 
     std::vector<MonomT> monoms_vec(std::begin(monoms_set),
