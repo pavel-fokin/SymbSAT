@@ -278,7 +278,6 @@ public:
     const MonomType monom() const {
       MonomType tmp;
       if (!mMonom.empty() && mMonom.back() == -1 ) {
-        // std::cout << "### 3 " << mMonom.back() << "\n";
         tmp.setOne();
       } else {
         for (auto &i : mMonom) {
@@ -290,23 +289,26 @@ public:
 
     operator bool() const { return mPath.empty(); }
     void operator++() {
-      while (!mPath.empty() && (mPath.top()->mAdd->isZero())) {
+      if (mPath.top()->isOne()) {
         mPath.pop();
         mMonom.erase(std::begin(mMonom));
-      }
-      if (!mPath.empty()) {
-        const Node *i = mPath.top()->mAdd;
-        mPath.pop();
-        mMonom.erase(std::begin(mMonom));
-        if (i->isOne()) {
-          // std::cout << "### 1\n";
-          mPath.push(i);
-          mMonom.push_back(-1);
-          // std::cout << "### 2 " << mMonom.back() << "\n";
-        } else {
-          for (; !i->isOne(); i = i->mMul) {
+      } else {
+        while (!mPath.empty() && (mPath.top()->mAdd->isZero())) {
+          mPath.pop();
+          mMonom.erase(std::begin(mMonom));
+        }
+        if (!mPath.empty()) {
+          const Node *i = mPath.top()->mAdd;
+          mPath.pop();
+          mMonom.erase(std::begin(mMonom));
+          if (i->isOne()) {
             mPath.push(i);
-            mMonom.push_back(i->mVar);
+            mMonom.push_back(-1);
+          } else {
+            for (; !i->isOne(); i = i->mMul) {
+              mPath.push(i);
+              mMonom.push_back(i->mVar);
+            }
           }
         }
       }
