@@ -78,6 +78,11 @@ public:
   }
 
   Poly &operator*=(const Poly &b) {
+    // if (isOne()) {
+    //   mMonoms.clear();
+    //   mMonoms = b.mMonoms;
+    //   return *this;
+    // }
     if (isZero() || b.isZero()) {
       mMonoms.clear();
       return *this;
@@ -108,6 +113,11 @@ public:
     return lhs;
   }
   Poly &operator*=(const MonomT &b) {
+    // if (isOne()) {
+    //   mMonoms.clear();
+    //   mMonoms.push_back(b);
+    //   return *this;
+    // }
     if (isZero() || b.isZero()) {
       mMonoms.clear();
       return *this;

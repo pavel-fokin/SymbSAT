@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "catch.hpp"
 
 #include "monomt.h"
@@ -75,5 +73,19 @@ TEST_CASE("Polynomial Multiplication", "[poly-mul]") {
     p_res *= _0;
 
     REQUIRE(p_res.isZero());
+  }
+
+  SECTION("Fix Bug Monoms == 1") {
+    Monoms::Monom32 a(0), b(1), c(2);
+    Poly<Monoms::Monom32> x1(0), x2(1), x3(2), _1;
+    _1.setOne();
+
+    Poly<Monoms::Monom32> p1, p2;
+
+    p1 = (x1 + _1)*(b*c);
+    p2 = (x1 + _1)*(x2*x3);
+    REQUIRE(p1 == x1*x2*x3 + x2*x3);
+    REQUIRE(p2 == x1*x2*x3 + x2*x3);
+
   }
 }
