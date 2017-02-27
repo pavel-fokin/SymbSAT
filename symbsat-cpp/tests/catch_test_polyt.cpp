@@ -38,6 +38,7 @@ TEST_CASE("Polynomial Addition", "[poly-add]") {
   p_ab = p_a + p_b;
   p_aa = p_a + p_a;
   REQUIRE(p_aa.isZero());
+
 }
 
 TEST_CASE("Polynomial Multiplication", "[poly-mul]") {
@@ -87,5 +88,13 @@ TEST_CASE("Polynomial Multiplication", "[poly-mul]") {
     REQUIRE(p1 == x1*x2*x3 + x2*x3);
     REQUIRE(p2 == x1*x2*x3 + x2*x3);
 
+  }
+  SECTION ("Fix Bug p = x1 + x1 + 1") {
+    Poly<Monoms::Monom32> x1(1), p, f, _1;
+    _1.setOne();
+
+   p = x1; 
+   f = x1 + _1;
+   p = p + f*_1;
   }
 }

@@ -50,6 +50,15 @@ TEST_CASE("Monom Multiplication", "[monom-mul]") {
 
     b = _0 * a;
     REQUIRE(b.isZero());
+
+    SECTION ("Multiply 1*1") {
+        Monoms::Monom32 one_1, one_2, res;
+        one_1.setOne();
+        one_2.setOne();
+        res = one_1 * one_2;
+
+        REQUIRE(res.isOne());
+    }
 }
 
 TEST_CASE("Monom IsDivisible", "[monom-isdivisible]") {

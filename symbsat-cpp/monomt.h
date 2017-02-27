@@ -100,6 +100,9 @@ public:
   }
 
   Monom &operator*=(const Monom &b) {
+    if (*this == b) {
+      return *this;
+    }
     if (this->isOne()) {
       is_one = false;
       mVars = b.mVars;

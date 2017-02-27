@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "catch.hpp"
 
 #include "monomt.h"
@@ -175,4 +173,40 @@ TEST_CASE("NormalForm 3 PolyZDD", "[normalform3-polyzdd]") {
   p_nf = normalform(p, F);
 
   REQUIRE(p_nf == x3*x4 + _1);
+}
+
+TEST_CASE("NormalForm 4 PolyZDD", "[normalform4-polyzdd]") {
+  ZDD<Monoms::Monom32> x1(1), x2(2),
+                        x3(3), x4(4), _1;
+  _1.setOne();
+
+  ZDD<Monoms::Monom32> p = x1 + x2;
+  ZDD<Monoms::Monom32> p_nf;
+
+  std::vector<ZDD<Monoms::Monom32>> F {
+    x2 + x4,
+    x4 + _1
+  };
+
+  p_nf = normalform(p, F);
+
+  REQUIRE(p_nf == x1 + _1);
+}
+
+TEST_CASE("NormalForm 4 PolyList", "[normalform4-polylist]") {
+  Poly<Monoms::Monom32> x1(1), x2(2),
+                        x3(3), x4(4), _1;
+  _1.setOne();
+
+  Poly<Monoms::Monom32> p = x1 + x2;
+  Poly<Monoms::Monom32> p_nf;
+
+  std::vector<Poly<Monoms::Monom32>> F {
+    x2 + x4,
+    x4 + _1
+  };
+
+  p_nf = normalform(p, F);
+
+  REQUIRE(p_nf == x1 + _1);
 }
