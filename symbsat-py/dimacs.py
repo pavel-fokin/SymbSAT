@@ -48,7 +48,9 @@ def load(filename, poly_type="list"):
     # list with polynomials
     P = []
 
-    for line in open(filename, 'r'):
+    file = open(filename, 'r')
+
+    for line in file:
 
         if line.startswith('c'):
             print(line.strip())
@@ -70,7 +72,10 @@ def load(filename, poly_type="list"):
         # accumulate clauses
         if line.endswith('0\n') or line.endswith('0'):
             p = _parse_line(line, x)
+            print(p)
             P.append(p)
+
+    file.close()
 
     assert num_clauses == len(P)
 
