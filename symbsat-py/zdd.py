@@ -37,9 +37,10 @@ class ZDD(object):
             elif self == ZDD._zero:
                 return "_zero"
             else:
-                return "{} -> {} {}".format(str(self.var),
-                                            str(self.mul),
-                                            str(self.add))
+                return (
+                    '%s -> {%s} {%s}' %
+                    (self.var, self.mul, self.add)
+                )
 
         def __eq__(self, other):
             return id(self) == id(other)
@@ -227,6 +228,9 @@ class ZDD(object):
                         monom.append(i.var)
                         path.append(i)
                         i = i.mul
+                    if monom == []:
+                        yield Monom.one
+                        break
                     yield Monom(vars=monom)
 
     def __str__(self):
