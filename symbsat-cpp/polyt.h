@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <unordered_set>
 #include <vector>
+#include <sstream>
 
 namespace symbsat {
 

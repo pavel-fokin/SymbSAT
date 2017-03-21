@@ -100,7 +100,7 @@ template <typename MonomType> class ZDD {
         return create_node(i->mVar, copy(i->mMul), add(i->mAdd, j));
       } else if (i->mVar > j->mVar) {
         return create_node(
-            //j->mVar, copy(j->mMul), add(i, j->mAdd));
+            // j->mVar, copy(j->mMul), add(i, j->mAdd));
             j->mVar, j->mMul, add(i, j->mAdd));
       } else {
         auto m = add(i->mMul, j->mMul);
