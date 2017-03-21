@@ -18,6 +18,15 @@ template <typename MonomType> class ZDD {
     Node &operator=(const Node &) = delete;
     Node &operator=(const Node &&) = delete;
 
+    Node(bool one) {
+      if (one) {
+        mVar = -1;
+      } else {
+        mVar = -2;
+      }
+      mMul = nullptr;
+      mAdd = nullptr;
+    }
     Node(int var, const Node *mul, const Node *add)
         : mVar(var), mMul(mul), mAdd(add) {}
 
@@ -40,8 +49,10 @@ template <typename MonomType> class ZDD {
   const Node *mRoot;
   std::vector<Node *> mNodes;
 
-  const Node *mOne = create_node(-1, nullptr, nullptr);
-  const Node *mZero = create_node(-2, nullptr, nullptr);
+  // const Node *const mOne = create_node(-1, nullptr, nullptr);
+  // const Node *const mZero = create_node(-2, nullptr, nullptr);
+  static const Node *const mOne;
+  static const Node *const mZero;
 
   inline const Node *create_node(int var, const Node *mul, const Node *add) {
     Node *tmp = new Node(var, mul, add);
@@ -59,7 +70,17 @@ template <typename MonomType> class ZDD {
     }
   }
 
-  friend std::ostream &operator<<(std::ostream &out, const Node *a);
+  friend std::ostream &operator<<(std::ostream &out, const Node *a) {
+      if (a->isZero()) {
+          out << "_zero";
+      } else if (a->isOne()) {
+          out << "_one";
+      } else {
+          out << a->mVar << " -> {" << a->mMul << "} {" << a->mAdd << "} ";
+      }
+
+      return out;
+  }
 
   const Node *add(const Node *i, const Node *j) {
     if (i->isZero()) {
@@ -79,7 +100,7 @@ template <typename MonomType> class ZDD {
         return create_node(i->mVar, copy(i->mMul), add(i->mAdd, j));
       } else if (i->mVar > j->mVar) {
         return create_node(
-            // j->mVar, copy(j->mMul), add(j->mAdd, i)
+            //j->mVar, copy(j->mMul), add(i, j->mAdd));
             j->mVar, j->mMul, add(i, j->mAdd));
       } else {
         auto m = add(i->mMul, j->mMul);
@@ -99,7 +120,6 @@ template <typename MonomType> class ZDD {
     } else if (i->isZero() || j->isZero()) {
       // return 0
       return mZero;
-      // } else if ( j->isOne() || i == j ) {
     } else if (j->isOne() || ZDD::Node::isEqual(i, j)) {
       return copy(i);
     } else {
@@ -245,7 +265,8 @@ public:
 
     MonomConstIterator it1(*this), it2(rhs);
 
-    while (!it1 || !it2) {
+    //while (!it1 || !it2) {
+    while (!it1 && !it2) {
       if (!(it1.monom() == it2.monom())) {
         return false;
       }
@@ -277,7 +298,7 @@ public:
 
     const MonomType monom() const {
       MonomType tmp;
-      if (!mMonom.empty() && mMonom.back() == -1 ) {
+      if (mMonom.back() == -1) {
         tmp.setOne();
       } else {
         for (auto &i : mMonom) {
@@ -291,28 +312,30 @@ public:
     void operator++() {
       if (mPath.top()->isOne()) {
         mPath.pop();
-        mMonom.erase(std::begin(mMonom));
-      } else {
-        while (!mPath.empty() && (mPath.top()->mAdd->isZero())) {
-          mPath.pop();
-          mMonom.erase(std::begin(mMonom));
+        mMonom.clear();
+      }
+      while (!mPath.empty() && (mPath.top()->mAdd->isZero())) {
+        mPath.pop();
+        mMonom.pop_back();
+      }
+
+      if (!mPath.empty()) {
+        const Node *i = mPath.top()->mAdd;
+        mPath.pop();
+        mMonom.pop_back();
+
+        while (!i->isOne()) {
+          mPath.push(i);
+          mMonom.push_back(i->mVar);
+          i = i->mMul;
         }
-        if (!mPath.empty()) {
-          const Node *i = mPath.top()->mAdd;
-          mPath.pop();
-          mMonom.erase(std::begin(mMonom));
-          if (i->isOne()) {
-            mPath.push(i);
-            mMonom.push_back(-1);
-          } else {
-            for (; !i->isOne(); i = i->mMul) {
-              mPath.push(i);
-              mMonom.push_back(i->mVar);
-            }
-          }
+        if (mMonom.empty()) {
+          mPath.push(mOne);
+          mMonom.push_back(-1);
         }
       }
     }
+
   };
 
   friend std::ostream &operator<<(std::ostream &out, const ZDD &a) {
@@ -334,6 +357,15 @@ public:
     s << *this;
     return s.str();
   }
-};
+
+}; // ZDD Template
+
+template <typename MonomType>
+const typename ZDD<MonomType>::Node *const
+    ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
+
+template <typename MonomType>
+const typename ZDD<MonomType>::Node *const
+    ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
 
 }; // namespace symbsat

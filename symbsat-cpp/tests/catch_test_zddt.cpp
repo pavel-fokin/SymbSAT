@@ -5,6 +5,26 @@
 
 using namespace symbsat;
 
+TEST_CASE("ZDD MonomIterator", "[zdd-monom-iter]") {
+  ZDD<Monoms::Monom32> z1(1), z2(2);
+  ZDD<Monoms::Monom32> z3 = z1 * z2 + z2;
+
+  ZDD<Monoms::Monom32>::MonomConstIterator it1(z3);
+
+  while (!it1) {
+    ++it1;
+  }
+
+  ZDD<Monoms::Monom32> z4;
+  ZDD<Monoms::Monom32>::MonomConstIterator it2(z4);
+
+  while (!it2) {
+    ++it2;
+  }
+
+  REQUIRE(true);
+}
+
 TEST_CASE("ZDD Constructor", "[zdd-constructor]") {
   ZDD<Monoms::Monom32> z;
   REQUIRE(z.isZero());
@@ -42,19 +62,6 @@ TEST_CASE("ZDD Constructor of Monoms", "[zdd-constructor-monom]") {
   REQUIRE(z_one.isOne());
 }
 
-TEST_CASE("ZDD MonomIterator", "[zdd-monom-iter]") {
-  ZDD<Monoms::Monom32> z1(1), z2(2);
-  ZDD<Monoms::Monom32> z3 = z1 * z2 + z2;
-
-  ZDD<Monoms::Monom32>::MonomConstIterator it(z3);
-
-  while (!it) {
-    ++it;
-  }
-
-  REQUIRE(true);
-}
-
 TEST_CASE("ZDD LM", "[zdd-lm]") {
   Monoms::Monom32 a(1), b(2), c(3);
   Monoms::Monom32 abc(a * b * c);
@@ -73,14 +80,23 @@ TEST_CASE("ZDD LM", "[zdd-lm]") {
 }
 
 TEST_CASE("ZDD Addition", "[zdd-add]") {
-  ZDD<Monoms::Monom32> a(1), b(2), c(3), d(4);
+  ZDD<Monoms::Monom32> a(1), b(2), c(3), d(4), _1;
+  _1.setOne();
 
-  ZDD<Monoms::Monom32> p1 = a + a + b + b;
-  REQUIRE(p1.isZero());
+  // ZDD<Monoms::Monom32> p1 = a + a + b + b;
+  // REQUIRE(p1.isZero());
 
-  ZDD<Monoms::Monom32> p2 = a + c + c + d;
+  // ZDD<Monoms::Monom32> p2 = a + c + c + d;
+  // REQUIRE(a + d == p2);
 
-  REQUIRE(a + d == p2);
+  // ZDD<Monoms::Monom32> p3;
+  // p3 = a*(b + _1);
+  ZDD<Monoms::Monom32> p1 = a*b + a;
+  ZDD<Monoms::Monom32> p2 = c + _1;
+  std::cout << "====\n";
+  ZDD<Monoms::Monom32> p3 = p1 * p2;
+  std::cout << "\n" << p3 << "!!\n";
+  std::cout << "\n" << a + _1 << "!!!\n";
 }
 
 TEST_CASE("ZDD Add Monom", "[zdd-add-monom]") {
