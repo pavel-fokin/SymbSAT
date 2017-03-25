@@ -1,8 +1,8 @@
 #include "catch.hpp"
 
-#include "monomt.h"
-#include "polyt.h"
-#include "zddt.h"
+#include "monom.h"
+#include "poly.h"
+#include "zdd.h"
 #include "polyfuncs.h"
 
 using namespace symbsat;

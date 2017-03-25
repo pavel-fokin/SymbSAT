@@ -1,10 +1,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "monomt.h"
-#include "polyt.h"
-#include "zddt.h"
-#include "gbt.h"
+#include "monom.h"
+#include "poly.h"
+#include "zdd.h"
+#include "gb.h"
 
 using namespace symbsat;
 

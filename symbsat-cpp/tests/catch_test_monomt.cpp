@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "monomt.h"
+#include "monom.h"
 
 TEST_CASE("Monom Constructor", "[monom-constructor]") {
   Monoms::Monom32 x1(0), x2(1);

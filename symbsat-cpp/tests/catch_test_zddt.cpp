@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "monomt.h"
-#include "zddt.h"
+#include "monom.h"
+#include "zdd.h"
 
 using namespace symbsat;
 

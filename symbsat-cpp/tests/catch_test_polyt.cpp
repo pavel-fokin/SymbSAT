@@ -1,7 +1,7 @@
 #include "catch.hpp"
 
-#include "monomt.h"
-#include "polyt.h"
+#include "monom.h"
+#include "poly.h"
 
 using namespace symbsat;
 

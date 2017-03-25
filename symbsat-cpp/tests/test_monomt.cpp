@@ -1,7 +1,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/config/SourcePrefix.h>
 
-#include "monomt.h"
+#include "monom.h"
 
 class TestMonomT: public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(TestMonomT);
