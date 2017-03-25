@@ -4,7 +4,7 @@
 #include <vector>
 #include <sstream>
 
-namespace Monoms {
+namespace symbsat {
 
 template <size_t N> class Monom {
 

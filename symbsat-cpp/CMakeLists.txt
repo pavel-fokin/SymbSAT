@@ -20,8 +20,8 @@ IF (BUILD_TEST)
   ADD_SUBDIRECTORY (tests)
 ENDIF (BUILD_TEST)
 
-ADD_EXECUTABLE(satsolvert satsolver.cpp)
+ADD_EXECUTABLE(satsolver satsolver.cpp)
 
-TARGET_LINK_LIBRARIES( satsolvert
+TARGET_LINK_LIBRARIES( satsolver
   gcov
 )

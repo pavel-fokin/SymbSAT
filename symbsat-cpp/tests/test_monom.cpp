@@ -2,10 +2,12 @@
 
 #include "monom.h"
 
+using namespace symbsat;
+
 TEST_CASE("Monom Constructor", "[monom-constructor]") {
-  Monoms::Monom32 x1(0), x2(1);
-  Monoms::Monom32 _0;
-  Monoms::Monom32 _1;
+  Monom32 x1(0), x2(1);
+  Monom32 _0;
+  Monom32 _1;
   _1.setOne();
 
   CHECK(!(x1 == x2));
@@ -16,8 +18,8 @@ TEST_CASE("Monom Constructor", "[monom-constructor]") {
 }
 
 TEST_CASE("Monom Ordering", "[monom-ordering]") {
-  Monoms::Monom64 a(0), b(1), c(2), ab(a * b);
-  Monoms::Monom64 _0, _1;
+  Monom64 a(0), b(1), c(2), ab(a * b);
+  Monom64 _0, _1;
   _1.setOne();
 
   REQUIRE(!(a < b));
@@ -28,8 +30,8 @@ TEST_CASE("Monom Ordering", "[monom-ordering]") {
 }
 
 TEST_CASE("Monom Multiplication", "[monom-mul]") {
-    Monoms::Monom64 a(0), b(1), c(2), abc;
-    Monoms::Monom64 _0, _1;
+    Monom64 a(0), b(1), c(2), abc;
+    Monom64 _0, _1;
     _1.setOne();
 
     abc = a*b*c;
@@ -52,7 +54,7 @@ TEST_CASE("Monom Multiplication", "[monom-mul]") {
     REQUIRE(b.isZero());
 
     SECTION ("Multiply 1*1") {
-        Monoms::Monom32 one_1, one_2, res;
+        Monom32 one_1, one_2, res;
         one_1.setOne();
         one_2.setOne();
         res = one_1 * one_2;
@@ -62,8 +64,8 @@ TEST_CASE("Monom Multiplication", "[monom-mul]") {
 }
 
 TEST_CASE("Monom IsDivisible", "[monom-isdivisible]") {
-    Monoms::Monom64 a(0), b(1), ab;
-    Monoms::Monom64 _0, _1;
+    Monom64 a(0), b(1), ab;
+    Monom64 _0, _1;
     _1.setOne();
 
     // REQUIRE(!a.isdivisible(_0));
@@ -80,9 +82,9 @@ TEST_CASE("Monom IsDivisible", "[monom-isdivisible]") {
 }
 
 TEST_CASE("Monom Division", "[monom-division]") {
-    Monoms::Monom64 a(0), b(1), c(2);
-    Monoms::Monom64 ab(a*b), bc(b*c), abc(a*b*c);
-    Monoms::Monom64 _0, _1;
+    Monom64 a(0), b(1), c(2);
+    Monom64 ab(a*b), bc(b*c), abc(a*b*c);
+    Monom64 _0, _1;
     _1.setOne();
 
     // b = a/_1;
@@ -103,8 +105,8 @@ TEST_CASE("Monom Division", "[monom-division]") {
 }
 
 TEST_CASE("Monom IsRelativelyPrime", "[monom-isrelativelyprime]") {
-    Monoms::Monom64 a(0), b(1), ab(a*b);
-    Monoms::Monom64 _0, _1;
+    Monom64 a(0), b(1), ab(a*b);
+    Monom64 _0, _1;
     _1.setOne();
 
     REQUIRE(a.isrelativelyprime(a));
@@ -114,8 +116,8 @@ TEST_CASE("Monom IsRelativelyPrime", "[monom-isrelativelyprime]") {
 }
 
 TEST_CASE("Monom GetVars", "[monom-getvars]") {
-    Monoms::Monom64 a(0), b(1), c(2), d(3);
-    Monoms::Monom64 abd(a*b*d);
+    Monom64 a(0), b(1), c(2), d(3);
+    Monom64 abd(a*b*d);
 
     std::vector<int> vars {0,1,3};
     REQUIRE(abd.getVars() == vars);

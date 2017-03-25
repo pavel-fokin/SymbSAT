@@ -8,7 +8,7 @@
 
 using namespace symbsat;
 
-using PolyN = Poly<Monoms::Monom128>;
+using PolyN = Poly<Monom256>;
 
 int main (int argc, char *argv[]) {
     std::ifstream cnf(argv[1]);

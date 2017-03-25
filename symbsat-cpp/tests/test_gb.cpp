@@ -8,11 +8,11 @@
 using namespace symbsat;
 
 TEST_CASE("Buchberger 1 PolyZDD", "[buchberger-polyzdd]") {
-    ZDD<Monoms::Monom32> x1(1), x2(2),
+    ZDD<Monom32> x1(1), x2(2),
                          x3(4), x4(4), _1;
     _1.setOne();
 
-    std::vector<ZDD<Monoms::Monom32>> F {
+    std::vector<ZDD<Monom32>> F {
         x1 + x2 + x3 + x4,
         x1*x2 + x2*x3 + x1*x3 + x3*x4,
         x1*x2*x3 + x1*x2*x4 + x1*x3*x4 + x2*x3*x4,
@@ -28,11 +28,11 @@ TEST_CASE("Buchberger 1 PolyZDD", "[buchberger-polyzdd]") {
 }
 
 TEST_CASE("Buchberger 1 PolyList", "[buchberger-polylist]") {
-    Poly<Monoms::Monom32> x1(1), x2(2),
+    Poly<Monom32> x1(1), x2(2),
                           x3(4), x4(4), _1;
     _1.setOne();
 
-    std::vector<Poly<Monoms::Monom32>> F {
+    std::vector<Poly<Monom32>> F {
         x1 + x2 + x3 + x4,
         x1*x2 + x2*x3 + x1*x3 + x3*x4,
         x1*x2*x3 + x1*x2*x4 + x1*x3*x4 + x2*x3*x4,
@@ -48,10 +48,10 @@ TEST_CASE("Buchberger 1 PolyList", "[buchberger-polylist]") {
 }
 
 TEST_CASE("Buchberger 3 PolyZDD", "[buchberger3-polyzdd]") {
-    ZDD<Monoms::Monom32> x1(1), x2(2), _1;
+    ZDD<Monom32> x1(1), x2(2), _1;
     _1.setOne();
 
-    std::vector<ZDD<Monoms::Monom32>> F {
+    std::vector<ZDD<Monom32>> F {
         x1*x2 + x1,
         x1*x2 + x2
     };
@@ -62,10 +62,10 @@ TEST_CASE("Buchberger 3 PolyZDD", "[buchberger3-polyzdd]") {
 }
 
 TEST_CASE("Buchberger 3 PolyList", "[buchberger3-polylist]") {
-    Poly<Monoms::Monom32> x1(1), x2(2), _1;
+    Poly<Monom32> x1(1), x2(2), _1;
     _1.setOne();
 
-    std::vector<Poly<Monoms::Monom32>> F {
+    std::vector<Poly<Monom32>> F {
         x1*x2 + x1,
         x1*x2 + x2
     };
@@ -76,10 +76,10 @@ TEST_CASE("Buchberger 3 PolyList", "[buchberger3-polylist]") {
 }
 
 TEST_CASE("Buchberger 7 PolyZDD", "[buchberger7-polyzdd]") {
-    ZDD<Monoms::Monom32> x1(1), x2(2), x3(3), _1;
+    ZDD<Monom32> x1(1), x2(2), x3(3), _1;
     _1.setOne();
 
-    std::vector<ZDD<Monoms::Monom32>> F {
+    std::vector<ZDD<Monom32>> F {
         x1*x2*x3,
         x1*x2*x3 + x1*x2,
         x1*x2*x3 + x1*x3,
@@ -96,10 +96,10 @@ TEST_CASE("Buchberger 7 PolyZDD", "[buchberger7-polyzdd]") {
 }
 
 TEST_CASE("Buchberger 7 PolyList", "[buchberger7-polylist]") {
-    Poly<Monoms::Monom32> x1(1), x2(2), x3(3), _1;
+    Poly<Monom32> x1(1), x2(2), x3(3), _1;
     _1.setOne();
 
-    std::vector<Poly<Monoms::Monom32>> F {
+    std::vector<Poly<Monom32>> F {
         x1*x2*x3,
         x1*x2*x3 + x1*x2,
         x1*x2*x3 + x1*x3,
