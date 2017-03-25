@@ -1,8 +1,8 @@
-#include <iostream>
-
 #pragma once
 
+#include <iostream>
 #include <stack>
+#include <utility>
 
 namespace symbsat {
 
@@ -49,8 +49,8 @@ template <typename MonomType> class ZDD {
   const Node *mRoot;
   std::vector<Node *> mNodes;
 
-  // const Node *const mOne = create_node(-1, nullptr, nullptr);
-  // const Node *const mZero = create_node(-2, nullptr, nullptr);
+  //const Node *const mOne = create_node(-1, nullptr, nullptr);
+  //const Node *const mZero = create_node(-2, nullptr, nullptr);
   static const Node *const mOne;
   static const Node *const mZero;
 
@@ -87,9 +87,7 @@ template <typename MonomType> class ZDD {
       return copy(j);
     } else if (j->isZero()) {
       return copy(i);
-      // } else if (i == j) {
     } else if (ZDD::Node::isEqual(i, j)) {
-      // return 0
       return mZero;
     } else if (i->isOne()) {
       return create_node(j->mVar, copy(j->mMul), add(j->mAdd, mOne));
@@ -100,8 +98,7 @@ template <typename MonomType> class ZDD {
         return create_node(i->mVar, copy(i->mMul), add(i->mAdd, j));
       } else if (i->mVar > j->mVar) {
         return create_node(
-            // j->mVar, copy(j->mMul), add(i, j->mAdd));
-            j->mVar, j->mMul, add(i, j->mAdd));
+             j->mVar, copy(j->mMul), add(i, j->mAdd));
       } else {
         auto m = add(i->mMul, j->mMul);
         auto a = add(i->mAdd, j->mAdd);
@@ -118,7 +115,6 @@ template <typename MonomType> class ZDD {
     if (i->isOne()) {
       return copy(j);
     } else if (i->isZero() || j->isZero()) {
-      // return 0
       return mZero;
     } else if (j->isOne() || ZDD::Node::isEqual(i, j)) {
       return copy(i);
@@ -158,11 +154,13 @@ template <typename MonomType> class ZDD {
 
 public:
   ZDD() {
-    // mRoot = create_node(-2, nullptr, nullptr); // zero
     mRoot = mZero;
   }
   ZDD(const ZDD &z) { mRoot = copy(z.mRoot); }
-  ZDD(const ZDD &&z) { mRoot = copy(z.mRoot); }
+  ZDD(ZDD &&z) {
+    mRoot = std::exchange(z.mRoot, nullptr);
+    mNodes = std::move(z.mNodes);
+  }
 
   ZDD &operator=(const ZDD &other) {
     if (this != &other) {
@@ -170,10 +168,10 @@ public:
     }
     return *this;
   }
-  // TODO move assignment
-  ZDD &operator=(const ZDD &&other) {
+  ZDD &operator=(ZDD &&other) {
     if (this != &other) {
-      mRoot = copy(other.mRoot);
+      mRoot = std::exchange(other.mRoot, nullptr);
+      mNodes = std::move(other.mNodes);
     }
     return *this;
   }
@@ -362,10 +360,10 @@ public:
 
 template <typename MonomType>
 const typename ZDD<MonomType>::Node *const
-    ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
+   ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
 
 template <typename MonomType>
 const typename ZDD<MonomType>::Node *const
-    ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
+   ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
 
 }; // namespace symbsat

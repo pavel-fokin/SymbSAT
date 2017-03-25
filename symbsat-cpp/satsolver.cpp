@@ -8,7 +8,7 @@
 
 using namespace symbsat;
 
-using PolyN = Poly<Monom256>;
+using PolyN = ZDD<Monom256>;
 
 int main (int argc, char *argv[]) {
     std::ifstream cnf(argv[1]);

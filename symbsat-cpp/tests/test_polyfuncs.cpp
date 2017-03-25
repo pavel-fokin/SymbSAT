@@ -55,7 +55,7 @@ TEST_CASE("S-polynomial PolyList", "[spoly-polylist]") {
 
 TEST_CASE("NormalForm 1 PolyList", "[normalform-polylist]") {
   Poly<Monom32> x1(1), x2(2),
-                        x3(3), x4(4), _1;
+                x3(3), x4(4), _1;
   _1.setOne();
 
   Poly<Monom32> p = x1*x2*x3 + x1*x2*x4 + x1*x3*x4 + x3;
@@ -75,7 +75,7 @@ TEST_CASE("NormalForm 1 PolyList", "[normalform-polylist]") {
 
 TEST_CASE("NormalForm 1 PolyZDD", "[normalform-polyzdd]") {
   ZDD<Monom32> x1(1), x2(2),
-                        x3(3), x4(4), _1;
+               x3(3), x4(4), _1;
   _1.setOne();
 
   ZDD<Monom32> p = x1*x2*x3 + x1*x2*x4 + x1*x3*x4 + x3;
@@ -95,7 +95,7 @@ TEST_CASE("NormalForm 1 PolyZDD", "[normalform-polyzdd]") {
 
 TEST_CASE("NormalForm 2 PolyList", "[normalform2-polylist]") {
   Poly<Monom32> x1(1), x2(2),
-                        x3(3), x4(4), _1;
+                x3(3), x4(4), _1;
   _1.setOne();
 
   Poly<Monom32> p = x1*x2*x3 + x1*x2*x4 + x1*x3*x4 + x3;
@@ -115,7 +115,7 @@ TEST_CASE("NormalForm 2 PolyList", "[normalform2-polylist]") {
 
 TEST_CASE("NormalForm 2 PolyZDD", "[normalform2-polyzdd]") {
   ZDD<Monom32> x1(1), x2(2),
-                       x3(3), x4(4), _1;
+               x3(3), x4(4), _1;
   _1.setOne();
 
   ZDD<Monom32> p = x1*x2*x3 + x1*x2*x4 + x1*x3*x4 + x3;
@@ -135,7 +135,7 @@ TEST_CASE("NormalForm 2 PolyZDD", "[normalform2-polyzdd]") {
 
 TEST_CASE("NormalForm 3 PolyList", "[normalform3-polylist]") {
   Poly<Monom32> x1(1), x2(2),
-                        x3(3), x4(4), _1;
+                x3(3), x4(4), _1;
   _1.setOne();
 
   Poly<Monom32> p = x2*x3*x4 + _1;
@@ -156,7 +156,7 @@ TEST_CASE("NormalForm 3 PolyList", "[normalform3-polylist]") {
 
 TEST_CASE("NormalForm 3 PolyZDD", "[normalform3-polyzdd]") {
   ZDD<Monom32> x1(1), x2(2),
-                        x3(3), x4(4), _1;
+               x3(3), x4(4), _1;
   _1.setOne();
 
   ZDD<Monom32> p = x2*x3*x4 + _1;
@@ -177,7 +177,7 @@ TEST_CASE("NormalForm 3 PolyZDD", "[normalform3-polyzdd]") {
 
 TEST_CASE("NormalForm 4 PolyZDD", "[normalform4-polyzdd]") {
   ZDD<Monom32> x1(1), x2(2),
-                        x3(3), x4(4), _1;
+               x3(3), x4(4), _1;
   _1.setOne();
 
   ZDD<Monom32> p = x1 + x2;
@@ -195,7 +195,7 @@ TEST_CASE("NormalForm 4 PolyZDD", "[normalform4-polyzdd]") {
 
 TEST_CASE("NormalForm 4 PolyList", "[normalform4-polylist]") {
   Poly<Monom32> x1(1), x2(2),
-                        x3(3), x4(4), _1;
+                x3(3), x4(4), _1;
   _1.setOne();
 
   Poly<Monom32> p = x1 + x2;
