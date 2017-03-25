@@ -1,8 +1,8 @@
-#include <iostream>
-
 #pragma once
 
+#include <iostream>
 #include <stack>
+#include <utility>
 
 namespace symbsat {
 
@@ -49,10 +49,12 @@ template <typename MonomType> class ZDD {
   const Node *mRoot;
   std::vector<Node *> mNodes;
 
-  // const Node *const mOne = create_node(-1, nullptr, nullptr);
-  // const Node *const mZero = create_node(-2, nullptr, nullptr);
-  static const Node *const mOne;
-  static const Node *const mZero;
+  const Node *mOne = create_node(-1, nullptr, nullptr);
+  const Node *mZero = create_node(-2, nullptr, nullptr);
+  //const Node *const mOne = create_node(-1, nullptr, nullptr);
+  //const Node *const mZero = create_node(-2, nullptr, nullptr);
+  //static const Node *const mOne;
+  //static const Node *const mZero;
 
   inline const Node *create_node(int var, const Node *mul, const Node *add) {
     Node *tmp = new Node(var, mul, add);
@@ -99,9 +101,10 @@ template <typename MonomType> class ZDD {
       if (i->mVar < j->mVar) {
         return create_node(i->mVar, copy(i->mMul), add(i->mAdd, j));
       } else if (i->mVar > j->mVar) {
+        //std::cout << "###\n";
         return create_node(
-            // j->mVar, copy(j->mMul), add(i, j->mAdd));
-            j->mVar, j->mMul, add(i, j->mAdd));
+             j->mVar, copy(j->mMul), add(i, j->mAdd));
+            //j->mVar, j->mMul, add(i, j->mAdd));
       } else {
         auto m = add(i->mMul, j->mMul);
         auto a = add(i->mAdd, j->mAdd);
@@ -162,7 +165,12 @@ public:
     mRoot = mZero;
   }
   ZDD(const ZDD &z) { mRoot = copy(z.mRoot); }
-  ZDD(const ZDD &&z) { mRoot = copy(z.mRoot); }
+  ZDD(ZDD &&z) {
+    mRoot = std::exchange(z.mRoot, nullptr);
+    mOne = std::exchange(z.mOne, nullptr);
+    mZero = std::exchange(z.mZero, nullptr);
+    mNodes = std::move(z.mNodes);
+  }
 
   ZDD &operator=(const ZDD &other) {
     if (this != &other) {
@@ -171,9 +179,12 @@ public:
     return *this;
   }
   // TODO move assignment
-  ZDD &operator=(const ZDD &&other) {
+  ZDD &operator=(ZDD &&other) {
     if (this != &other) {
-      mRoot = copy(other.mRoot);
+      mRoot = std::exchange(other.mRoot, nullptr);
+      mOne = std::exchange(other.mOne, nullptr);
+      mZero = std::exchange(other.mZero, nullptr);
+      mNodes = std::move(other.mNodes);
     }
     return *this;
   }
@@ -286,9 +297,11 @@ public:
   class MonomConstIterator {
     std::vector<int> mMonom;
     std::stack<const Node *> mPath;
+    const Node *mOne;
 
   public:
     explicit MonomConstIterator(const ZDD &z) {
+      mOne = z.mOne;
       for (const Node *i = z.mRoot; i->mVar >= 0; i = i->mMul) {
         mPath.push(i);
         mMonom.push_back(i->mVar);
@@ -330,6 +343,7 @@ public:
           i = i->mMul;
         }
         if (mMonom.empty()) {
+          //std::cout << i << "\n";
           mPath.push(mOne);
           mMonom.push_back(-1);
         }
@@ -360,12 +374,12 @@ public:
 
 }; // ZDD Template
 
-template <typename MonomType>
-const typename ZDD<MonomType>::Node *const
-    ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
+//template <typename MonomType>
+//const typename ZDD<MonomType>::Node *const
+//    ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
 
-template <typename MonomType>
-const typename ZDD<MonomType>::Node *const
-    ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
+//template <typename MonomType>
+//const typename ZDD<MonomType>::Node *const
+//    ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
 
 }; // namespace symbsat
