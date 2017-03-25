@@ -1,129 +1,122 @@
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/config/SourcePrefix.h>
+#include "catch.hpp"
 
 #include "monom.h"
 
-class TestMonom: public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(TestMonom);
+TEST_CASE("Monom Constructor", "[monom-constructor]") {
+  Monoms::Monom32 x1(0), x2(1);
+  Monoms::Monom32 _0;
+  Monoms::Monom32 _1;
+  _1.setOne();
 
-    CPPUNIT_TEST(testConstructor);
-    CPPUNIT_TEST(testOrdering);
-    CPPUNIT_TEST(testMul);
-    CPPUNIT_TEST(testIsDivisible);
-    CPPUNIT_TEST(testDiv);
-    CPPUNIT_TEST(testIsRelativelyPrime);
-    CPPUNIT_TEST(testGetVars);
-
-    CPPUNIT_TEST_SUITE_END();
-public:
-    void setUp() {}
-    void tearDown() {}
-
-    void testConstructor();
-    void testOrdering();
-    void testMul();
-    void testIsDivisible();
-    void testDiv();
-    void testIsRelativelyPrime();
-    void testGetVars();
-};
-
-CPPUNIT_TEST_SUITE_REGISTRATION(TestMonom);
-
-void TestMonom::testConstructor() {
-    Monom m1, _1(0);
-
-    CPPUNIT_ASSERT(m1.isZero());
-    CPPUNIT_ASSERT(_1.isOne());
+  CHECK(!(x1 == x2));
+  REQUIRE(x1.toStr() == "[ 0 ]");
+  REQUIRE(x2.toStr() == "[ 1 ]");
+  REQUIRE(_0.toStr() == "0");
+  REQUIRE(_1.toStr() == "1");
 }
 
-void TestMonom::testOrdering() {
-    Monom _0, _1(0), a(1), b(2), c(3), ab(a*b);
+TEST_CASE("Monom Ordering", "[monom-ordering]") {
+  Monoms::Monom64 a(0), b(1), c(2), ab(a * b);
+  Monoms::Monom64 _0, _1;
+  _1.setOne();
 
-    CPPUNIT_ASSERT(!(a < b));
-    CPPUNIT_ASSERT(b < a);
-    CPPUNIT_ASSERT(c < a);
-    CPPUNIT_ASSERT(!(b < c));
-    CPPUNIT_ASSERT(b < ab);
+  REQUIRE(!(a < b));
+  REQUIRE(b < a);
+  REQUIRE(c < a);
+  REQUIRE(!(b < c));
+  REQUIRE(b < ab);
 }
 
-void TestMonom::testMul() {
-    Monom _0, _1(0),
-          a(1), b(2), c(3),
-          abc;
-
-    b = _1*a;
-    CPPUNIT_ASSERT(a == b);
-
-    b = a*_1;
-    CPPUNIT_ASSERT(a == b);
-
-    b = a*_0;
-    CPPUNIT_ASSERT(b.isZero());
-
-    b = _0*a;
-    CPPUNIT_ASSERT(b.isZero());
-
-    CPPUNIT_ASSERT(a*b == b*a);
-    CPPUNIT_ASSERT(a*a == a);
+TEST_CASE("Monom Multiplication", "[monom-mul]") {
+    Monoms::Monom64 a(0), b(1), c(2), abc;
+    Monoms::Monom64 _0, _1;
+    _1.setOne();
 
     abc = a*b*c;
 
-    CPPUNIT_ASSERT(abc == a*b*c);
+    REQUIRE(abc == a*b*c);
+
+    REQUIRE(a*b == b*a);
+    REQUIRE(a*a == a);
+
+    b = a * _1;
+    REQUIRE(a == b);
+
+    b = _1 * a;
+    REQUIRE(a == b);
+
+    b = a * _0;
+    REQUIRE(b.isZero());
+
+    b = _0 * a;
+    REQUIRE(b.isZero());
+
+    SECTION ("Multiply 1*1") {
+        Monoms::Monom32 one_1, one_2, res;
+        one_1.setOne();
+        one_2.setOne();
+        res = one_1 * one_2;
+
+        REQUIRE(res.isOne());
+    }
 }
 
-void TestMonom::testIsDivisible() {
-    Monom _0, _1(0), a(1), b(2), ab;
+TEST_CASE("Monom IsDivisible", "[monom-isdivisible]") {
+    Monoms::Monom64 a(0), b(1), ab;
+    Monoms::Monom64 _0, _1;
+    _1.setOne();
 
-    // CPPUNIT_ASSERT(!a.isdivisible(_0));
+    // REQUIRE(!a.isdivisible(_0));
     // a/1 = a True
-    CPPUNIT_ASSERT(a.isdivisible(_1));
+    REQUIRE(a.isdivisible(_1));
     // a/b = 0 False
-    CPPUNIT_ASSERT(!a.isdivisible(b));
+    REQUIRE(!a.isdivisible(b));
     // 1/b = 0 False
-    CPPUNIT_ASSERT(!_1.isdivisible(b));
+    REQUIRE(!_1.isdivisible(b));
 
     ab = a*b;
-    CPPUNIT_ASSERT(ab.isdivisible(a));
-    CPPUNIT_ASSERT(ab.isdivisible(b));
+    REQUIRE(ab.isdivisible(a));
+    REQUIRE(ab.isdivisible(b));
 }
 
-void TestMonom::testDiv() {
-    Monom _0, _1(0),
-          a(1), b(2), c(3),
-          ab(a*b), bc(b*c), abc(a*b*c);
+TEST_CASE("Monom Division", "[monom-division]") {
+    Monoms::Monom64 a(0), b(1), c(2);
+    Monoms::Monom64 ab(a*b), bc(b*c), abc(a*b*c);
+    Monoms::Monom64 _0, _1;
+    _1.setOne();
 
     // b = a/_1;
     // a == a/_1;
-    CPPUNIT_ASSERT_EQUAL(a, a/_1);
+    REQUIRE(a == a/_1);
 
     // a/b == _0;
-    CPPUNIT_ASSERT_EQUAL(_0, a/b);
+    REQUIRE(_0 == a/b);
 
     // ab/b == a;
-    CPPUNIT_ASSERT_EQUAL(a, ab/b);
+    REQUIRE(a == ab/b);
     // ab/a == b;
-    CPPUNIT_ASSERT_EQUAL(b, ab/a);
+    REQUIRE(b == ab/a);
     // abc/ab == c;
-    CPPUNIT_ASSERT_EQUAL(c, abc/ab);
+    REQUIRE(c == abc/ab);
     // ab/bc == 0;
-    CPPUNIT_ASSERT_EQUAL(_0, ab/bc);
+    REQUIRE(_0 == ab/bc);
 }
 
-void TestMonom::testIsRelativelyPrime() {
-    Monom _0, _1(0), a(1), b(2), ab = a*b;
+TEST_CASE("Monom IsRelativelyPrime", "[monom-isrelativelyprime]") {
+    Monoms::Monom64 a(0), b(1), ab(a*b);
+    Monoms::Monom64 _0, _1;
+    _1.setOne();
 
-    CPPUNIT_ASSERT(a.isrelativelyprime(a));
-    CPPUNIT_ASSERT(a.isrelativelyprime(_1));
-    CPPUNIT_ASSERT(a.isrelativelyprime(b));
-    CPPUNIT_ASSERT(!ab.isrelativelyprime(b));
+    REQUIRE(a.isrelativelyprime(a));
+    REQUIRE(a.isrelativelyprime(_1));
+    REQUIRE(a.isrelativelyprime(b));
+    REQUIRE(!ab.isrelativelyprime(b));
 }
 
-void TestMonom::testGetVars() {
+TEST_CASE("Monom GetVars", "[monom-getvars]") {
+    Monoms::Monom64 a(0), b(1), c(2), d(3);
+    Monoms::Monom64 abd(a*b*d);
 
-    Monom a(1), b(2), c(3), d(4);
-    Monom abd(a*b*d);
-
-    std::vector<int> vars {1,2,4};
-    CPPUNIT_ASSERT(abd.getVars() == vars);
+    std::vector<int> vars {0,1,3};
+    REQUIRE(abd.getVars() == vars);
 }
