@@ -20,29 +20,8 @@ IF (BUILD_TEST)
   ADD_SUBDIRECTORY (tests)
 ENDIF (BUILD_TEST)
 
-ADD_LIBRARY(boolpoly STATIC
-    zddt.h
-    polyt.h
-    monomt.h
-    monom.h
-    monom.cpp
-    poly.h
-    poly.cpp
-    zdd.h
-    zdd.cpp
-    gb.h
-    gb.cpp
-)
-
-ADD_EXECUTABLE(satsolver satsolver.cpp)
 ADD_EXECUTABLE(satsolvert satsolvert.cpp)
 
-TARGET_LINK_LIBRARIES( satsolver
-  boolpoly
-  gcov
-)
-
 TARGET_LINK_LIBRARIES( satsolvert
-  boolpoly
   gcov
 )
