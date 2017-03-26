@@ -3,6 +3,7 @@ PROJECT (symbsat)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 ADD_DEFINITIONS(-std=c++14 -Wall --coverage -g)
+# ADD_DEFINITIONS(-std=c++14 -O3)
 
 # We want to generate files with extension *.gcno but not with *.cpp.gcno
 SET(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)

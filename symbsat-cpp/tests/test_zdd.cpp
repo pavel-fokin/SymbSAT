@@ -148,3 +148,21 @@ TEST_CASE("ZDD Print", "[zdd-print]") {
   one.setOne();
   REQUIRE(one.toStr() == "1");
 }
+
+TEST_CASE("ZDD Count Nodes", "[zdd-count-nodes]") {
+  ZDD<Monom32> x(1), y(2), z(3);
+  ZDD<Monom32> _1; _1.setOne();
+  ZDD<Monom32> p1, p2, p3;
+
+  p1 = x*y*z + x;
+  p2 = x*y*z + y;
+
+  p3 = (x + _1)*(y + _1)*(z + _1);
+
+  REQUIRE(x.count_nodes() == 1);
+  std::cout << p1.count_nodes() << "\n";
+  std::cout << p2.count_nodes() << "\n";
+  std::cout << p3.count_nodes() << "\n";
+  // REQUIRE(p1.count_nodes() == 1);
+  // REQUIRE(p2.count_nodes() == 1);
+}

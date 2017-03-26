@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <stack>
+#include <unordered_set>
 #include <utility>
+#include <tuple>
 
 namespace symbsat {
 
@@ -44,22 +46,81 @@ template <typename MonomType> class ZDD {
         return isEqual(a->mAdd, b->mAdd) && isEqual(a->mMul, b->mMul);
       }
     }
+
+    // bool operator==(const Node* rhs) const {
+    //   std::cout << "operator==\n";
+    //   return isEqual(this, rhs);
+    // }
   };
 
-  const Node *mRoot;
-  std::vector<Node *> mNodes;
+  struct cache_key {
+    int r, m, a;
 
-  const Node *mOne = create_node(-1, nullptr, nullptr);
-  const Node *mZero = create_node(-2, nullptr, nullptr);
-  //const Node *const mOne = create_node(-1, nullptr, nullptr);
-  //const Node *const mZero = create_node(-2, nullptr, nullptr);
-  //static const Node *const mOne;
-  //static const Node *const mZero;
+    bool operator==(cache_key const& other) const {
+      return std::tie(r, m, a) == std::tie(other.r, other.m, other.a);
+    }
+  };
+
+  template <class T>
+  inline static void hash_combine(std::size_t & seed, const T & v) {
+      std::hash<T> hasher;
+        seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+  }
+
+  struct cache_key_hash {
+    std::size_t operator()(const Node *node) const {
+      std::size_t seed = 0;
+
+      hash_combine(seed, node->mVar);
+      hash_combine(seed, node->mMul->mVar);
+      hash_combine(seed, node->mAdd->mVar);
+
+      return seed;
+    }
+  };
+  struct cache_key_eq {
+    std::size_t operator()(Node const *lhs, Node const *rhs) const {
+      return ZDD::Node::isEqual(lhs, rhs);
+    }
+  };
+
+  static std::size_t hash(const Node *node) {
+    std::size_t seed = 0;
+
+    hash_combine(seed, node->mVar);
+    hash_combine(seed, node->mMul->mVar);
+    hash_combine(seed, node->mAdd->mVar);
+
+    return seed;
+  }
+
+
+  std::unordered_set<Node *, cache_key_hash, cache_key_eq> cache;
+
+  const Node *mRoot;
+  // std::vector<Node *> mNodes;
+
+  // const Node *mOne = create_node(-1, nullptr, nullptr);
+  // const Node *mZero = create_node(-2, nullptr, nullptr);
+  // const Node *const mOne = create_node(-1, nullptr, nullptr);
+  // const Node *const mZero = create_node(-2, nullptr, nullptr);
+  static const Node *const mOne;
+  static const Node *const mZero;
 
   inline const Node *create_node(int var, const Node *mul, const Node *add) {
     Node *tmp = new Node(var, mul, add);
-    mNodes.push_back(tmp);
-    return tmp;
+    // mNodes.push_back(tmp);
+
+
+    auto search = cache.find(tmp);
+    if (search != cache.end()) {
+      // std::cout << "Found " << *search << "\n";
+      return *search;
+    } else {
+      cache.insert(tmp);
+      return tmp;
+    }
+    // return tmp;
   }
 
   const Node *copy(const Node *n) {
@@ -89,9 +150,7 @@ template <typename MonomType> class ZDD {
       return copy(j);
     } else if (j->isZero()) {
       return copy(i);
-      // } else if (i == j) {
     } else if (ZDD::Node::isEqual(i, j)) {
-      // return 0
       return mZero;
     } else if (i->isOne()) {
       return create_node(j->mVar, copy(j->mMul), add(j->mAdd, mOne));
@@ -101,10 +160,8 @@ template <typename MonomType> class ZDD {
       if (i->mVar < j->mVar) {
         return create_node(i->mVar, copy(i->mMul), add(i->mAdd, j));
       } else if (i->mVar > j->mVar) {
-        //std::cout << "###\n";
         return create_node(
              j->mVar, copy(j->mMul), add(i, j->mAdd));
-            //j->mVar, j->mMul, add(i, j->mAdd));
       } else {
         auto m = add(i->mMul, j->mMul);
         auto a = add(i->mAdd, j->mAdd);
@@ -121,7 +178,6 @@ template <typename MonomType> class ZDD {
     if (i->isOne()) {
       return copy(j);
     } else if (i->isZero() || j->isZero()) {
-      // return 0
       return mZero;
     } else if (j->isOne() || ZDD::Node::isEqual(i, j)) {
       return copy(i);
@@ -161,15 +217,21 @@ template <typename MonomType> class ZDD {
 
 public:
   ZDD() {
-    // mRoot = create_node(-2, nullptr, nullptr); // zero
     mRoot = mZero;
   }
   ZDD(const ZDD &z) { mRoot = copy(z.mRoot); }
   ZDD(ZDD &&z) {
     mRoot = std::exchange(z.mRoot, nullptr);
-    mOne = std::exchange(z.mOne, nullptr);
-    mZero = std::exchange(z.mZero, nullptr);
-    mNodes = std::move(z.mNodes);
+    // mNodes = std::move(z.mNodes);
+    cache = std::move(z.cache);
+  }
+
+  int count_nodes() {
+    // for (auto n: mNodes) {
+    //   std::cout << n << "\n";
+    // }
+    // return mNodes.size();
+    return cache.size();
   }
 
   ZDD &operator=(const ZDD &other) {
@@ -178,19 +240,19 @@ public:
     }
     return *this;
   }
-  // TODO move assignment
   ZDD &operator=(ZDD &&other) {
     if (this != &other) {
       mRoot = std::exchange(other.mRoot, nullptr);
-      mOne = std::exchange(other.mOne, nullptr);
-      mZero = std::exchange(other.mZero, nullptr);
-      mNodes = std::move(other.mNodes);
+      // mNodes = std::move(other.mNodes);
+      cache = std::move(other.cache);
     }
     return *this;
   }
   ~ZDD() {
-    std::for_each(std::begin(mNodes), std::end(mNodes),
+    std::for_each(std::begin(cache), std::end(cache),
                   [](Node *n) { delete n; });
+    // std::for_each(std::begin(mNodes), std::end(mNodes),
+    //               [](Node *n) { delete n; });
   }
 
   explicit ZDD(int var) { mRoot = create_node(var, mOne, mZero); }
@@ -297,11 +359,11 @@ public:
   class MonomConstIterator {
     std::vector<int> mMonom;
     std::stack<const Node *> mPath;
-    const Node *mOne;
+    // const Node *mOne;
 
   public:
     explicit MonomConstIterator(const ZDD &z) {
-      mOne = z.mOne;
+      // mOne = z.mOne;
       for (const Node *i = z.mRoot; i->mVar >= 0; i = i->mMul) {
         mPath.push(i);
         mMonom.push_back(i->mVar);
@@ -374,12 +436,12 @@ public:
 
 }; // ZDD Template
 
-//template <typename MonomType>
-//const typename ZDD<MonomType>::Node *const
-//    ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
+template <typename MonomType>
+const typename ZDD<MonomType>::Node *const
+   ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
 
-//template <typename MonomType>
-//const typename ZDD<MonomType>::Node *const
-//    ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
+template <typename MonomType>
+const typename ZDD<MonomType>::Node *const
+   ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
 
 }; // namespace symbsat
