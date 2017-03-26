@@ -13,12 +13,15 @@ addons:
   apt:
     packages:
       - cmake
-      - libcppunit-dev
+      - g++-5
+    sources:
+      - ubuntu-toolchain-r-test
 
 install:
   - wget https://raw.githubusercontent.com/philsquared/Catch/master/single_include/catch.hpp -P symbsat-cpp/tests
   - pip install -U pip setuptools
   - pip install coverage
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
 
 script:
   - (cd symbsat-py && coverage run --branch -m unittest tests/test_*.py)
