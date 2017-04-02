@@ -4,6 +4,8 @@
 #include <stack>
 #include <utility>
 
+#include "zddcache.h"
+
 namespace symbsat {
 
 template <typename MonomType> class ZDD {
@@ -46,8 +48,12 @@ template <typename MonomType> class ZDD {
     }
   };
 
+  template <typename ZDDNode>
+  friend class ZDDCache;
+
+  ZDDCache<Node> cache;
+
   const Node *mRoot;
-  std::vector<Node *> mNodes;
 
   //const Node *const mOne = create_node(-1, nullptr, nullptr);
   //const Node *const mZero = create_node(-2, nullptr, nullptr);
@@ -55,9 +61,7 @@ template <typename MonomType> class ZDD {
   static const Node *const mZero;
 
   inline const Node *create_node(int var, const Node *mul, const Node *add) {
-    Node *tmp = new Node(var, mul, add);
-    mNodes.push_back(tmp);
-    return tmp;
+    return cache.createNode(var, mul, add);
   }
 
   const Node *copy(const Node *n) {
@@ -156,10 +160,12 @@ public:
   ZDD() {
     mRoot = mZero;
   }
-  ZDD(const ZDD &z) { mRoot = copy(z.mRoot); }
+  ZDD(const ZDD &z) {
+    mRoot = copy(z.mRoot);
+  }
   ZDD(ZDD &&z) {
     mRoot = std::exchange(z.mRoot, nullptr);
-    mNodes = std::move(z.mNodes);
+    cache = std::move(z.cache);
   }
 
   ZDD &operator=(const ZDD &other) {
@@ -171,14 +177,11 @@ public:
   ZDD &operator=(ZDD &&other) {
     if (this != &other) {
       mRoot = std::exchange(other.mRoot, nullptr);
-      mNodes = std::move(other.mNodes);
+      cache = std::move(other.cache);
     }
     return *this;
   }
-  ~ZDD() {
-    std::for_each(std::begin(mNodes), std::end(mNodes),
-                  [](Node *n) { delete n; });
-  }
+  ~ZDD() =default;
 
   explicit ZDD(int var) { mRoot = create_node(var, mOne, mZero); }
   explicit ZDD(const MonomType &m) {

@@ -5,6 +5,7 @@
 
 using namespace symbsat;
 
+
 TEST_CASE("ZDD MonomIterator", "[zdd-monom-iter]") {
   ZDD<Monom32> z1(1), z2(2);
   ZDD<Monom32> z3 = z1 * z2 + z2;
