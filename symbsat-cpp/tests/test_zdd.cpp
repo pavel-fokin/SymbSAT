@@ -94,10 +94,7 @@ TEST_CASE("ZDD Addition", "[zdd-add]") {
   // p3 = a*(b + _1);
   ZDD<Monom32> p1 = a*b + a;
   ZDD<Monom32> p2 = c + _1;
-  std::cout << "====\n";
   ZDD<Monom32> p3 = p1 * p2;
-  std::cout << "\n" << p3 << "!!\n";
-  std::cout << "\n" << a + _1 << "!!!\n";
 }
 
 TEST_CASE("ZDD Add Monom", "[zdd-add-monom]") {
@@ -148,4 +145,20 @@ TEST_CASE("ZDD Print", "[zdd-print]") {
   ZDD<Monom32> one;
   one.setOne();
   REQUIRE(one.toStr() == "1");
+}
+
+TEST_CASE("ZDD Count Nodes", "[zdd-count-nodes]") {
+  ZDD<Monom32> x(1), y(2), z(3);
+  ZDD<Monom32> _1; _1.setOne();
+  ZDD<Monom32> p1, p2, p3;
+
+  p1 = x*y*z + x;
+  p2 = x*y*z + y;
+  p3 = (x + _1)*(y + _1)*(z + _1);
+
+  REQUIRE(x.count_nodes() == 1);
+  REQUIRE(p1.count_nodes() == 9);
+  REQUIRE(p2.count_nodes() == 10);
+  REQUIRE(p3.count_nodes() == 12);
+
 }

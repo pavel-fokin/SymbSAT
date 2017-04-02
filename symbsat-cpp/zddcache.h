@@ -21,6 +21,10 @@ public:
     return nodes.back().get();
   }
 
+  int size() const {
+    return nodes.size();
+  }
+
 };  // ZDDCache
 
 };  // symbsat

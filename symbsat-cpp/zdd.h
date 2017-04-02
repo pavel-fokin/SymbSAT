@@ -358,7 +358,9 @@ public:
     s << *this;
     return s.str();
   }
-
+  int count_nodes() const {
+    return cache.size();
+  }
 }; // ZDD Template
 
 template <typename MonomType>
