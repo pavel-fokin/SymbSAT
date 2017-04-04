@@ -5,11 +5,11 @@ from monom import Monom
 
 class ZDD(object):
 
-    _slots__ = ['root', '_lm']
+    __slots__ = ('root', '_lm')
 
     class Node(object):
 
-        __slots__ = ['var', 'mul', 'add']
+        __slots__ = ('var', 'mul', 'add')
 
         def __init__(self, var, m, a):
             self.var = var
