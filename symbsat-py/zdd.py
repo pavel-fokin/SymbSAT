@@ -221,9 +221,6 @@ class ZDD(object):
                 if path:
                     i = path.pop().add
                     monom.pop()
-                    if i.isOne():
-                        yield Monom.one
-                        break
                     while i != ZDD._one:
                         monom.append(i.var)
                         path.append(i)
