@@ -48,11 +48,13 @@ std::vector<PolyType> buchberger(const std::vector<PolyType>& F, const int num_v
     G = autoreduce(F);
 
     int k = G.size();
-    for (int i=-num_vars; i<k; ++i)
-        for (int j=0; j<k; ++j)
+    for (int i=-num_vars; i<k; ++i) {
+        for (int j=0; j<k; ++j) {
             if (i<j) {
                 pairs.push_back(std::make_tuple(i, j));
             }
+        }
+    }
 
     while (!pairs.empty()) {
         PolyType s, h;
@@ -77,10 +79,10 @@ std::vector<PolyType> buchberger(const std::vector<PolyType>& F, const int num_v
         h = normalform(s, G);
         if (!h.isZero()) {
             G.push_back(h);
-            ++k;
-            for (int i=-num_vars; i<k-1; ++i) {
-                pairs.push_back(std::make_tuple(i, k-1));
+            for (int i=-num_vars; i<k; ++i) {
+                pairs.push_back(std::make_tuple(i, k));
             }
+            ++k;
         }
     }
 
