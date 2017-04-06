@@ -16,6 +16,23 @@ def autoreduce(G):
     return G_red
 
 
+def _criteria(i, j, M, G):
+    """Two Buchberger's criteria"""
+
+    Gi, Gj = G[i], G[j]
+    Gi_lm, Gj_lm = Gi.lm(), Gj.lm()
+
+    if Gi_lm.isrelativelyprime(Gj_lm):
+        return True
+
+    for k in range(len(G)):
+        if ((M[i][k] and  M[k][j]) and
+           G[k].lm().isdivisible(Gi_lm * Gj_lm)):
+            return True
+
+    return False
+
+
 def buchberger(F, BRing):
     """Basic Buchberger algorithm without any optimizations."""
     if len(F) > 1:
@@ -28,6 +45,8 @@ def buchberger(F, BRing):
 
     # Fill pairs with negative indexes for field polynomials
     pairs = [(i, j) for i in range(-len(BRing.gens), k) for j in range(len(G))]
+    # Matrix M with treated pairs
+    M = [[0 for i in range(len(G))] for j in range(len(G))]
 
     count = 0
     while pairs != []:
@@ -40,17 +59,25 @@ def buchberger(F, BRing):
                 continue
             s = G[j]*x[abs(i)-1]
         else:
-            p, q = G[i], G[j]
-            p_lm, q_lm = p.lm(), q.lm()
-            # TODO Check first criteria
-            if p_lm.isrelativelyprime(q_lm):
+            M[i][j] = 1
+            if _criteria(i, j, M, G):
                 continue
+            p, q = G[i], G[j]
             s = spoly(p, q)
+
         h = normal_form(s, G)
+
         if not h.isZero():
             G.append(h)
+
             pairs += [(i, k) for i in range(-len(BRing.gens), k)]
             k += 1
+
+            # Extend M with new entry (h, g) forall g in G
+            for row in M:
+                row.append(0)
+            M.append([0 for i in range(len(G))])
+
         count += 1
 
     # Autoreduce
