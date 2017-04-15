@@ -3,7 +3,7 @@
 from polyfuncs import spoly, normal_form
 
 
-def autoreduce(G):
+def _autoreduce(G):  # pragma: no cover
     """
     Code from Toy Bucberger Algorithm Sympy
     https://mattpap.github.io/masters-thesis/html/src/groebner.html
@@ -14,6 +14,44 @@ def autoreduce(G):
         if not G[i].isZero():
             G_red.append(G[i])
     return G_red
+
+
+def autoreduce(F):
+    """Autoreduce set of polynomials
+    K. Geddes, S. Czapor, G. Labahn
+    Algorithms for Computer Algebra (1992)
+    p. 448 ReduceSet(E)
+    """
+    G = F.copy();
+    P = []
+
+    while G != []:
+        h = G.pop(-1)
+        h = normal_form(h, P)
+        if not h.isZero():
+            P_size = len(P)
+            i = 0
+            while i < P_size:
+                p = P[i]
+                if p.lm().isdivisible(h.lm()):
+                    G.append(p)
+                    P.remove(p)
+                    P_size -= 1
+                else:
+                    i += 1
+            P.append(h)
+
+    P_size = len(P)
+    i = 0
+    while i < P_size:
+        h = P.pop()
+        h = normal_form(h, P)
+        if h.isZero():
+            P_size -= 1
+        else:
+            P.append(h)
+        i += 1
+    return P
 
 
 def _criteria(i, j, M, G):
@@ -34,7 +72,7 @@ def _criteria(i, j, M, G):
 
 
 def buchberger(F, BRing):
-    """Basic Buchberger algorithm without any optimizations."""
+    """Basic Buchberger algorithm with two criteria."""
     if len(F) > 1:
         G = autoreduce(F)
     else:
