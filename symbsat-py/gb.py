@@ -3,7 +3,7 @@
 from polyfuncs import spoly, normal_form
 
 
-def _autoreduce(G):  # pragma: no cover
+def _autoreduce(G):
     """
     Code from Toy Bucberger Algorithm Sympy
     https://mattpap.github.io/masters-thesis/html/src/groebner.html

@@ -1,7 +1,42 @@
 import unittest
+import unittest.mock as mock
 
 from ring import BoolPolyRing
-from gb import buchberger
+from gb import buchberger, autoreduce, _autoreduce
+
+
+class TestAutoreduce:
+
+    def test_autoreduce(self):
+        x0, x1, x2, x3 = self.B.gens[:4]
+        _1 = self.B.one
+
+        F = [
+            x0 + x1 + x2 + x3,
+            x0*x1 + x1*x2 + x0*x3 + x2*x3,
+            x0*x1*x2 + x0*x1*x3 + x0*x2*x3 + x1*x2*x3,
+            x0*x1*x2*x3 + _1
+        ]
+
+        F = autoreduce(F)
+
+        self.assertTrue(len(F) == 3)
+
+
+class TestAutoreducePolyList(unittest.TestCase, TestAutoreduce):
+
+    def setUp(self):
+        # Create BoolRing with number of variables
+        # enough for all tests
+        self.B = BoolPolyRing(10, poly_type="list")
+
+
+class TestAutoreducePolyZDD(unittest.TestCase, TestAutoreduce):
+
+    def setUp(self):
+        # Create BoolRing with number of variables
+        # enough for all tests
+        self.B = BoolPolyRing(10, poly_type="zdd")
 
 
 class TestBuchberger(object):
@@ -163,6 +198,10 @@ class TestBuchbergerPolyList(unittest.TestCase, TestBuchberger):
         # enough for all tests
         self.B = BoolPolyRing(10, poly_type="list")
 
+        patcher = mock.patch('gb.autoreduce', _autoreduce)
+        self.addCleanup(patcher.stop)
+        patcher.start()
+
 
 class TestBuchbergerPolyZDD(unittest.TestCase, TestBuchberger):
 
@@ -170,3 +209,8 @@ class TestBuchbergerPolyZDD(unittest.TestCase, TestBuchberger):
         # Create BoolRing with number of variables
         # enough for all tests
         self.B = BoolPolyRing(10, poly_type="zdd")
+
+        patcher = mock.patch('gb.autoreduce', _autoreduce)
+        self.addCleanup(patcher.stop)
+        patcher.start()
+
