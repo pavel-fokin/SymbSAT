@@ -27,5 +27,6 @@ echo
 echo "Python Tests"
 echo "============"
 pushd symbsat-py
+flake8 || exit 1
 python3 -m unittest tests/test_*.py
 popd
