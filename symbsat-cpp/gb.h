@@ -40,14 +40,33 @@ std::vector<PolyType> autoreduce(const std::vector<PolyType>& F) {
     return G;
 }
 
+
+template <typename PolyType>
+bool criteria(int i, int j, PolyType& p, PolyType &q,
+              std::vector<std::vector<int>> &M, std::vector<PolyType> &G) {
+    if (p.lm().isrelativelyprime(q.lm())) {
+        return true;
+    }
+    int G_size = G.size();
+    for (int k = 0; k<G_size; ++k) {
+        if (M[i][k] && M[k][j] && G[k].lm().isdivisible(p.lm() * q.lm())) {
+            return true;
+        }
+    }
+    return false;
+}
+
 template <typename PolyType>
 std::vector<PolyType> buchberger(const std::vector<PolyType>& F, const int num_vars) {
     std::vector<PolyType> G;
     std::vector<std::tuple<int, int>> pairs;
 
     G = autoreduce(F);
-
     int k = G.size();
+    // Matrix M with treated pairs
+    std::vector<std::vector<int>> M(k, std::vector<int>(k, 0));
+
+
     for (int i=-num_vars; i<k; ++i) {
         for (int j=0; j<k; ++j) {
             if (i<j) {
@@ -70,9 +89,14 @@ std::vector<PolyType> buchberger(const std::vector<PolyType>& F, const int num_v
                 continue;
             s = G[j]*xi;
         } else {
+            M[i][j] = 1;
             PolyType p = G[i], q = G[j];
-            if (p.lm().isrelativelyprime(q.lm()))
+            // if (p.lm().isrelativelyprime(q.lm())) {
+            //     continue;
+            // }
+            if (criteria(i, j, p, q, M, G)) {
                 continue;
+            }
             s = spoly(p, q);
         }
 
@@ -82,7 +106,14 @@ std::vector<PolyType> buchberger(const std::vector<PolyType>& F, const int num_v
             for (int i=-num_vars; i<k; ++i) {
                 pairs.push_back(std::make_tuple(i, k));
             }
+
             ++k;
+            // Enlarge M for new h entry
+            for (auto&& row: M) {
+                row.push_back(0);
+            }
+            M.push_back(std::vector<int>(k, 0));
+
         }
     }
 
