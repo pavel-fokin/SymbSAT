@@ -22,7 +22,7 @@ def autoreduce(F):
     Algorithms for Computer Algebra (1992)
     p. 448 ReduceSet(E)
     """
-    G = F.copy();
+    G = F.copy()
     P = []
 
     while G != []:
@@ -64,7 +64,7 @@ def _criteria(i, j, M, G):
         return True
 
     for k in range(len(G)):
-        if ((M[i][k] and  M[k][j]) and
+        if ((M[i][k] and M[k][j]) and
            G[k].lm().isdivisible(Gi_lm * Gj_lm)):
             return True
 

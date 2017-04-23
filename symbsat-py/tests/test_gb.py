@@ -213,4 +213,3 @@ class TestBuchbergerPolyZDD(unittest.TestCase, TestBuchberger):
         patcher = mock.patch('gb.autoreduce', _autoreduce)
         self.addCleanup(patcher.stop)
         patcher.start()
-

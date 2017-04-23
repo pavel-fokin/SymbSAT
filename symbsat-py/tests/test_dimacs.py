@@ -107,6 +107,7 @@ class TestDIMACS:
         self.assertTrue(P[3] == x6*x8*x12 + x6*x12 + x8*x12 + x12)
         self.assertTrue(P[4] == x6*x7*x11 + x6*x7 + x6*x11 + x6)
 
+
 class TestDIMACSPolyZDD(unittest.TestCase, TestDIMACS):
 
     def setUp(self):
