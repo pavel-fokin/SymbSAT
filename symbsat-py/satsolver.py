@@ -1,5 +1,5 @@
 """Check SAT UNSAT."""
-
+import argparse
 import functools
 
 import dimacs
@@ -31,7 +31,25 @@ def sat_groebner(P, ring):
 
 def main():
 
-    P, ring = dimacs.load(sys.argv[1], sys.argv[2] or "list")
+    parser = argparse.ArgumentParser(
+        description='Check files in DIMACS format'
+    )
+    parser.add_argument(
+        'file', metavar='DIMACS', type=argparse.FileType('r'),
+        help='File in DIMACS format'
+    )
+    group = parser.add_mutually_exclusive_group(required=False)
+    group.add_argument(
+        '--polylist', action='store_const', dest='polytype', const='list',
+        default='list'
+    )
+    group.add_argument(
+        '--polyzdd', action='store_const', dest='polytype', const='zdd'
+    )
+
+    args = parser.parse_args()
+
+    P, ring = dimacs.load(args.file, args.polytype)
     sat_groebner(P, ring)
     #  sat_mult(P)
     return 0

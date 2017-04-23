@@ -65,10 +65,14 @@ class TestDIMACS:
 
     def test_load_dimacs_1(self):
 
+        P, B = None, None
+
         with tempfile.NamedTemporaryFile(delete=False) as dimacs_file:
             dimacs_file.write(DIMACS_1)
 
-        P, B = dimacs.load(dimacs_file.name, poly_type=self.poly_type)
+        with open(dimacs_file.name, 'r') as file:
+            P, B = dimacs.load(file, poly_type=self.poly_type, quite=True)
+
         os.remove(dimacs_file.name)
 
         x1, x2, x3, x4 = B.gens
@@ -79,10 +83,14 @@ class TestDIMACS:
 
     def test_load_dimacs_2(self):
 
+        P, B = None, None
+
         with tempfile.NamedTemporaryFile(delete=False) as dimacs_file:
             dimacs_file.write(DIMACS_2)
 
-        P, B = dimacs.load(dimacs_file.name, poly_type=self.poly_type)
+        with open(dimacs_file.name, 'r') as file:
+            P, B = dimacs.load(file, poly_type=self.poly_type, quite=True)
+
         os.remove(dimacs_file.name)
 
         x1, x2, x3 = B.gens
@@ -94,10 +102,14 @@ class TestDIMACS:
 
     def test_load_marg2x2(self):
 
+        P, B = None, None
+
         with tempfile.NamedTemporaryFile(delete=False) as dimacs_file:
             dimacs_file.write(dimacs_marg2x2)
 
-        P, B = dimacs.load(dimacs_file.name, poly_type=self.poly_type)
+        with open(dimacs_file.name, 'r') as file:
+            P, B = dimacs.load(file, poly_type=self.poly_type, quite=True)
+
         os.remove(dimacs_file.name)
 
         x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12 = B.gens

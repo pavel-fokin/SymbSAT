@@ -37,7 +37,7 @@ def _parse_line(line, x):
     return p
 
 
-def load(filename, poly_type="list"):
+def load(file: 'File', poly_type="list", quite=False):
 
     num_vars = 0
     num_clauses = 0
@@ -48,16 +48,16 @@ def load(filename, poly_type="list"):
     # list with polynomials
     P = []
 
-    file = open(filename, 'r')
-
     for line in file:
 
         if line.startswith('c'):
-            print(line.strip())
+            if not quite:
+                print(line.strip())
             continue
 
         if line.startswith('p'):
-            print(line.strip())
+            if not quite:
+                print(line.strip())
             _line = line.split()
             assert _line[1] == 'cnf'
 
@@ -72,7 +72,8 @@ def load(filename, poly_type="list"):
         # accumulate clauses
         if line.endswith('0\n') or line.endswith('0'):
             p = _parse_line(line, x)
-            print(p)
+            if not quite:
+                print(p)
             P.append(p)
 
     file.close()
