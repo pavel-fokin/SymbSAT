@@ -13,13 +13,12 @@ class Monom(tuple):
     def __new__(cls, bits=None, vars=None):
         if bits is not None:
             return super(Monom, cls).__new__(cls, bits)
-        elif vars is not None:
+        if vars is not None:
             bits = list(itertools.repeat(0, Monom.size))
             for var in vars:
                 bits[var] = 1
             return super(Monom, cls).__new__(cls, bits)
-        else:
-            return Monom.zero
+        return Monom.zero
 
     def __mul__(self, other):
         if self.isOne():

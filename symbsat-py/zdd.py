@@ -3,11 +3,11 @@
 from monom import Monom
 
 
-class ZDD(object):
+class ZDD:
 
     __slots__ = ('root', '_lm')
 
-    class Node(object):
+    class Node:
 
         __slots__ = ('var', 'mul', 'add')
 
@@ -34,13 +34,13 @@ class ZDD(object):
         def __str__(self):
             if self == ZDD._one:
                 return "_one"
-            elif self == ZDD._zero:
+            if self == ZDD._zero:
                 return "_zero"
-            else:
-                return (
-                    '%s -> {%s} {%s}' %
-                    (self.var, self.mul, self.add)
-                )
+
+            return (
+                '%s -> {%s} {%s}' %
+                (self.var, self.mul, self.add)
+            )
 
         def __eq__(self, other):
             return id(self) == id(other)
@@ -61,9 +61,9 @@ class ZDD(object):
                 self.root = self._create_node(
                     monom.vars[0], ZDD._one, ZDD._zero
                 )
-                for var in monom.vars[1:]:
+                for var_ in monom.vars[1:]:
                     self.root = self._mul(
-                        self.root, self._create_node(var, ZDD._one, ZDD._zero)
+                        self.root, self._create_node(var_, ZDD._one, ZDD._zero)
                     )
         elif var < 0:
             self.root = ZDD._zero
@@ -85,11 +85,12 @@ class ZDD(object):
 
         if i.isZero():
             return j
-        elif j.isZero():
+        if j.isZero():
             return i
-        elif i == j:
+        if i == j:
             return ZDD._zero
-        elif i.isOne():
+
+        if i.isOne():
             r = self._create_node(j.var, j.mul, self._add(j.add, ZDD._one))
         elif j.isOne():
             r = self._create_node(i.var, i.mul, self._add(i.add, ZDD._one))
@@ -112,61 +113,60 @@ class ZDD(object):
 
         if i.isOne():
             return j
-        elif i.isZero() or j.isZero():
+        if i.isZero() or j.isZero():
             return ZDD._zero
-        elif j.isOne() or i == j:
+        if j.isOne() or i == j:
             return i
+
+        r = None
+        if i.var < j.var:
+            m = self._mul(i.mul, j)
+            a = self._mul(i.add, j)
+
+            if m.isZero():
+                return a
+
+            r = self._create_node(i.var, m, a)
+        elif i.var > j.var:
+            m = self._mul(j.mul, i)
+            a = self._mul(j.add, i)
+
+            if m.isZero():
+                return a
+
+            r = self._create_node(j.var, m, a)
         else:
-            r = None
-            if i.var < j.var:
-                m = self._mul(i.mul, j)
-                a = self._mul(i.add, j)
+            m1 = self._mul(i.add, j.mul)
+            m2 = self._mul(i.mul, j.mul)
+            m3 = self._mul(i.mul, j.add)
+            ms_sum = self._add(m1, self._add(m2, m3))
 
-                if m.isZero():
-                    return a
+            if ms_sum.isZero():
+                return self._mul(i.add, j.add)
 
-                r = self._create_node(i.var, m, a)
-            elif i.var > j.var:
-                m = self._mul(j.mul, i)
-                a = self._mul(j.add, i)
-
-                if m.isZero():
-                    return a
-
-                r = self._create_node(j.var, m, a)
-            else:
-                m1 = self._mul(i.add, j.mul)
-                m2 = self._mul(i.mul, j.mul)
-                m3 = self._mul(i.mul, j.add)
-                ms_sum = self._add(m1, self._add(m2, m3))
-
-                if ms_sum.isZero():
-                    return self._mul(i.add, j.add)
-
-                r = self._create_node(i.var, ms_sum, self._mul(i.add, j.add))
-            return r
+            r = self._create_node(i.var, ms_sum, self._mul(i.add, j.add))
+        return r
 
     def __add__(self, other):
 
         if isinstance(other, Monom):
             return self + ZDD(monom=other)
-        elif isinstance(other, ZDD):
+        if isinstance(other, ZDD):
             r = ZDD()
             r.root = self._add(self.root, other.root)
             return r
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __mul__(self, other):
 
         if isinstance(other, Monom):
             return self * ZDD(monom=other)
-        elif isinstance(other, ZDD):
+        if isinstance(other, ZDD):
             r = ZDD()
             r.root = self._mul(self.root, other.root)
             return r
-        else:
-            return NotImplemented
+
+        return NotImplemented
 
     def copy(self):
         r = ZDD()
@@ -189,17 +189,17 @@ class ZDD(object):
     def lm(self):
         if self.root.isZero():
             return Monom.zero
-        elif self.root.isOne():
+        if self.root.isOne():
             return Monom.one
-        else:
-            if self._lm is None:
-                monom = []
-                i = self.root
-                while i.var >= 0:
-                    monom.append(i.var)
-                    i = i.mul
-                self._lm = Monom(vars=monom)
-            return self._lm
+
+        if self._lm is None:
+            monom = []
+            i = self.root
+            while i.var >= 0:
+                monom.append(i.var)
+                i = i.mul
+            self._lm = Monom(vars=monom)
+        return self._lm
 
     def __iter__(self):
         if self.root.isZero():

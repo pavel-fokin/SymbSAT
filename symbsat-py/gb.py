@@ -63,9 +63,9 @@ def _criteria(i, j, M, G):
     if Gi_lm.isrelativelyprime(Gj_lm):
         return True
 
-    for k in range(len(G)):
-        if ((M[i][k] and M[k][j]) and
-           G[k].lm().isdivisible(Gi_lm * Gj_lm)):
+    for k, _ in enumerate(G):
+        if ((M[i][k] and M[k][j])
+                and G[k].lm().isdivisible(Gi_lm * Gj_lm)):
             return True
 
     return False

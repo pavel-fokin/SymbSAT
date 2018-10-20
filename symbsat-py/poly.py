@@ -17,16 +17,15 @@ class Poly(list):
         return super(Poly, cls).__new__(cls, monoms)
 
     def __init__(self, monoms):
-        return super(Poly, self).__init__(sorted(monoms, reverse=True))
+        super(Poly, self).__init__(sorted(monoms, reverse=True))
 
     def __add__(self, other):
         # symmetric difference
         if isinstance(other, Monom):
             return Poly(set(self) ^ set([other]))
-        elif isinstance(other, Poly):
+        if isinstance(other, Poly):
             return Poly(set(self) ^ set(other))
-        else:
-            return NotImplemented
+        return NotImplemented
 
     def __mul__(self, other):
         if isinstance(other, Monom):
