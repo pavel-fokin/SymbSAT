@@ -25,8 +25,8 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
 
 script:
-  - (cd symbsat-py && coverage run --branch -m unittest tests/test_*.py)
-  - (mkdir build && cd build && cmake ../symbsat-cpp && make -j2 && tests/unittests)
+  - make coverage-py
+  - make tests-cpp
 
 after_success:
   - (cd symbsat-cpp && bash <(curl -s https://codecov.io/bash))
