@@ -42,7 +42,8 @@ class Monom(tuple):
 
         return Monom(map(operator.xor, self, other))
 
-    __div__ = __truediv__
+    def __lt__(self, other):
+        return self.lex(other)
 
     def __str__(self):
         if self.isOne():
@@ -80,7 +81,7 @@ class Monom(tuple):
 
     def prolong(self, i):
         """Prolongation of the monomial m*x."""
-        assert(not self[i])
+        assert not self[i]
         self[i] = 1
 
     @property
@@ -93,7 +94,15 @@ class Monom(tuple):
         return sum(self)
 
     def lex(self, other):
-        raise NotImplementedError
+        if other.isOne():
+            return False
+        if self.isOne():
+            return True
+        vec = [
+            var for var in map(operator.sub, self, other)
+            if var != 0
+        ]
+        return len(vec) > 0 > vec[0]
 
     def deglex(self, other):
         raise NotImplementedError
