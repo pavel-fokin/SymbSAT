@@ -1,3 +1,4 @@
+# pylint: disable=invalid-name
 """Groebner Basis."""
 
 from polyfuncs import spoly, normal_form

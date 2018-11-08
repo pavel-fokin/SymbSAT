@@ -94,10 +94,10 @@ class Monom(tuple):
         return sum(self)
 
     def lex(self, other):
-        if other.isOne():
-            return False
         if self.isOne():
             return True
+        if other.isOne():
+            return False
         vec = [
             var for var in map(operator.sub, self, other)
             if var != 0
@@ -105,7 +105,9 @@ class Monom(tuple):
         return len(vec) > 0 > vec[0]
 
     def deglex(self, other):
-        raise NotImplementedError
+        if self.degree < other.degree:
+            return False
+        return self.lex(other)
 
 
 Monom.one = Monom(())
