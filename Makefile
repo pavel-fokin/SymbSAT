@@ -9,7 +9,7 @@ all: help
 help:
 	@echo 'Makefile help:                         '
 	@echo '                                       '
-	@echo '   compile         Compile C++ code    '
+	@echo '   build           Compile C++ code    '
 	@echo '   tests-cpp       Run tests for C++   '
 	@echo '   tests-py        Run tests for Python'
 
@@ -17,16 +17,16 @@ help:
 clean-cpp:
 	@[ ! -d $(BUILDDIR) ] || rm -rf $(BUILDDIR)
 
-.PHONY: compile
-compile: clean-cpp
-	 mkdir $(BUILDDIR) && cd $(BUILDDIR) && cmake $(CPPDIR) && make -j$(nproc)
+.PHONY: build
+build: clean-cpp
+	 @mkdir $(BUILDDIR) && cd $(BUILDDIR) && cmake $(CPPDIR) && make -j$(nproc)
 
 .PHONY: tests-py
 tests-py:
 	@cd $(PYDIR) && python3 -m unittest $(PYDIR)/tests/test_*.py
 
 .PHONY: tests-cpp
-tests-cpp: compile
+tests-cpp: build
 	@$(BUILDDIR)/tests/unittests
 
 .PHONY: coverage-py

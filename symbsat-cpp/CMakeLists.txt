@@ -7,6 +7,7 @@ ADD_DEFINITIONS(-std=c++14 -Wall --coverage -g)
 # We want to generate files with extension *.gcno but not with *.cpp.gcno
 SET(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE 1)
 
+SET(BUILD_COV TRUE)
 SET(BUILD_TEST TRUE)
 
 IF (BUILD_TEST)
