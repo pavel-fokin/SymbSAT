@@ -30,10 +30,10 @@ class TestZDD(unittest.TestCase):
         self.assertEqual(p, a + d)
 
         p = a + a + b + b
-        self.assertTrue(p.isZero())
+        self.assertTrue(p.is_zero())
 
         p = a + a + _1
-        self.assertTrue(p.isOne())
+        self.assertTrue(p.is_one())
 
     def test_add_monom(self):
         a, b, c, d = self.B.gens
@@ -56,7 +56,7 @@ class TestZDD(unittest.TestCase):
         self.assertEqual(p, a*c)
 
         p = (a*c + a + c + _1) * c
-        self.assertTrue(p.isZero())
+        self.assertTrue(p.is_zero())
 
         p = _1 * a
         self.assertEqual(p, a)

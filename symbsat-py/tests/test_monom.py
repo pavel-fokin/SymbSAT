@@ -31,7 +31,7 @@ class TestBoolMonom(unittest.TestCase):
         self.assertEqual(ab, (1, 1, 0, 0))
         self.assertEqual(c, (0, 0, 1, 0))
         self.assertEqual(d, (0, 0, 0, 1))
-        self.assertTrue(_0.isZero())
+        self.assertTrue(_0.is_zero())
 
     def test_mul(self):
         a, b = self.variables[:2]
@@ -49,11 +49,11 @@ class TestBoolMonom(unittest.TestCase):
         _1 = Monom.one
 
         # 1/a == 0
-        self.assertTrue((_1/a).isZero())
+        self.assertTrue((_1/a).is_zero())
         # a == a/1
         self.assertEqual(a, a/_1)
         # a/b == 0
-        self.assertTrue((a/b).isZero())
+        self.assertTrue((a/b).is_zero())
         # ab/b == a
         self.assertEqual(a, ab/b)
         # ab/a == b
@@ -61,7 +61,7 @@ class TestBoolMonom(unittest.TestCase):
         # abc/ab == c
         self.assertEqual(c, abc/ab)
         # ab/bc == 0
-        self.assertTrue((ab/bc).isZero())
+        self.assertTrue((ab/bc).is_zero())
 
     def test_isdivisible(self):
         a, b, c = self.variables[:3]

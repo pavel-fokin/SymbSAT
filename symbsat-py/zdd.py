@@ -25,10 +25,10 @@ class ZDD:
                 self.add.copy()
             )
 
-        def isZero(self):
+        def is_zero(self):
             return self.var == -2
 
-        def isOne(self):
+        def is_one(self):
             return self.var == -1
 
         def __str__(self):
@@ -53,9 +53,9 @@ class ZDD:
         self._lm = None
 
         if monom is not None:
-            if monom.isOne():
+            if monom.is_one():
                 self.setOne()
-            elif monom.isZero():
+            elif monom.is_zero():
                 self.setZero()
             else:
                 self.root = self._create_node(
@@ -83,16 +83,16 @@ class ZDD:
 
     def _add(self, i, j):
 
-        if i.isZero():
+        if i.is_zero():
             return j
-        if j.isZero():
+        if j.is_zero():
             return i
         if i == j:
             return ZDD._zero
 
-        if i.isOne():
+        if i.is_one():
             r = self._create_node(j.var, j.mul, self._add(j.add, ZDD._one))
-        elif j.isOne():
+        elif j.is_one():
             r = self._create_node(i.var, i.mul, self._add(i.add, ZDD._one))
         else:
             if i.var < j.var:
@@ -111,11 +111,11 @@ class ZDD:
 
     def _mul(self, i, j):
 
-        if i.isOne():
+        if i.is_one():
             return j
-        if i.isZero() or j.isZero():
+        if i.is_zero() or j.is_zero():
             return ZDD._zero
-        if j.isOne() or i == j:
+        if j.is_one() or i == j:
             return i
 
         r = None
@@ -123,7 +123,7 @@ class ZDD:
             m = self._mul(i.mul, j)
             a = self._mul(i.add, j)
 
-            if m.isZero():
+            if m.is_zero():
                 return a
 
             r = self._create_node(i.var, m, a)
@@ -131,7 +131,7 @@ class ZDD:
             m = self._mul(j.mul, i)
             a = self._mul(j.add, i)
 
-            if m.isZero():
+            if m.is_zero():
                 return a
 
             r = self._create_node(j.var, m, a)
@@ -141,7 +141,7 @@ class ZDD:
             m3 = self._mul(i.mul, j.add)
             ms_sum = self._add(m1, self._add(m2, m3))
 
-            if ms_sum.isZero():
+            if ms_sum.is_zero():
                 return self._mul(i.add, j.add)
 
             r = self._create_node(i.var, ms_sum, self._mul(i.add, j.add))
@@ -180,16 +180,16 @@ class ZDD:
     def setOne(self):
         self.root = ZDD._one
 
-    def isZero(self):
-        return self.root.isZero()
+    def is_zero(self):
+        return self.root.is_zero()
 
-    def isOne(self):
-        return self.root.isOne()
+    def is_one(self):
+        return self.root.is_one()
 
     def lm(self):
-        if self.root.isZero():
+        if self.root.is_zero():
             return Monom.zero
-        if self.root.isOne():
+        if self.root.is_one():
             return Monom.one
 
         if self._lm is None:
@@ -202,9 +202,9 @@ class ZDD:
         return self._lm
 
     def __iter__(self):
-        if self.root.isZero():
+        if self.root.is_zero():
             yield Monom.zero
-        elif self.root.isOne():
+        elif self.root.is_one():
             yield Monom.one
         else:
             monom, path = [], []
@@ -215,7 +215,7 @@ class ZDD:
                 i = i.mul
             yield Monom(vars=monom)
             while path:
-                while path and path[-1].add.isZero():
+                while path and path[-1].add.is_zero():
                     path.pop()
                     monom.pop()
                 if path:

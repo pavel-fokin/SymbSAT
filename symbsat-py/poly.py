@@ -29,7 +29,7 @@ class Poly(list):
 
     def __mul__(self, other):
         if isinstance(other, Monom):
-            if self == Poly.zero or other.isZero():
+            if self == Poly.zero or other.is_zero():
                 return Poly.zero
             monoms = map(lambda m: m*other, self)
         elif isinstance(other, Poly):
@@ -53,10 +53,10 @@ class Poly(list):
     def copy(self):
         return Poly(self)
 
-    def isZero(self):
+    def is_zero(self):
         return self == Poly.zero
 
-    def isOne(self):
+    def is_one(self):
         return self == Poly.one
 
     def lm(self):

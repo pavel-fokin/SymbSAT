@@ -21,7 +21,7 @@ def normal_form(f, F):
     if F == []:
         return p
 
-    while not p.isZero():
+    while not p.is_zero():
         i = 0
         divisionoccured = False
         while i < len(F) and (not divisionoccured):

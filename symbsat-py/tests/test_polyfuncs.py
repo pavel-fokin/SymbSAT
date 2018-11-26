@@ -126,7 +126,7 @@ class TestPolyUtils(object):
         # Should reduce to 0
         nf = normal_form(s, F)
 
-        self.assertTrue(nf.isZero())
+        self.assertTrue(nf.is_zero())
 
 
 class TestPolyListUtils(unittest.TestCase, TestPolyUtils):

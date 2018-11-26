@@ -58,7 +58,7 @@ class TestBoolPoly(unittest.TestCase):
         self.assertEqual(p, a*c)
 
         p = (a*c + a + c + _1) * c
-        self.assertTrue(p.isZero())
+        self.assertTrue(p.is_zero())
 
     def test_mul_monom(self):
         a, b, c, d = self.B.gens

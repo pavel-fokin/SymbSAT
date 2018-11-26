@@ -12,7 +12,7 @@ def _autoreduce(G):
     G_red = []
     for i, g in enumerate(G):
         G[i] = normal_form(g, G[:i] + G[i+1:])
-        if not G[i].isZero():
+        if not G[i].is_zero():
             G_red.append(G[i])
     return G_red
 
@@ -29,7 +29,7 @@ def autoreduce(F):
     while G != []:
         h = G.pop(-1)
         h = normal_form(h, P)
-        if not h.isZero():
+        if not h.is_zero():
             P_size = len(P)
             i = 0
             while i < P_size:
@@ -47,7 +47,7 @@ def autoreduce(F):
     while i < P_size:
         h = P.pop()
         h = normal_form(h, P)
-        if h.isZero():
+        if h.is_zero():
             P_size -= 1
         else:
             P.append(h)
@@ -106,7 +106,7 @@ def buchberger(F, BRing):
 
         h = normal_form(s, G)
 
-        if not h.isZero():
+        if not h.is_zero():
             G.append(h)
 
             pairs += [(i, k) for i in range(-len(BRing.gens), k)]

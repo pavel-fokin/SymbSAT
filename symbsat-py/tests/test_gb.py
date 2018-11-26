@@ -188,7 +188,7 @@ class TestBuchberger(object):
         G = buchberger(F, self.B)
 
         self.assertTrue(len(G) == 1)
-        self.assertTrue(G[0].isOne())
+        self.assertTrue(G[0].is_one())
 
 
 class TestBuchbergerPolyList(unittest.TestCase, TestBuchberger):

@@ -21,19 +21,19 @@ class Monom(tuple):
         return Monom.zero
 
     def __mul__(self, other):
-        if self.isOne():
+        if self.is_one():
             return other
-        if other.isOne():
+        if other.is_one():
             return self
-        if self.isZero() or other.isZero():
+        if self.is_zero() or other.is_zero():
             return Monom.zero
 
         return Monom(map(operator.or_, self, other))
 
     def __truediv__(self, other):
-        if other.isOne():
+        if other.is_one():
             return self
-        if self.isOne():
+        if self.is_one():
             return Monom.zero
         if self == other:
             return Monom.one
@@ -46,9 +46,9 @@ class Monom(tuple):
         return self.lex(other)
 
     def __str__(self):
-        if self.isOne():
+        if self.is_one():
             return "1"
-        if self.isZero():
+        if self.is_zero():
             return "0"
         return str(self.vars)
 
@@ -58,23 +58,23 @@ class Monom(tuple):
     def lcm(self, other):
         return self*other
 
-    def isOne(self):
+    def is_one(self):
         return id(self) == id(Monom.one)
 
-    def isZero(self):
+    def is_zero(self):
         return id(self) == id(Monom.zero)
 
     def isdivisible(self, other):
-        if other.isOne():
+        if other.is_one():
             return True
-        if self.isOne():
+        if self.is_one():
             return False
         return self == Monom(map(operator.or_, self, other))
 
     def isrelativelyprime(self, other):
         if self == other:
             return True
-        if self.isOne():
+        if self.is_one():
             return True
         lcm = self.lcm(other)
         return Monom(map(operator.xor, lcm, self)) == other
@@ -94,9 +94,9 @@ class Monom(tuple):
         return sum(self)
 
     def lex(self, other):
-        if self.isOne():
+        if self.is_one():
             return True
-        if other.isOne():
+        if other.is_one():
             return False
         vec = [
             var for var in map(operator.sub, self, other)
