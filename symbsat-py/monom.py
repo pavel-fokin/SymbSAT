@@ -1,7 +1,8 @@
 """Boolean Monomials."""
-
 import itertools
 import operator
+
+import order
 
 
 class Monom(tuple):
@@ -10,7 +11,10 @@ class Monom(tuple):
     zero = None
     one = None
 
-    def __new__(cls, bits=None, vars=None):
+    def __new__(cls, bits=None, vars=None, order=order.Lex):
+
+        cls.order = order
+
         if bits is not None:
             return super(Monom, cls).__new__(cls, bits)
         if vars is not None:
@@ -28,7 +32,7 @@ class Monom(tuple):
         if self.is_zero() or other.is_zero():
             return Monom.zero
 
-        return Monom(map(operator.or_, self, other))
+        return Monom(map(operator.or_, self, other), order=self.order)
 
     def __truediv__(self, other):
         if other.is_one():
@@ -40,10 +44,10 @@ class Monom(tuple):
         if not self.isdivisible(other):
             return Monom.zero
 
-        return Monom(map(operator.xor, self, other))
+        return Monom(map(operator.xor, self, other), order=self.order)
 
     def __lt__(self, other):
-        return self.lex(other)
+        return self.order.lt(self, other)
 
     def __str__(self):
         if self.is_one():
@@ -69,7 +73,7 @@ class Monom(tuple):
             return True
         if self.is_one():
             return False
-        return self == Monom(map(operator.or_, self, other))
+        return self == Monom(map(operator.or_, self, other), order=self.order)
 
     def isrelativelyprime(self, other):
         if self == other:
@@ -77,7 +81,7 @@ class Monom(tuple):
         if self.is_one():
             return True
         lcm = self.lcm(other)
-        return Monom(map(operator.xor, lcm, self)) == other
+        return Monom(map(operator.xor, lcm, self), order=self.order) == other
 
     def prolong(self, i):
         """Prolongation of the monomial m*x."""
@@ -92,22 +96,6 @@ class Monom(tuple):
     @property
     def degree(self):
         return sum(self)
-
-    def lex(self, other):
-        if self.is_one():
-            return True
-        if other.is_one():
-            return False
-        vec = [
-            var for var in map(operator.sub, self, other)
-            if var != 0
-        ]
-        return len(vec) > 0 > vec[0]
-
-    def deglex(self, other):
-        if self.degree < other.degree:
-            return False
-        return self.lex(other)
 
 
 Monom.one = Monom(())

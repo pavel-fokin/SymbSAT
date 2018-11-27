@@ -92,17 +92,3 @@ class TestBoolMonom(unittest.TestCase):
         ac = a*c
 
         self.assertEqual([0, 2], ac.vars)
-
-    def test_lex(self):
-        a, b, c, d = self.variables
-        _1 = Monom.one
-
-        self.assertFalse(a.lex(b))
-        self.assertFalse(b < b)
-        self.assertFalse(b > b)
-        self.assertTrue(b.lex(a))
-        self.assertTrue(b < a)
-        self.assertTrue(d.lex(c))
-        self.assertTrue(d < c)
-        self.assertFalse(a.lex(_1))
-        self.assertFalse(a < _1)
