@@ -26,9 +26,14 @@ class Order:
 class Lex(Order):
     @classmethod
     def lt(cls, first, second):
-        if first.is_zero() or first.is_one():
+        if first.is_zero():
             return True
-        if second.is_zero() or second.is_one():
+        if second.is_zero():
+            return False
+
+        if first.is_one():
+            return True
+        if second.is_one():
             return False
 
         return cls.lex_condition(first, second)
@@ -37,9 +42,14 @@ class Lex(Order):
 class DegLex(Order):
     @classmethod
     def lt(cls, first, second):
-        if first.is_zero() or first.is_one():
+        if first.is_zero():
             return True
-        if second.is_zero() or second.is_one():
+        if second.is_zero():
+            return False
+
+        if first.is_one():
+            return True
+        if second.is_one():
             return False
 
         if first.degree < second.degree:
@@ -53,9 +63,14 @@ class DegLex(Order):
 class DegRevLex(Order):
     @classmethod
     def lt(cls, first, second):
-        if first.is_zero() or first.is_one():
+        if first.is_zero():
             return True
-        if second.is_zero() or second.is_one():
+        if second.is_zero():
+            return False
+
+        if first.is_one():
+            return True
+        if second.is_one():
             return False
 
         if first.degree < second.degree:
