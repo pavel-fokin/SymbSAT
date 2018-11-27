@@ -34,6 +34,9 @@ class TestBoolMonomOrder(unittest.TestCase):
         self.assertTrue(Lex.lt(_0, a))  # 0 < a
         self.assertTrue(Lex.lt(_0, _1))  # 0 < 1
 
+        self.assertFalse(Lex.lt(a, _0))  # a > 0
+        self.assertFalse(Lex.lt(_1, _0))  # 1 > 0
+
         ab = Monom(vars=[0, 1])
         bc = Monom(vars=[1, 2])
 
@@ -64,6 +67,9 @@ class TestBoolMonomOrder(unittest.TestCase):
 
         self.assertTrue(Lex.lt(_0, a))  # 0 < a
         self.assertTrue(Lex.lt(_0, _1))  # 0 < 1
+
+        self.assertFalse(Lex.lt(a, _0))  # a > 0
+        self.assertFalse(Lex.lt(_1, _0))  # 1 > 0
 
         ab = Monom(vars=[0, 1], order=DegLex)
         bc = Monom(vars=[1, 2], order=DegLex)
@@ -98,6 +104,9 @@ class TestBoolMonomOrder(unittest.TestCase):
 
         self.assertFalse(Lex.lt(a, _1))  # a < 1
         self.assertTrue(Lex.lt(_1, a))  # 1 < a
+
+        self.assertFalse(Lex.lt(a, _0))  # a > 0
+        self.assertFalse(Lex.lt(_1, _0))  # 1 > 0
 
         self.assertTrue(Lex.lt(_0, a))  # 0 < a
         self.assertTrue(Lex.lt(_0, _1))  # 0 < 1
