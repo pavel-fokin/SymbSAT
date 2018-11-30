@@ -8,7 +8,6 @@ import operator
 
 
 class Order:
-
     @classmethod
     def lex_condition(cls, first, second):
         vec = [

@@ -2,7 +2,7 @@
 import itertools
 import operator
 
-import order
+from order import Lex
 
 
 class Monom(tuple):
@@ -11,7 +11,7 @@ class Monom(tuple):
     zero = None
     one = None
 
-    def __new__(cls, bits=None, vars=None, order=order.Lex):
+    def __new__(cls, bits=None, vars=None, order=Lex):
 
         cls.order = order
 
@@ -48,6 +48,18 @@ class Monom(tuple):
 
     def __lt__(self, other):
         return self.order.lt(self, other)
+
+    def __le__(self, other):
+        return NotImplemented
+
+    def __gt__(self, other):
+        return not self.order.lt(self, other)
+
+    def __ge__(self, other):
+        return NotImplemented
+
+    def __ne__(self, other):
+        return NotImplemented
 
     def __str__(self):
         if self.is_one():
