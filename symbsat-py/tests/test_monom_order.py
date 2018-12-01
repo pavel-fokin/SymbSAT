@@ -10,6 +10,18 @@ class TestBoolMonomOrder(unittest.TestCase):
     def setUp(self):
         Monom.size = 4
 
+    def test_base_rules(self):
+        a, b = (
+            Monom(vars=[0], order=Lex),  # a
+            Monom(vars=[1], order=Lex),  # b
+        )
+
+        with self.assertRaises(TypeError):
+            a <= b
+
+        with self.assertRaises(TypeError):
+            a >= b
+
     def test_lex(self):
         a, b, c, d = (
             Monom(vars=[0], order=Lex),  # a

@@ -58,9 +58,6 @@ class Monom(tuple):
     def __ge__(self, other):
         return NotImplemented
 
-    def __ne__(self, other):
-        return NotImplemented
-
     def __str__(self):
         if self.is_one():
             return "1"

@@ -39,6 +39,10 @@ class TestBoolMonom(unittest.TestCase):
         self.assertEqual(a*a, a)
         self.assertEqual(b*a, a*b)
 
+        _0 = Monom()
+        self.assertEqual(a*_0, _0)
+        self.assertEqual(_0*a, _0)
+
     def test_truediv(self):
         a, b, c = self.variables[:3]
 
