@@ -2,7 +2,7 @@
 import itertools
 import operator
 
-from order import Lex
+from symbsat.order import Lex
 
 
 class Monom(tuple):

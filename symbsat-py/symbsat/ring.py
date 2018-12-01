@@ -1,11 +1,10 @@
 """Boolean Polynomial Ring."""
+from symbsat.monom import Monom
+from symbsat.poly import Poly
+from symbsat.zdd import ZDD
 
-from monom import Monom
-from poly import Poly
-from zdd import ZDD
 
-
-class BoolPolyRing(object):
+class BoolPolyRing:
 
     def __init__(self, n, poly_type="list"):
 

@@ -1,6 +1,6 @@
 """ZDDs."""
 
-from monom import Monom
+from symbsat.monom import Monom
 
 
 class ZDD:

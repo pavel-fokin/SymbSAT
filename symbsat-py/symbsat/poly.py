@@ -1,10 +1,9 @@
 """Boolean Polynomials."""
-
 import collections
 import operator
 import itertools
 
-from monom import Monom
+from symbsat.monom import Monom
 
 
 class Poly(list):

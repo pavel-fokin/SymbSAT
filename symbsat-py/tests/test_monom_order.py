@@ -1,8 +1,8 @@
 # pylint: disable=invalid-name
 import unittest
 
-from monom import Monom
-from order import Lex, DegLex, DegRevLex
+from symbsat.monom import Monom
+from symbsat.order import Lex, DegLex, DegRevLex
 
 
 class TestBoolMonomOrder(unittest.TestCase):

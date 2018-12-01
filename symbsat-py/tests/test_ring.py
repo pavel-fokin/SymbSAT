@@ -1,7 +1,7 @@
 import unittest
 
-from zdd import ZDD
-from ring import BoolPolyRing
+from symbsat.zdd import ZDD
+from symbsat.ring import BoolPolyRing
 
 
 class TestBoolPolyRing(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 
-import monom
-import gbinv
+import symbsat.monom as monom
+import symbsat.gbinv as gbinv
 
 
 class TestGBInv(unittest.TestCase):

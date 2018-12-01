@@ -1,7 +1,7 @@
 import unittest
 
-from ring import BoolPolyRing
-from polyfuncs import spoly, normal_form
+from symbsat.ring import BoolPolyRing
+from symbsat.polyfuncs import spoly, normal_form
 
 
 class TestPolyUtils(object):
