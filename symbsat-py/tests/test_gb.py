@@ -1,8 +1,8 @@
 import unittest
 import unittest.mock as mock
 
-from ring import BoolPolyRing
-from gb import buchberger, autoreduce, _autoreduce
+from symbsat.ring import BoolPolyRing
+from symbsat.gb import buchberger, autoreduce, _autoreduce
 
 
 class TestAutoreduce:
@@ -198,7 +198,7 @@ class TestBuchbergerPolyList(unittest.TestCase, TestBuchberger):
         # enough for all tests
         self.B = BoolPolyRing(10, poly_type="list")
 
-        patcher = mock.patch('gb.autoreduce', _autoreduce)
+        patcher = mock.patch('symbsat.gb.autoreduce', _autoreduce)
         self.addCleanup(patcher.stop)
         patcher.start()
 
@@ -210,6 +210,6 @@ class TestBuchbergerPolyZDD(unittest.TestCase, TestBuchberger):
         # enough for all tests
         self.B = BoolPolyRing(10, poly_type="zdd")
 
-        patcher = mock.patch('gb.autoreduce', _autoreduce)
+        patcher = mock.patch('symbsat.gb.autoreduce', _autoreduce)
         self.addCleanup(patcher.stop)
         patcher.start()

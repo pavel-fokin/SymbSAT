@@ -1,7 +1,7 @@
 # pylint: disable=invalid-name
 """Groebner Basis."""
 
-from polyfuncs import spoly, normal_form
+from symbsat.polyfuncs import spoly, normal_form
 
 
 def _autoreduce(G):

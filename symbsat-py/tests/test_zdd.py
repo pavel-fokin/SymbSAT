@@ -1,8 +1,8 @@
 import unittest
 
-from monom import Monom
-from zdd import ZDD
-from ring import BoolPolyRing
+from symbsat.monom import Monom
+from symbsat.zdd import ZDD
+from symbsat.ring import BoolPolyRing
 
 
 class TestZDD(unittest.TestCase):

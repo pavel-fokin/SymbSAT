@@ -2,9 +2,9 @@
 import argparse
 import functools
 
-import dimacs
-import gb
-from poly import Poly
+import symbsat.dimacs as dimacs
+import symbsat.gb as gb
+from symbsat.poly import Poly
 
 
 def sat_mult(P):
