@@ -188,9 +188,9 @@ class ZDD:
 
     def lm(self):
         if self.root.is_zero():
-            return Monom.zero
+            return Monom.zero()
         if self.root.is_one():
-            return Monom.one
+            return Monom.one()
 
         if self._lm is None:
             monom = []
@@ -203,9 +203,9 @@ class ZDD:
 
     def __iter__(self):
         if self.root.is_zero():
-            yield Monom.zero
+            yield Monom.zero()
         elif self.root.is_one():
-            yield Monom.one
+            yield Monom.one()
         else:
             monom, path = [], []
             i = self.root
@@ -226,7 +226,7 @@ class ZDD:
                         path.append(i)
                         i = i.mul
                     if monom == []:
-                        yield Monom.one
+                        yield Monom.one()
                         break
                     yield Monom(vars=monom)
 

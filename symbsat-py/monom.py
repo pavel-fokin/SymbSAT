@@ -5,46 +5,70 @@ import operator
 from order import Lex
 
 
-class Monom(tuple):
+class Monom:
 
     size = 0
-    zero = None
-    one = None
 
-    def __new__(cls, bits=None, vars=None, order=Lex):
-
-        cls.order = order
-
+    def __init__(self, bits=None, vars=None, order=Lex):
+        self.order = order
         if bits is not None:
-            return super(Monom, cls).__new__(cls, bits)
-        if vars is not None:
+            self.bits = tuple(bits)
+        elif vars is not None:
             bits = list(itertools.repeat(0, Monom.size))
             for var in vars:
                 bits[var] = 1
-            return super(Monom, cls).__new__(cls, bits)
-        return Monom.zero
+            self.bits = tuple(bits)
+        else:
+            self.bits = tuple()
+
+    @classmethod
+    def zero(cls):
+        return cls(bits=tuple())
+
+    @classmethod
+    def one(cls):
+        return cls(bits=(0,))
+
+    def is_zero(self):
+        return self.bits == ()
+
+    def is_one(self):
+        return self.bits == (0,)
 
     def __mul__(self, other):
         if self.is_one():
             return other
         if other.is_one():
             return self
-        if self.is_zero() or other.is_zero():
-            return Monom.zero
+        if self.is_zero():
+            return Monom.zero()
+        if other.is_zero():
+            return Monom.zero()
 
-        return Monom(map(operator.or_, self, other), order=self.order)
+        return Monom(
+            map(operator.or_, self.bits, other.bits), order=self.order
+        )
 
     def __truediv__(self, other):
         if other.is_one():
             return self
         if self.is_one():
-            return Monom.zero
+            return Monom.zero()
         if self == other:
-            return Monom.one
+            return Monom.one()
         if not self.isdivisible(other):
-            return Monom.zero
+            return Monom.zero()
 
-        return Monom(map(operator.xor, self, other), order=self.order)
+        return Monom(
+            map(operator.xor, self.bits, other.bits),
+            order=self.order
+        )
+
+    def __hash__(self):
+        return hash(self.bits)
+
+    def __eq__(self, other):
+        return self.bits == other.bits
 
     def __lt__(self, other):
         return self.order.lt(self, other)
@@ -71,18 +95,15 @@ class Monom(tuple):
     def lcm(self, other):
         return self*other
 
-    def is_one(self):
-        return id(self) == id(Monom.one)
-
-    def is_zero(self):
-        return id(self) == id(Monom.zero)
-
     def isdivisible(self, other):
         if other.is_one():
             return True
         if self.is_one():
             return False
-        return self == Monom(map(operator.or_, self, other), order=self.order)
+        return self == Monom(
+            map(operator.or_, self.bits, other.bits),
+            order=self.order
+        )
 
     def isrelativelyprime(self, other):
         if self == other:
@@ -90,7 +111,10 @@ class Monom(tuple):
         if self.is_one():
             return True
         lcm = self.lcm(other)
-        return Monom(map(operator.xor, lcm, self), order=self.order) == other
+        return Monom(
+            map(operator.xor, lcm.bits, self.bits),
+            order=self.order
+        ) == other
 
     def prolong(self, i):
         """Prolongation of the monomial m*x."""
@@ -100,12 +124,8 @@ class Monom(tuple):
     @property
     def vars(self):
         """Return list of variables positions."""
-        return [i for i, v in enumerate(self) if v == 1]
+        return [i for i, v in enumerate(self.bits) if v == 1]
 
     @property
     def degree(self):
-        return sum(self)
-
-
-Monom.one = Monom(())
-Monom.zero = Monom(())
+        return sum(self.bits)

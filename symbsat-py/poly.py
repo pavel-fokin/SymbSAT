@@ -29,11 +29,11 @@ class Poly(list):
 
     def __mul__(self, other):
         if isinstance(other, Monom):
-            if self == Poly.zero or other.is_zero():
+            if self.is_zero() or other.is_zero():
                 return Poly.zero
             monoms = map(lambda m: m*other, self)
         elif isinstance(other, Poly):
-            if self == Poly.zero or other == Poly.zero:
+            if self.is_zero() or other.is_zero():
                 return Poly.zero
             monoms = itertools.starmap(
                 operator.mul,
@@ -46,7 +46,7 @@ class Poly(list):
         return Poly({m for m, c in counter.items() if c % 2 != 0})
 
     def __str__(self):
-        if self == Poly.zero:
+        if self.is_zero():
             return "0"
         return " + ".join(map(str, sorted(self, reverse=True)))
 
@@ -54,16 +54,18 @@ class Poly(list):
         return Poly(self)
 
     def is_zero(self):
-        return self == Poly.zero
+        #  return self == Poly.zero
+        return self == []
 
     def is_one(self):
-        return self == Poly.one
+        #  return self == Poly.one
+        return len(self) == 1 and self[0].is_one()
 
     def lm(self):
         if self == Poly.zero:
-            return Monom.zero
+            return Monom.zero()
         return self[0]
 
 
 Poly.zero = Poly([])
-Poly.one = Poly([Monom.one])
+Poly.one = Poly([Monom.one()])

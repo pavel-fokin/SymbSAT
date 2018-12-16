@@ -19,7 +19,7 @@ class TestBoolMonomOrder(unittest.TestCase):
     def test_lex(self):
         """Test lexicographic order."""
         a, b, c, d = self.variables
-        _1 = Monom.one
+        _1 = Monom.one()
         _0 = Monom()
 
         # a > b > c > d
@@ -54,7 +54,7 @@ class TestBoolMonomOrder(unittest.TestCase):
 
     def test_deglex(self):
         a, b, c, d = self.variables
-        _1 = Monom.one
+        _1 = Monom.one()
         _0 = Monom()
 
         self.assertFalse(DegLex.lt(a, b))
@@ -93,7 +93,7 @@ class TestBoolMonomOrder(unittest.TestCase):
 
     def test_degrevlex(self):
         a, b, c, d = self.variables
-        _1 = Monom.one
+        _1 = Monom.one()
         _0 = Monom()
 
         # a < b < c < d

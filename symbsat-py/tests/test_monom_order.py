@@ -43,7 +43,7 @@ class TestBoolMonomOrder(unittest.TestCase):
         self.assertTrue(a > d)
         self.assertTrue(d < a)
 
-        _1 = Monom.one
+        _1 = Monom.one()
         _0 = Monom()
 
         self.assertTrue(a > _1)
@@ -90,7 +90,7 @@ class TestBoolMonomOrder(unittest.TestCase):
         self.assertTrue(a > d)
         self.assertTrue(d < a)
 
-        _1 = Monom.one
+        _1 = Monom.one()
         _0 = Monom()
 
         self.assertTrue(a > _1)
@@ -137,7 +137,7 @@ class TestBoolMonomOrder(unittest.TestCase):
         self.assertTrue(a < d)
         self.assertTrue(d > a)
 
-        _1 = Monom.one
+        _1 = Monom.one()
         _0 = Monom()
 
         self.assertTrue(a > _1)

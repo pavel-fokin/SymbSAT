@@ -11,9 +11,6 @@ class TestBoolPoly(unittest.TestCase):
     def setUp(self):
         self.B = BoolPolyRing(4)
 
-    def test_init(self):
-        self.assertTrue(True)
-
     def test_zero_poly(self):
         p1 = Poly([Monom([1, 0, 0, 0])])
         p2 = Poly([Monom([1, 0, 0, 0])])
@@ -49,7 +46,7 @@ class TestBoolPoly(unittest.TestCase):
 
     def test_mul(self):
         a, b, c, d = self.B.gens
-        _1 = self.B.one
+        _1 = Poly.one
 
         p = (a + b + c + d) * b*c
         self.assertEqual(p, a*b*c + b*c*d)

@@ -15,9 +15,6 @@ class TestBoolMonom(unittest.TestCase):
             Monom(vars=[3]),  # d
         )
 
-    def test_zero_one(self):
-        self.assertNotEqual(id(Monom.zero), id(Monom.one))
-
     def test_init(self):
         abcd = Monom((1, 1, 1, 1))
         ab = Monom(vars=[0, 1])
@@ -26,12 +23,29 @@ class TestBoolMonom(unittest.TestCase):
         d = Monom(vars=[3])
         _0 = Monom()
 
-        self.assertEqual(abcd, (1, 1, 1, 1))
-        self.assertEqual(abc, (1, 1, 1, 0))
-        self.assertEqual(ab, (1, 1, 0, 0))
-        self.assertEqual(c, (0, 0, 1, 0))
-        self.assertEqual(d, (0, 0, 0, 1))
+        self.assertEqual(abcd.bits, (1, 1, 1, 1))
+        self.assertEqual(abc.bits, (1, 1, 1, 0))
+        self.assertEqual(ab.bits, (1, 1, 0, 0))
+        self.assertEqual(c.bits, (0, 0, 1, 0))
+        self.assertEqual(d.bits, (0, 0, 0, 1))
         self.assertTrue(_0.is_zero())
+
+    def test_one(self):
+        _1 = Monom.one()
+        self.assertTrue(_1.is_one())
+        self.assertFalse(_1.is_zero())
+
+    def test_zero(self):
+        _0 = Monom.zero()
+        self.assertTrue(_0.is_zero())
+        self.assertFalse(_0.is_one())
+
+    def test_str(self):
+        _0 = Monom.zero()
+        self.assertEqual(str(_0), '0')
+
+        _1 = Monom.one()
+        self.assertEqual(str(_1), '1')
 
     def test_mul(self):
         a, b = self.variables[:2]
@@ -39,9 +53,13 @@ class TestBoolMonom(unittest.TestCase):
         self.assertEqual(a*a, a)
         self.assertEqual(b*a, a*b)
 
-        _0 = Monom()
+        _0 = Monom.zero()
         self.assertEqual(a*_0, _0)
         self.assertEqual(_0*a, _0)
+
+        _1 = Monom.one()
+        self.assertEqual(a*_1, a)
+        self.assertEqual(_1*a, a)
 
     def test_truediv(self):
         a, b, c = self.variables[:3]
@@ -50,7 +68,7 @@ class TestBoolMonom(unittest.TestCase):
         bc = b*c
         abc = a*b*c
 
-        _1 = Monom.one
+        _1 = Monom.one()
 
         # 1/a == 0
         self.assertTrue((_1/a).is_zero())
@@ -69,10 +87,11 @@ class TestBoolMonom(unittest.TestCase):
 
     def test_isdivisible(self):
         a, b, c = self.variables[:3]
+        _1 = Monom.one()
 
-        self.assertFalse(Monom.one.isdivisible(a))
+        self.assertFalse(_1.isdivisible(a))
 
-        self.assertTrue(Monom.one.isdivisible(Monom.one))
+        self.assertTrue(_1.isdivisible(_1))
 
     def test_isrelativelyprime(self):
         a, b, c = self.variables[:3]

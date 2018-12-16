@@ -3,9 +3,9 @@
 
 def nmulti_vars(m):
     """Pommaret Non-Multiplicative Variables."""
-    for i, bit in enumerate(reversed(m)):
+    for i, bit in enumerate(reversed(m.bits)):
         if bit == 1:
-            return range(len(m) - i, len(m) + 1)
+            return range(len(m.bits) - i, len(m.bits) + 1)
 
 
 def multi_vars(m):

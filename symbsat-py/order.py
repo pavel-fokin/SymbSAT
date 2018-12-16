@@ -11,7 +11,7 @@ class Order:
     @classmethod
     def lex_condition(cls, first, second):
         vec = [
-            var for var in map(operator.sub, first, second)
+            var for var in map(operator.sub, first.bits, second.bits)
             if var != 0
         ]
         # the left-most nonzero entry of vector a - b is positive
