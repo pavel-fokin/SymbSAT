@@ -1,9 +1,10 @@
 import unittest
 
-from monom import Monom
-from zdd import ZDD
+from monom import Monom4 as Monom
+from zdd import make_zdd_type
 from ring import BoolPolyRing
 
+ZDD = make_zdd_type(Monom)
 
 class TestZDD(unittest.TestCase):
 

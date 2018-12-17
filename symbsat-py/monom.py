@@ -1,20 +1,20 @@
 """Boolean Monomials."""
 import itertools
 import operator
+from functools import partialmethod
 
 from order import Lex
 
 
 class Monom:
 
-    size = 0
-
-    def __init__(self, bits=None, vars=None, order=Lex):
+    def __init__(self, size, bits=None, vars=None, order=Lex):
+        self.size = size
         self.order = order
         if bits is not None:
             self.bits = tuple(bits)
         elif vars is not None:
-            bits = list(itertools.repeat(0, Monom.size))
+            bits = [0] * size
             for var in vars:
                 bits[var] = 1
             self.bits = tuple(bits)
@@ -23,11 +23,12 @@ class Monom:
 
     @classmethod
     def zero(cls):
-        return cls(bits=tuple())
+        super(cls).__init__()
+        return cls(size=0, bits=tuple())
 
     @classmethod
     def one(cls):
-        return cls(bits=(0,))
+        return cls(size=1, bits=(0,))
 
     def is_zero(self):
         return self.bits == ()
@@ -46,7 +47,9 @@ class Monom:
             return Monom.zero()
 
         return Monom(
-            map(operator.or_, self.bits, other.bits), order=self.order
+            size=self.size,
+            bits=map(operator.or_, self.bits, other.bits),
+            order=self.order
         )
 
     def __truediv__(self, other):
@@ -60,7 +63,8 @@ class Monom:
             return Monom.zero()
 
         return Monom(
-            map(operator.xor, self.bits, other.bits),
+            size=self.size,
+            bits=map(operator.xor, self.bits, other.bits),
             order=self.order
         )
 
@@ -101,7 +105,8 @@ class Monom:
         if self.is_one():
             return False
         return self == Monom(
-            map(operator.or_, self.bits, other.bits),
+            size=self.size,
+            bits=map(operator.or_, self.bits, other.bits),
             order=self.order
         )
 
@@ -112,7 +117,8 @@ class Monom:
             return True
         lcm = self.lcm(other)
         return Monom(
-            map(operator.xor, lcm.bits, self.bits),
+            size=self.size,
+            bits=map(operator.xor, lcm.bits, self.bits),
             order=self.order
         ) == other
 
@@ -129,3 +135,20 @@ class Monom:
     @property
     def degree(self):
         return sum(self.bits)
+
+
+def make_monom_type(size):
+
+    class _Monom(Monom):
+        __init__ = partialmethod(Monom.__init__, size)
+
+        @classmethod
+        def zero(cls):
+            return cls(bits=tuple())
+
+        @classmethod
+        def one(cls):
+            return cls(bits=(0,))
+    return _Monom
+
+Monom4 = make_monom_type(4)

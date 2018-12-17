@@ -1,11 +1,12 @@
 """ZDDs."""
+from functools import partialmethod
 
 from monom import Monom
 
 
 class ZDD:
 
-    __slots__ = ('root', '_lm')
+    __slots__ = ('monom_type', 'root', '_lm')
 
     class Node:
 
@@ -49,7 +50,8 @@ class ZDD:
     _one = Node(-1, None, None)
     _zero = Node(-2, None, None)
 
-    def __init__(self, var=-1, monom=None):
+    def __init__(self, monom_type, var=-1, monom=None):
+        self.monom_type = monom_type
         self._lm = None
 
         if monom is not None:
@@ -150,9 +152,9 @@ class ZDD:
     def __add__(self, other):
 
         if isinstance(other, Monom):
-            return self + ZDD(monom=other)
+            return self + ZDD(self.monom_type, monom=other)
         if isinstance(other, ZDD):
-            r = ZDD()
+            r = ZDD(self.monom_type)
             r.root = self._add(self.root, other.root)
             return r
         return NotImplemented
@@ -160,19 +162,29 @@ class ZDD:
     def __mul__(self, other):
 
         if isinstance(other, Monom):
-            return self * ZDD(monom=other)
+            return self * ZDD(self.monom_type, monom=other)
         if isinstance(other, ZDD):
-            r = ZDD()
+            r = ZDD(self.monom_type)
             r.root = self._mul(self.root, other.root)
             return r
 
         return NotImplemented
 
     def copy(self):
-        r = ZDD()
+        r = ZDD(self.monom_type)
         r.root = self.root.copy()
         r._lm = self._lm
         return r
+
+    def zero(self):
+        zdd_zero = ZDD(self.monom_type)
+        zdd_zero.setZero()
+        return zdd_zero
+
+    def one(self):
+        zdd_one = ZDD(self.monom_type)
+        zdd_one.setOne()
+        return zdd_one
 
     def setZero(self):
         self.root = ZDD._zero
@@ -188,9 +200,9 @@ class ZDD:
 
     def lm(self):
         if self.root.is_zero():
-            return Monom.zero()
+            return self.monom_type.zero()
         if self.root.is_one():
-            return Monom.one()
+            return self.monom_type.one()
 
         if self._lm is None:
             monom = []
@@ -198,14 +210,15 @@ class ZDD:
             while i.var >= 0:
                 monom.append(i.var)
                 i = i.mul
-            self._lm = Monom(vars=monom)
+            #  self._lm = Monom(vars=monom)
+            self._lm = self.monom_type(vars=monom)
         return self._lm
 
     def __iter__(self):
         if self.root.is_zero():
-            yield Monom.zero()
+            yield self.monom_type.zero()
         elif self.root.is_one():
-            yield Monom.one()
+            yield self.monom_type.one()
         else:
             monom, path = [], []
             i = self.root
@@ -213,7 +226,8 @@ class ZDD:
                 monom.append(i.var)
                 path.append(i)
                 i = i.mul
-            yield Monom(vars=monom)
+            #  yield Monom(vars=monom)
+            yield self.monom_type(vars=monom)
             while path:
                 while path and path[-1].add.is_zero():
                     path.pop()
@@ -226,9 +240,17 @@ class ZDD:
                         path.append(i)
                         i = i.mul
                     if monom == []:
-                        yield Monom.one()
+                        yield self.monom_type.one()
                         break
-                    yield Monom(vars=monom)
+                    #  yield Monom(vars=monom)
+                    yield self.monom_type(vars=monom)
 
     def __str__(self):
         return " + ".join(map(str, self))
+
+
+def make_zdd_type(monom_type):
+    class _ZDD(ZDD):
+        __init__ = partialmethod(ZDD.__init__, monom_type)
+
+    return _ZDD

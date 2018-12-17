@@ -4,7 +4,7 @@ from ring import BoolPolyRing
 from polyfuncs import spoly, normal_form
 
 
-class TestPolyUtils(object):
+class TestPolyUtils:
 
     def test_spoly(self):
         a, b, c, d = self.B.gens

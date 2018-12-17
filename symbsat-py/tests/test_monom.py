@@ -1,13 +1,13 @@
 # pylint: disable=invalid-name
 import unittest
 
-from monom import Monom
+from monom import Monom4 as Monom
 
 
 class TestBoolMonom(unittest.TestCase):
 
     def setUp(self):
-        Monom.size = 4
+        #  Monom.size = 4
         self.variables = (
             Monom(vars=[0]),  # a
             Monom(vars=[1]),  # b

@@ -16,7 +16,7 @@ def normal_form(f, F):
     $3 A Division Algorithm
     """
     p = f.copy()
-    r = f.ring.zero
+    r = f.zero()
 
     if F == []:
         return p

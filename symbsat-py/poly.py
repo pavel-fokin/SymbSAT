@@ -10,8 +10,8 @@ from monom import Monom
 class Poly(list):
 
     ring = None
-    one = None
-    zero = None
+    _one = None
+    _zero = None
 
     def __new__(cls, monoms):
         return super(Poly, cls).__new__(cls, monoms)
@@ -53,19 +53,25 @@ class Poly(list):
     def copy(self):
         return Poly(self)
 
+    @classmethod
+    def zero(cls):
+        return cls([])
+
+    @classmethod
+    def one(cls):
+        return cls([Monom.one()])
+
     def is_zero(self):
-        #  return self == Poly.zero
         return self == []
 
     def is_one(self):
-        #  return self == Poly.one
         return len(self) == 1 and self[0].is_one()
 
     def lm(self):
-        if self == Poly.zero:
+        if self.is_zero():
             return Monom.zero()
         return self[0]
 
 
-Poly.zero = Poly([])
-Poly.one = Poly([Monom.one()])
+Poly._zero = Poly([])
+Poly._one = Poly([Monom.one()])

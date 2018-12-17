@@ -1,7 +1,7 @@
 # pylint: disable=invalid-name
 import unittest
 
-from monom import Monom
+from monom import Monom4 as Monom
 from poly import Poly
 from ring import BoolPolyRing
 
@@ -15,11 +15,11 @@ class TestBoolPoly(unittest.TestCase):
         p1 = Poly([Monom([1, 0, 0, 0])])
         p2 = Poly([Monom([1, 0, 0, 0])])
 
-        self.assertEqual(p1 + p2, Poly.zero)
+        self.assertEqual(p1 + p2, self.B.zero)
 
     def test_lm(self):
         a, b, c, d = self.B.gens
-        _1 = Poly.one
+        _1 = self.B.one
 
         f = a*b*c + c*d + a*b + _1
         g = c*d + b
@@ -46,7 +46,7 @@ class TestBoolPoly(unittest.TestCase):
 
     def test_mul(self):
         a, b, c, d = self.B.gens
-        _1 = Poly.one
+        _1 = self.B.one
 
         p = (a + b + c + d) * b*c
         self.assertEqual(p, a*b*c + b*c*d)

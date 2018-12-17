@@ -6,7 +6,7 @@ from ring import BoolPolyRing
 def _parse_line(line, x):
 
     # TODO
-    _1 = x[0].ring.one
+    _1 = x[0].one()
 
     indexes = tuple(map(int, line.split()))
 

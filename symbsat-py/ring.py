@@ -1,26 +1,27 @@
 """Boolean Polynomial Ring."""
-from monom import Monom
+from monom import make_monom_type
 from poly import Poly
-from zdd import ZDD
+from zdd import make_zdd_type
 
 
-class BoolPolyRing(object):
+class BoolPolyRing:
 
     def __init__(self, n, poly_type="list"):
 
-        Monom.size = n
+        monom_type = make_monom_type(n)
 
         if poly_type == "list":
             Poly.ring = self
-            self.one = Poly.one
-            self.zero = Poly.zero
+
+            self.one = Poly._one
+            self.zero = Poly._zero
 
             self.gens = [
-                Poly([Monom(vars=[i])])
+                Poly([monom_type(vars=[i])])
                 for i in range(n)
             ]
         elif poly_type == "zdd":
-            ZDD.ring = self
+            ZDD = make_zdd_type(monom_type)
 
             one = ZDD()
             one.setOne()
