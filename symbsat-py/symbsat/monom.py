@@ -3,7 +3,7 @@ import itertools
 import operator
 from functools import partialmethod
 
-from order import Lex
+from symbsat.order import Lex
 
 
 class Monom:

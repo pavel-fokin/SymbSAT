@@ -1,7 +1,7 @@
 """Boolean Polynomial Ring."""
-from monom import make_monom_type
-from poly import Poly
-from zdd import make_zdd_type
+from symbsat.monom import make_monom_type
+from symbsat.poly import Poly
+from symbsat.zdd import make_zdd_type
 
 
 class BoolPolyRing:

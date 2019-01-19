@@ -1,9 +1,9 @@
 # pylint: disable=invalid-name
 import unittest
 
-from monom import Monom4 as Monom
-from poly import Poly
-from ring import BoolPolyRing
+from symbsat.monom import Monom4 as Monom
+from symbsat.poly import Poly
+from symbsat.ring import BoolPolyRing
 
 
 class TestBoolPoly(unittest.TestCase):

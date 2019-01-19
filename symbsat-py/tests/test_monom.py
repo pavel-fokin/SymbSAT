@@ -1,7 +1,7 @@
 # pylint: disable=invalid-name
 import unittest
 
-from monom import Monom4 as Monom
+from symbsat.monom import Monom4 as Monom
 
 
 class TestBoolMonom(unittest.TestCase):

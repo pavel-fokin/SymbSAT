@@ -3,8 +3,8 @@ import tempfile
 
 import unittest
 
-import dimacs
-from ring import BoolPolyRing
+import symbsat.dimacs as dimacs
+from symbsat.ring import BoolPolyRing
 
 
 DIMACS_1 = b"""

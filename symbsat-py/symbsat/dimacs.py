@@ -1,6 +1,6 @@
 """DIMACS Reading."""
 
-from ring import BoolPolyRing
+from symbsat.ring import BoolPolyRing
 
 
 def _parse_line(line, x):

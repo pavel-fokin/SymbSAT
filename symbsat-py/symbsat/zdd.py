@@ -1,7 +1,7 @@
 """ZDDs."""
 from functools import partialmethod
 
-from monom import Monom
+from symbsat.monom import Monom
 
 
 class ZDD:
