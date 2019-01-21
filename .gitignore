@@ -3,3 +3,4 @@ catch.hpp
 __pycache__
 tags
 *.bak
+*.pyc
