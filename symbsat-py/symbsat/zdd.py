@@ -1,4 +1,6 @@
+# pylint:disable=invalid-name
 """ZDDs."""
+from collections import defaultdict
 from functools import partialmethod
 
 from symbsat.monom import Monom
@@ -6,25 +8,26 @@ from symbsat.monom import Monom
 
 class ZDD:
 
-    __slots__ = ('monom_type', 'root', '_lm')
+    __slots__ = ("monom_type", "root", "_lm", "_cache")
 
     class Node:
 
-        __slots__ = ('var', 'mul', 'add')
+        __slots__ = ("var", "mul", "add", "_id")
 
         def __init__(self, var, m, a):
             self.var = var
             self.mul = m  # and
             self.add = a  # xor
+            self._id = id(self)
+
+        @property
+        def id(self):
+            return self._id
 
         def copy(self):
             if self.var < 0:
                 return self
-            return ZDD.Node(
-                self.var,
-                self.mul.copy(),
-                self.add.copy()
-            )
+            return ZDD.Node(self.var, self.mul.copy(), self.add.copy())
 
         def is_zero(self):
             return self.var == -2
@@ -38,13 +41,17 @@ class ZDD:
             if self == ZDD._zero:
                 return "_zero"
 
-            return (
-                '%s -> {%s} {%s}' %
-                (self.var, self.mul, self.add)
-            )
+            return "%s -> {%s} {%s}" % (self.var, self.mul, self.add)
 
         def __eq__(self, other):
-            return id(self) == id(other)
+            if self.var != other.var:
+                return False
+            elif self.is_zero() and other.is_zero():
+                return True
+            elif self.is_one() and other.is_one():
+                return True
+            else:
+                return self.mul == other.mul and self.add == other.add
 
     ring = None
     _one = Node(-1, None, None)
@@ -53,6 +60,7 @@ class ZDD:
     def __init__(self, monom_type, var=-1, monom=None):
         self.monom_type = monom_type
         self._lm = None
+        self._cache = defaultdict(list)
 
         if monom is not None:
             if monom.is_one():
@@ -79,9 +87,17 @@ class ZDD:
         return list(self) == list(other)
 
     def _create_node(self, var, m, a):
-        assert m != ZDD._zero
+        if m.is_zero():
+            raise RuntimeError
 
-        return ZDD.Node(var, m, a)
+        if var in self._cache:
+            for cached in self._cache[var]:
+                if cached.mul == m and cached.add == a:
+                    return cached
+
+        r = ZDD.Node(var, m, a)
+        self._cache[var].append(r)
+        return r
 
     def _add(self, i, j):
 
@@ -156,6 +172,7 @@ class ZDD:
         if isinstance(other, ZDD):
             r = ZDD(self.monom_type)
             r.root = self._add(self.root, other.root)
+            r._cache = self._cache.copy()
             return r
         return NotImplemented
 
@@ -166,6 +183,7 @@ class ZDD:
         if isinstance(other, ZDD):
             r = ZDD(self.monom_type)
             r.root = self._mul(self.root, other.root)
+            r._cache = self._cache.copy()
             return r
 
         return NotImplemented
@@ -173,6 +191,7 @@ class ZDD:
     def copy(self):
         r = ZDD(self.monom_type)
         r.root = self.root.copy()
+        r._cache = self._cache.copy()
         r._lm = self._lm
         return r
 
