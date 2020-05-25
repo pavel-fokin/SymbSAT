@@ -273,3 +273,46 @@ def make_zdd_type(monom_type):
         __init__ = partialmethod(ZDD.__init__, monom_type)
 
     return _ZDD
+
+
+def view(zdd):
+    import string
+    try:
+        import graphviz as gv
+    except ImportError:
+        print("Install graphviz 'pip install graphviz'")
+
+    def gv_node(graph, node):
+        if node.is_zero():
+            graph.node("0", shape="box")
+            return "0"
+        if node.is_one():
+            graph.node("1", shape="box")
+            return "1"
+        graph.node(f"{node.id}", label=string.ascii_lowercase[node.var])
+        return f"{node.id}"
+
+    stack = [zdd.root]
+    graph = gv.Digraph()
+    edges = set()
+
+    while stack:
+        node = stack.pop()
+
+        if node.mul:
+            head = gv_node(graph, node)
+            tail = gv_node(graph, node.mul)
+            if ("mul", head, tail) not in edges:
+                graph.edge(head, tail, style="solid")
+                edges.add(("mul", head, tail))
+            stack.append(node.mul)
+
+        if node.add:
+            head = gv_node(graph, node)
+            tail = gv_node(graph, node.add)
+            if ("add", head, tail) not in edges:
+                graph.edge(head, tail, style="dashed")
+                edges.add(("add", head, tail))
+            stack.append(node.add)
+
+    graph.view()
