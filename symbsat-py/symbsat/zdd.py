@@ -277,6 +277,7 @@ def make_zdd_type(monom_type):
 
 def view(zdd):
     import string
+
     try:
         import graphviz as gv
     except ImportError:
@@ -289,8 +290,10 @@ def view(zdd):
         if node.is_one():
             graph.node("1", shape="box")
             return "1"
-        graph.node(f"{node.id}", label=string.ascii_lowercase[node.var])
-        return f"{node.id}"
+        graph.node(
+            "{}".format(node.id), label=string.ascii_lowercase[node.var]
+        )
+        return "{}".format(node.id)
 
     stack = [zdd.root]
     graph = gv.Digraph()
