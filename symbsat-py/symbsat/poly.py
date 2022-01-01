@@ -53,13 +53,13 @@ class Poly(list):
     def copy(self):
         return Poly(self)
 
-    @classmethod
-    def zero(cls):
-        return cls([])
+    def zero(self):
+        class_ = type(self)
+        return class_([])
 
-    @classmethod
-    def one(cls):
-        return cls([Monom.one()])
+    def one(self):
+        class_ = type(self)
+        return class_([Monom.one()])
 
     def is_zero(self):
         return self == []
