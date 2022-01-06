@@ -8,7 +8,8 @@
 
 using namespace symbsat;
 
-using PolyN = ZDD<Monom256>;
+// using PolyN = ZDD<Monom256>;
+using PolyN = Poly<Monom256>;
 
 int main (int argc, char *argv[]) {
     std::ifstream cnf(argv[1]);
@@ -51,14 +52,17 @@ int main (int argc, char *argv[]) {
             }
         } while (var);
 
-        if (!p.isOne())
+        if (!p.isOne()) {
             P.push_back(p);
+        }
 
         ++line;
     }
+    cnf.close();
 
-    for (auto&& p: P)
+    for (auto&& p: P) {
         std::cout << p << "\n";
+    }
 
     auto G = buchberger(P, vars);
 
@@ -66,10 +70,9 @@ int main (int argc, char *argv[]) {
     std::cout << "\n";
     std::cout << "\n";
 
-    for (auto&& p: G)
+    for (auto&& p: G) {
         std::cout << p << "\n";
-
-    cnf.close();
+    }
 
     return EXIT_SUCCESS;
 }
