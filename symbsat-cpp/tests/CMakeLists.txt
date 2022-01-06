@@ -11,5 +11,5 @@ ADD_EXECUTABLE( unittests
 )
 
 TARGET_LINK_LIBRARIES( unittests
-    gcov
+    # gcov
 )
