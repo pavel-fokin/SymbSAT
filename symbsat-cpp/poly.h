@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <algorithm>
 #include <initializer_list>
 #include <unordered_set>
@@ -113,33 +115,66 @@ public:
     lhs *= rhs;
     return lhs;
   }
+  // Poly &operator*=(const MonomT &b) {
+  //   // if (isOne()) {
+  //   //   mMonoms.clear();
+  //   //   mMonoms.push_back(b);
+  //   //   return *this;
+  //   // }
+  //   //
+  //   // std::cout << *this << " * " << b << " = ";
+  //   if (isZero() || b.isZero()) {
+  //     mMonoms.clear();
+  //     return *this;
+  //   }
+  //   std::unordered_set<MonomT, typename MonomT::hash> monoms_set;
+
+  //   for (auto &m : mMonoms) {
+  //     MonomT tmp(m * b);
+
+  //     if (monoms_set.find(tmp) == monoms_set.end()) {
+  //       monoms_set.insert(tmp);
+  //     } else {
+  //       monoms_set.erase(tmp);
+  //     }
+  //   }
+
+  //   std::vector<MonomT> monoms(std::begin(monoms_set),
+  //                                  std::end(monoms_set));
+
+  //   std::sort(monoms.begin(), monoms.end());
+  //   mMonoms = std::move(monoms);
+  //   // std::cout << *this << std::endl;
+
+  //   return *this;
+  // }
   Poly &operator*=(const MonomT &b) {
-    // if (isOne()) {
-    //   mMonoms.clear();
-    //   mMonoms.push_back(b);
-    //   return *this;
-    // }
     if (isZero() || b.isZero()) {
       mMonoms.clear();
       return *this;
     }
-    std::unordered_set<MonomT, typename MonomT::hash> monoms_set;
 
-    for (auto &m : mMonoms) {
-      MonomT tmp(m * b);
+    std::vector<MonomT> monoms;
+    monoms.reserve(mMonoms.size());
 
-      if (monoms_set.find(tmp) == monoms_set.end()) {
-        monoms_set.insert(tmp);
+    for (auto &m: mMonoms) {
+      monoms.push_back(m * b);
+    }
+
+    // remove duplicates
+    std::sort(monoms.begin(), monoms.end());
+
+    for (auto it = monoms.begin(); std::next(it) != monoms.end(); ) {
+      if (*it == *std::next(it)) {
+        monoms.erase(it);
+        monoms.erase(it);
       } else {
-        monoms_set.erase(tmp);
+        ++it;
       }
     }
 
-    std::vector<MonomT> monoms_vec(std::begin(monoms_set),
-                                   std::end(monoms_set));
-
-    mMonoms = monoms_vec;
-    std::sort(mMonoms.begin(), mMonoms.end());
+    monoms.shrink_to_fit();
+    mMonoms = std::move(monoms);
 
     return *this;
   }
