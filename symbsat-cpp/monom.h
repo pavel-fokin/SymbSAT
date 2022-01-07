@@ -35,8 +35,8 @@ public:
     return *this;
   }
 
-  bool isZero() const { return !is_one && mVars.none(); }
-  bool isOne() const { return is_one; }
+  inline bool isZero() const { return !is_one && mVars.none(); }
+  inline bool isOne() const { return is_one; }
   void setZero() {
     mVars.reset();
     is_one = false;
@@ -80,14 +80,32 @@ public:
     }
   }
 
+  // bool operator<(const Monom &a) const {
+  //   size_t msize = mVars.size();
+  //   for (size_t i = 0; i < msize; ++i) {
+  //     if (mVars[i] ^ a.mVars[i]) {
+  //       return a.mVars[i];
+  //       // return mVars[i];
+  //     }
+  //   }
+  //   return false;
+  // }
+
   bool operator<(const Monom &a) const {
-    size_t msize = mVars.size();
-    for (size_t i = 0; i < msize; ++i) {
-      if (mVars[i] ^ a.mVars[i]) {
-        return a.mVars[i];
-      }
+    auto n = (mVars ^ a.mVars).to_ulong();
+
+    if (!n) {
+      return false;
     }
-    return false;
+
+    n &= -n;
+
+    int pos = 0;
+    while (n >>= 1) {
+      ++pos;
+    }
+
+    return a.mVars[pos];
   }
   bool operator==(const Monom &other) const {
     if (isZero() && other.isZero())
