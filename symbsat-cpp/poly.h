@@ -68,24 +68,22 @@ public:
 
   Poly &operator+=(const Poly &b) {
     std::vector<MonomT> monoms;
-    std::set_symmetric_difference(mMonoms.begin(), mMonoms.end(),
-                                  b.mMonoms.begin(), b.mMonoms.end(),
+    monoms.reserve(mMonoms.size() + b.mMonoms.size());
+
+    std::set_symmetric_difference(mMonoms.cbegin(), mMonoms.cend(),
+                                  b.mMonoms.cbegin(), b.mMonoms.cend(),
                                   std::back_inserter(monoms));
 
-    mMonoms = monoms;
+    mMonoms = std::move(monoms);
     return *this;
   }
+
   friend Poly operator+(Poly lhs, const Poly &rhs) {
     lhs += rhs;
     return lhs;
   }
 
   Poly &operator*=(const Poly &b) {
-    // if (isOne()) {
-    //   mMonoms.clear();
-    //   mMonoms = b.mMonoms;
-    //   return *this;
-    // }
     if (isZero() || b.isZero()) {
       mMonoms.clear();
       return *this;
@@ -115,39 +113,6 @@ public:
     lhs *= rhs;
     return lhs;
   }
-  // Poly &operator*=(const MonomT &b) {
-  //   // if (isOne()) {
-  //   //   mMonoms.clear();
-  //   //   mMonoms.push_back(b);
-  //   //   return *this;
-  //   // }
-  //   //
-  //   // std::cout << *this << " * " << b << " = ";
-  //   if (isZero() || b.isZero()) {
-  //     mMonoms.clear();
-  //     return *this;
-  //   }
-  //   std::unordered_set<MonomT, typename MonomT::hash> monoms_set;
-
-  //   for (auto &m : mMonoms) {
-  //     MonomT tmp(m * b);
-
-  //     if (monoms_set.find(tmp) == monoms_set.end()) {
-  //       monoms_set.insert(tmp);
-  //     } else {
-  //       monoms_set.erase(tmp);
-  //     }
-  //   }
-
-  //   std::vector<MonomT> monoms(std::begin(monoms_set),
-  //                                  std::end(monoms_set));
-
-  //   std::sort(monoms.begin(), monoms.end());
-  //   mMonoms = std::move(monoms);
-  //   // std::cout << *this << std::endl;
-
-  //   return *this;
-  // }
   Poly &operator*=(const MonomT &b) {
     if (isZero() || b.isZero()) {
       mMonoms.clear();
@@ -158,7 +123,7 @@ public:
     monoms.reserve(mMonoms.size());
 
     for (auto &m: mMonoms) {
-      monoms.push_back(m * b);
+      monoms.emplace_back(m * b);
     }
 
     // remove duplicates
@@ -173,7 +138,6 @@ public:
       }
     }
 
-    monoms.shrink_to_fit();
     mMonoms = std::move(monoms);
 
     return *this;
@@ -189,10 +153,13 @@ public:
     } else if (a.isOne()) {
       out << "1";
     } else {
-      auto monoms(a.mMonoms);
-      std::reverse(monoms.begin(), monoms.end());
-      for (auto &m : monoms) {
-        out << m << " ";
+      for (auto it = a.mMonoms.rbegin(); it != a.mMonoms.rend(); ){
+        if (std::next(it) == a.mMonoms.rend()) {
+          out << *it;
+        } else {
+          out << *it << " ";
+        }
+        it++;
       }
     }
     return out;
