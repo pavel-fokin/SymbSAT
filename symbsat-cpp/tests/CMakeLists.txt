@@ -4,6 +4,7 @@ ADD_EXECUTABLE( unittests
     catch.hpp
     unittests.cpp
     test_monom.cpp
+    test_order.cpp
     test_poly.cpp
     test_zdd.cpp
     test_polyfuncs.cpp

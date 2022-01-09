@@ -4,9 +4,16 @@
 #include <vector>
 #include <sstream>
 
+#include "order.h"
+
 namespace symbsat {
 
-template <size_t N> class Monom {
+template <size_t N, template <typename> class Order = Lex>
+class Monom {
+
+  friend Lex<Monom>;
+  friend DegLex<Monom>;
+  friend DegRevLex<Monom>;
 
   std::bitset<N> mVars;
 
@@ -47,6 +54,9 @@ public:
 
   void setVar(size_t var) {
       mVars.set(var);
+  }
+  inline size_t degree() const {
+    return mVars.count();
   }
   std::vector<int> getVars() const {
     std::vector<int> vars;
@@ -92,20 +102,7 @@ public:
   // }
 
   bool operator<(const Monom &a) const {
-    auto n = (mVars ^ a.mVars).to_ulong();
-
-    if (!n) {
-      return false;
-    }
-
-    n &= -n;
-
-    int pos = 0;
-    while (n >>= 1) {
-      ++pos;
-    }
-
-    return a.mVars[pos];
+    return Order<Monom>::lt(*this, a);
   }
   bool operator==(const Monom &other) const {
     if (isZero() && other.isZero())
@@ -197,15 +194,7 @@ public:
     return out;
   }
 
-  // static const Monom<N> sZero;
-  // static const Monom<N> sOne;
 };
-
-// template <size_t N>
-// const Monom<N> Monom<N>::sZero;
-
-// template <size_t N>
-// const Monom<N> Monom<N>::sOne;
 
 using Monom32 = Monom<32>;
 using Monom64 = Monom<64>;
