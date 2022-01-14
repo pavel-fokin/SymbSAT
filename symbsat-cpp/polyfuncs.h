@@ -7,10 +7,7 @@ PolyType spoly(const PolyType &f, const PolyType &g) {
     auto g_lm = g.lm();
     auto lcm = f_lm*g_lm;
 
-    PolyType spoly;
-    spoly = f*(lcm/f_lm) + g*(lcm/g_lm);
-
-    return spoly;
+    return f*(lcm/f_lm) + g*(lcm/g_lm);
 }
 
 template <typename PolyType>
