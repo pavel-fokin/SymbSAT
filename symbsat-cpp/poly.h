@@ -79,7 +79,6 @@ public:
     mMonoms = std::move(monoms);
     return *this;
   }
-
   friend Poly operator+(Poly lhs, const Poly &rhs) {
     lhs += rhs;
     return lhs;
@@ -134,9 +133,10 @@ public:
 
     for (auto it = monoms.begin(); std::next(it) != monoms.end(); ) {
       if (*it == *std::next(it)) {
-        // monoms.erase(it, it+1);
         monoms.erase(it);
-        monoms.erase(it);
+        if (monoms.erase(it) == monoms.end()) {
+          break;
+        }
       } else {
         ++it;
       }

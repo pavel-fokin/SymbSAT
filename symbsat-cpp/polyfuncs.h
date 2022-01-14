@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 template <typename PolyType>
 PolyType spoly(const PolyType &f, const PolyType &g) {
@@ -38,5 +39,6 @@ PolyType normalform(const PolyType &f, const std::vector<PolyType> &F) {
             p = p + PolyType(p_lm);
         }
     }
+
     return r;
 }

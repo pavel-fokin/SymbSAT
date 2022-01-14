@@ -197,9 +197,4 @@ public:
 
 };
 
-using Monom32 = Monom<32>;
-using Monom64 = Monom<64>;
-using Monom128 = Monom<128>;
-using Monom256 = Monom<256>;
-
 }; // namespace Monoms

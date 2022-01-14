@@ -3,15 +3,16 @@
 #include <sstream>
 
 #include "monom.h"
+#include "order.h"
 #include "poly.h"
 #include "zdd.h"
 #include "gb.h"
 
 using namespace symbsat;
 
-// using PolyN = ZDD<Monom32>;
-using PolyN = Poly<Monom32>;
-using Vars = std::unordered_map<std::string, PolyN>;
+typedef Monom<32, DegRevLex> Monom32;
+typedef Poly<Monom32> PolyN;
+typedef std::unordered_map<std::string, PolyN> Vars;
 
 PolyN parseMonom(const Vars V, std::string monom) {
     PolyN m; m.setOne();
@@ -96,7 +97,8 @@ int main (int argc, char *argv[]) {
 
     auto G = buchberger(P, V.size());
 
+    std::cout << std::endl;
     for (auto&& p: G) {
-        std::cout << p << "\n";
+        std::cout << p << std::endl;
     }
 }

@@ -7,6 +7,8 @@
 
 using namespace symbsat;
 
+typedef Monom<32> Monom32;
+
 TEST_CASE("S-polynomial PolyZDD", "[spoly-polyzdd]") {
   ZDD<Monom32> f, g;
   ZDD<Monom32> a(1), b(2), c(3), d(4);

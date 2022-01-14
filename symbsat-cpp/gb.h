@@ -84,10 +84,12 @@ std::vector<PolyType> buchberger(const std::vector<PolyType>& F, const int num_v
 
         if (i < 0) {
             auto Gj_lm = G[j].lm();
-            PolyType xi(std::abs(i));
-            if (Gj_lm.isrelativelyprime(xi.lm()))
+
+            typename PolyType::MonomType xi(std::abs(i));
+            if (Gj_lm.isrelativelyprime(xi))
                 continue;
-            s = G[j]*xi;
+
+            s = G[j] * xi;
         } else {
             M[i][j] = 1;
             PolyType p = G[i], q = G[j];

@@ -9,6 +9,7 @@
 using namespace symbsat;
 
 // using PolyN = ZDD<Monom256>;
+typedef Monom<256> Monom256;
 using PolyN = Poly<Monom256>;
 
 int main (int argc, char *argv[]) {

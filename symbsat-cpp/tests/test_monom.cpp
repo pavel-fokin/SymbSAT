@@ -4,6 +4,9 @@
 
 using namespace symbsat;
 
+typedef Monom<32> Monom32;
+typedef Monom<64> Monom64;
+
 TEST_CASE("Monom Constructor", "[monom-constructor]") {
   Monom32 x1(0), x2(1);
   Monom32 _0;
@@ -15,18 +18,6 @@ TEST_CASE("Monom Constructor", "[monom-constructor]") {
   REQUIRE(x2.toStr() == "[ 1 ]");
   REQUIRE(_0.toStr() == "0");
   REQUIRE(_1.toStr() == "1");
-}
-
-TEST_CASE("Monom Ordering", "[monom-ordering]") {
-  Monom64 a(0), b(1), c(2), ab(a * b);
-  Monom64 _0, _1;
-  _1.setOne();
-
-  REQUIRE(!(a < b));
-  REQUIRE(b < a);
-  REQUIRE(c < a);
-  REQUIRE(!(b < c));
-  REQUIRE(b < ab);
 }
 
 TEST_CASE("Monom Multiplication", "[monom-mul]") {
@@ -65,7 +56,7 @@ TEST_CASE("Monom Multiplication", "[monom-mul]") {
 
 TEST_CASE("Monom IsDivisible", "[monom-isdivisible]") {
     Monom64 a(0), b(1), ab;
-    Monom64 _0, _1;
+    Monom64 _1;
     _1.setOne();
 
     // REQUIRE(!a.isdivisible(_0));
@@ -106,7 +97,7 @@ TEST_CASE("Monom Division", "[monom-division]") {
 
 TEST_CASE("Monom IsRelativelyPrime", "[monom-isrelativelyprime]") {
     Monom64 a(0), b(1), ab(a*b);
-    Monom64 _0, _1;
+    Monom64 _1;
     _1.setOne();
 
     REQUIRE(a.isrelativelyprime(a));

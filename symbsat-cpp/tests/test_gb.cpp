@@ -7,6 +7,8 @@
 
 using namespace symbsat;
 
+typedef Monom<32> Monom32;
+
 TEST_CASE("Buchberger 1 PolyZDD", "[buchberger-polyzdd]") {
     ZDD<Monom32> x1(1), x2(2),
                          x3(4), x4(4), _1;

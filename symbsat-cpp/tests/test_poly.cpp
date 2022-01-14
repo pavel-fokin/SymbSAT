@@ -5,6 +5,8 @@
 
 using namespace symbsat;
 
+typedef Monom<32> Monom32;
+
 TEST_CASE("Poly Constructor", "[poly-constructor]") {
   Monom32 a(0), b(1), c(2);
 
@@ -64,16 +66,6 @@ TEST_CASE("Polynomial Multiplication", "[poly-mul]") {
   REQUIRE(p_res.isZero());
 
   SECTION("Multiply by Monom") {
-    Monom32 a(0), b(1), _0;
-    Poly<Monom32> p_a(a), p_res;
-
-    p_res = p_a * b;
-
-    REQUIRE(p_res.toStr() == "[ 0 1 ]");
-
-    p_res *= _0;
-
-    REQUIRE(p_res.isZero());
   }
 
   SECTION("Fix Bug Monoms == 1") {
@@ -97,4 +89,26 @@ TEST_CASE("Polynomial Multiplication", "[poly-mul]") {
    f = x1 + _1;
    p = p + f*_1;
   }
+}
+
+TEST_CASE("Polynomial Multiply by Monom", "[poly-mul-monom]") {
+    Monom32 a(0), b(1), c(2), _0;
+    Poly<Monom32> p_a(a), p_b(b), p_c(c), p_res;
+
+    p_res = p_a * b;
+
+    REQUIRE(p_res.toStr() == "[ 0 1 ]");
+
+    p_res *= _0;
+
+    REQUIRE(p_res.isZero());
+
+    Poly<Monom32> p1, p2;
+    p1 = p_a * p_b + p_a;
+    p1 = p1 * a;
+    REQUIRE(p1.toStr() == "[ 0 1 ] [ 0 ]");
+
+    p2 = p_a * p_b + p_a + p_c;
+    p2 = p2 * b;
+    REQUIRE(p2.toStr() == "[ 1 2 ]");
 }

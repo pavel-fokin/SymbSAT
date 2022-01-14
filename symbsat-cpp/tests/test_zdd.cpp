@@ -5,6 +5,7 @@
 
 using namespace symbsat;
 
+typedef Monom<32> Monom32;
 
 TEST_CASE("ZDD MonomIterator", "[zdd-monom-iter]") {
   ZDD<Monom32> z1(1), z2(2);
