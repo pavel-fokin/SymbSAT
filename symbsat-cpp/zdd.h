@@ -8,7 +8,7 @@
 
 namespace symbsat {
 
-template <typename MonomType> class ZDD {
+template <typename MonomT> class ZDD {
   struct Node {
     int mVar;
     const Node *mMul; // and
@@ -157,6 +157,8 @@ template <typename MonomType> class ZDD {
   }
 
 public:
+  typedef MonomT MonomType;
+
   ZDD() {
     mRoot = mZero;
   }
@@ -184,7 +186,7 @@ public:
   ~ZDD() =default;
 
   explicit ZDD(int var) { mRoot = create_node(var, mOne, mZero); }
-  explicit ZDD(const MonomType &m) {
+  explicit ZDD(const MonomT &m) {
     if (m.isOne()) {
       setOne();
     } else if (m.isZero()) {
@@ -204,8 +206,8 @@ public:
   inline bool isOne() const { return mRoot->isOne(); }
   inline void setZero() { mRoot = mZero; }
   inline void setOne() { mRoot = mOne; }
-  MonomType lm() const {
-    MonomType tmp;
+  MonomT lm() const {
+    MonomT tmp;
     if (isZero()) {
       return tmp;
     } else if (isOne()) {
@@ -228,12 +230,12 @@ public:
     return lhs;
   }
 
-  ZDD &operator+=(const MonomType &rhs) {
+  ZDD &operator+=(const MonomT &rhs) {
     ZDD rhs_zdd(rhs);
     mRoot = add(mRoot, rhs_zdd.mRoot);
     return *this;
   }
-  friend ZDD operator+(ZDD lhs, const MonomType &rhs) {
+  friend ZDD operator+(ZDD lhs, const MonomT &rhs) {
     lhs += rhs;
     return lhs;
   }
@@ -247,12 +249,12 @@ public:
     return lhs;
   }
 
-  ZDD &operator*=(const MonomType &rhs) {
+  ZDD &operator*=(const MonomT &rhs) {
     ZDD rhs_zdd(rhs);
     mRoot = mul(mRoot, rhs_zdd.mRoot);
     return *this;
   }
-  friend ZDD operator*(ZDD lhs, const MonomType &rhs) {
+  friend ZDD operator*(ZDD lhs, const MonomT &rhs) {
     lhs *= rhs;
     return lhs;
   }
@@ -297,8 +299,8 @@ public:
     };
     ~MonomConstIterator() = default;
 
-    const MonomType monom() const {
-      MonomType tmp;
+    const MonomT monom() const {
+      MonomT tmp;
       if (mMonom.back() == -1) {
         tmp.setOne();
       } else {
@@ -363,12 +365,12 @@ public:
   }
 }; // ZDD Template
 
-template <typename MonomType>
-const typename ZDD<MonomType>::Node *const
-   ZDD<MonomType>::mOne = new ZDD<MonomType>::Node(true);
+template <typename MonomT>
+const typename ZDD<MonomT>::Node *const
+   ZDD<MonomT>::mOne = new ZDD<MonomT>::Node(true);
 
-template <typename MonomType>
-const typename ZDD<MonomType>::Node *const
-   ZDD<MonomType>::mZero = new ZDD<MonomType>::Node(false);
+template <typename MonomT>
+const typename ZDD<MonomT>::Node *const
+   ZDD<MonomT>::mZero = new ZDD<MonomT>::Node(false);
 
 }; // namespace symbsat

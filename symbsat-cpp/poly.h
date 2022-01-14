@@ -14,6 +14,8 @@ template <typename MonomT> class Poly {
   std::vector<MonomT> mMonoms;
 
 public:
+  typedef MonomT MonomType;
+
   Poly() = default;
   ~Poly() = default;
   explicit Poly(MonomT &m) : mMonoms{m} {}
@@ -104,7 +106,7 @@ public:
     std::vector<MonomT> monoms_vec(std::begin(monoms_set),
                                    std::end(monoms_set));
 
-    mMonoms = monoms_vec;
+    mMonoms = std::move(monoms_vec);
     std::sort(mMonoms.begin(), mMonoms.end());
 
     return *this;
@@ -113,6 +115,7 @@ public:
     lhs *= rhs;
     return lhs;
   }
+
   Poly &operator*=(const MonomT &b) {
     if (isZero() || b.isZero()) {
       mMonoms.clear();
@@ -123,7 +126,7 @@ public:
     monoms.reserve(mMonoms.size());
 
     for (auto &m: mMonoms) {
-      monoms.emplace_back(m * b);
+      monoms.push_back(m * b);
     }
 
     // remove duplicates
@@ -131,6 +134,7 @@ public:
 
     for (auto it = monoms.begin(); std::next(it) != monoms.end(); ) {
       if (*it == *std::next(it)) {
+        // monoms.erase(it, it+1);
         monoms.erase(it);
         monoms.erase(it);
       } else {

@@ -49,6 +49,7 @@ public:
     is_one = false;
   }
   void setOne() {
+    mVars.reset();
     is_one = true;
   }
 

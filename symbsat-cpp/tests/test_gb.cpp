@@ -21,9 +21,6 @@ TEST_CASE("Buchberger 1 PolyZDD", "[buchberger-polyzdd]") {
 
     auto G = buchberger(F, 4);
 
-    // for (auto& p: G)
-        // std::cout << p << std::endl;
-
     REQUIRE(true);
 }
 
@@ -40,9 +37,6 @@ TEST_CASE("Buchberger 1 PolyList", "[buchberger-polylist]") {
     };
 
     auto G = buchberger(F, 4);
-
-    // for (auto& p: G)
-        // std::cout << p << std::endl;
 
     REQUIRE(true);
 }
