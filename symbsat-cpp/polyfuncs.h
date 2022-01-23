@@ -32,8 +32,10 @@ PolyType normalform(const PolyType &f, const std::vector<PolyType> &F) {
             }
         }
         if (!divisionoccured) {
-            r = r + PolyType(p_lm);
-            p = p + PolyType(p_lm);
+            // r = r + PolyType(p_lm);
+            // p = p + PolyType(p_lm);
+            r = r + p_lm;
+            p = p + p_lm;
         }
     }
 

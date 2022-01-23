@@ -63,9 +63,7 @@ public:
   };
 
   bool operator==(const Poly &other) const {
-    Poly a(*this), b(other);
-
-    return std::equal(a.mMonoms.begin(), a.mMonoms.end(), b.mMonoms.begin());
+    return std::equal(mMonoms.begin(), mMonoms.end(), other.mMonoms.begin());
   }
 
   Poly &operator+=(const Poly &b) {
@@ -80,6 +78,32 @@ public:
     return *this;
   }
   friend Poly operator+(Poly lhs, const Poly &rhs) {
+    lhs += rhs;
+    return lhs;
+  }
+
+  // TODO Add more tests
+  Poly &operator+=(const MonomT &b) {
+    if (isZero()) {
+      mMonoms.push_back(b);
+      return *this;
+    }
+    for (auto it = mMonoms.begin(); it != mMonoms.end(); it++ ) {
+      if (*it == b) {
+        mMonoms.erase(it);
+        break;
+      }
+      if (*it < b) {
+        continue;
+      }
+      if (!(*it < b)) {
+        mMonoms.insert(it, b);
+        break;
+      }
+    }
+    return *this;
+  }
+  friend Poly operator+(Poly lhs, const MonomT &rhs) {
     lhs += rhs;
     return lhs;
   }

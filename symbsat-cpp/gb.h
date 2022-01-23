@@ -111,7 +111,7 @@ std::vector<PolyType> buchberger(const std::vector<PolyType>& F, const int num_v
 
             ++k;
             // Enlarge M for new h entry
-            for (auto&& row: M) {
+            for (auto& row: M) {
                 row.push_back(0);
             }
             M.push_back(std::vector<int>(k, 0));

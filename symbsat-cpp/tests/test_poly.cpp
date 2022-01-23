@@ -43,6 +43,26 @@ TEST_CASE("Polynomial Addition", "[poly-add]") {
 
 }
 
+TEST_CASE("Polynomial Add Monom", "[poly-add-monom]") {
+  Monom32 a(0), b(1);
+  Poly<Monom32> p_a(a), p_b(b);
+
+  Poly<Monom32> p_ab = p_a*p_b;
+  Poly<Monom32> p_a_b = p_a + p_b;
+  Poly<Monom32> p_ab_a_b = p_ab + p_a + p_b;
+
+  Poly<Monom32> p_aa = p_a + a;
+  REQUIRE(p_aa.isZero());
+
+  Poly<Monom32> p_res;
+
+  p_res = p_ab_a_b + a*b;
+  p_res = p_res + a;
+  p_res = p_res + b;
+
+  REQUIRE(p_res.isZero());
+}
+
 TEST_CASE("Polynomial Multiplication", "[poly-mul]") {
   Monom32 a(0), b(1), c(2);
 
