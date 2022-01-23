@@ -15,18 +15,15 @@ class Monom {
   friend DegLex<Monom>;
   friend DegRevLex<Monom>;
 
-  std::bitset<N> mVars;
-
   bool is_one = false;
+  std::bitset<N> mVars;
 
 public:
   Monom() =default;
   ~Monom() = default;
   Monom(size_t var) { mVars.set(var); }
-  Monom(const Monom &m)
-      : mVars(m.mVars), is_one(m.is_one) {}
-  Monom(const Monom &&m) noexcept : mVars(std::move(m.mVars)),
-                                    is_one(std::move(m.is_one)) {}
+  Monom(const Monom &m): is_one(m.is_one), mVars(m.mVars) {}
+  Monom(const Monom &&m) noexcept : is_one(std::move(m.is_one)), mVars(std::move(m.mVars)) {}
   Monom &operator=(const Monom &other) {
     if (this != &other) {
       mVars = other.mVars;
@@ -44,11 +41,11 @@ public:
 
   inline bool isZero() const { return !is_one && mVars.none(); }
   inline bool isOne() const { return is_one; }
-  void setZero() {
+  inline void setZero() {
     mVars.reset();
     is_one = false;
   }
-  void setOne() {
+  inline void setOne() {
     mVars.reset();
     is_one = true;
   }
@@ -144,12 +141,7 @@ public:
   Monom &operator/=(const Monom &b) {
     if (b.isOne()) {
       return *this;
-    }
-    if (this->isOne()) {
-      setZero();
-      return *this;
-    }
-    if (*this == b) {
+    } else if (*this == b) {
       // return 1
       setOne();
       return *this;
@@ -157,9 +149,10 @@ public:
       // return 0
       setZero();
       return *this;
+    } else {
+      mVars ^= b.mVars;
+      return *this;
     }
-    mVars ^= b.mVars;
-    return *this;
   }
   friend Monom operator/(Monom lhs, const Monom &rhs) {
     lhs /= rhs;
@@ -197,4 +190,4 @@ public:
 
 };
 
-}; // namespace Monoms
+}; // namespace
